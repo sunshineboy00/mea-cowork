@@ -478,11 +478,11 @@ export default function SkillPackagesTab({
                           <div
                             className={styles.packageSkillRowIcon}
                             style={{
-                              color: "#059669",
+                              color: "#007e49",
                               background:
                                 iconUrl || figurative
                                   ? "transparent"
-                                  : "#0596691a",
+                                  : "#007e491a",
                             }}
                           >
                             <PackageSkillIcon

@@ -49,7 +49,7 @@ const CATEGORY_ACCENT: Record<string, string> = {
   media: "#EC4899",
   memory: "#F59E0B",
   cron: "#6366F1",
-  knowledge: "#10B981",
+  knowledge: "#00B96B",
   mobile: "#0EA5E9",
   teams: "#F97316",
   misc: "#64748B",

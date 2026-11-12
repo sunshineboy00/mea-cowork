@@ -36,7 +36,7 @@ describe("theme palettes", () => {
     ]);
   });
 
-  it("keeps the historic Elegant Rose default brand tokens", () => {
+  it("keeps the historic Elegant Rose palette tokens (non-default)", () => {
     expect(ANTD_BRAND_TOKENS.rose.light.colorPrimary).toBe("#E85D75");
     expect(ANTD_BRAND_TOKENS.rose.light.colorPrimaryHover).toBe("#D14A62");
     expect(ANTD_BRAND_TOKENS.rose.light.colorPrimaryActive).toBe("#B83A50");
@@ -44,6 +44,8 @@ describe("theme palettes", () => {
     expect(ANTD_BRAND_TOKENS.rose.dark.colorLink).toBe("#F08B9A");
   });
 
+  // Rose's original brand hex (#E85D75) fails the 4.5:1 white-text contrast
+  // gate, so it keeps its historic exemption; all other palettes are checked.
   it.each(VALID_PALETTES.filter((palette) => palette !== "rose"))(
     "keeps %s solid Ant Design states readable with white text",
     (palette) => {

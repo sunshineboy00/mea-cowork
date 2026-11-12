@@ -78,7 +78,7 @@ test("深色主题覆盖底色，浅色仍是默认", () => {
   assert.equal(dark.declarations["--page"], "#0e0e0e");
   assert.equal(dark.declarations["--surface"], "#1e1e1e");
   assert.equal(dark.declarations["--text"], "rgba(255, 255, 255, 0.9)");
-  assert.equal(dark.declarations["--brand"], "#f08b9a");
+  assert.equal(dark.declarations["--brand"], "#2ed58e");
 });
 
 test("壳启动横版标与仪表盘是同一对图", () => {

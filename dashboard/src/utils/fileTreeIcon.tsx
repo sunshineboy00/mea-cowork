@@ -59,7 +59,7 @@ const NAME_MAP: Record<string, IconSpec> = {
   "SOUL.md": { Icon: Sparkles, color: "#7c3aed" },
   "IDENTITY.md": { Icon: Fingerprint, color: "#db2777" },
   "USER.md": { Icon: User, color: "#2563eb" },
-  "AGENTS.md": { Icon: BookOpen, color: "#059669" },
+  "AGENTS.md": { Icon: BookOpen, color: "#007e49" },
   "TOOLS.md": { Icon: Wrench, color: "#f59e0b" },
   "BOOTSTRAP.md": { Icon: Rocket, color: "#d97706" },
   "HEARTBEAT.md": { Icon: Heart, color: "#ef4444" },

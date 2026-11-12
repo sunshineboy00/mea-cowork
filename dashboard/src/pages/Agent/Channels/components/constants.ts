@@ -139,7 +139,7 @@ export const CHANNEL_COLORS: Record<ChannelKey, string> = {
   discord: "#5865F2",
   dashboard: "#6366F1",
   agentchat: "#64748B",
-  octopbot: "#10B981",
+  octopbot: "#00B96B",
 };
 
 export function getChannelColor(channel: string): string {

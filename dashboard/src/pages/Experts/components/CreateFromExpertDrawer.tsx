@@ -269,7 +269,7 @@ export default function CreateFromExpertDrawer({
   const [detailLoading, setDetailLoading] = useState(false);
   const [skillPackages, setSkillPackages] = useState<SkillPackage[]>([]);
   const [skillPackagesLoading, setSkillPackagesLoading] = useState(false);
-  const [colorPalette, setColorPalette] = useState<string>("rose");
+  const [colorPalette, setColorPalette] = useState<string>(DEFAULT_PALETTE);
   const [expertVisibility, setExpertVisibility] =
     useState<ResourceVisibilityMode>("owner");
   const [expertGroupIds, setExpertGroupIds] = useState<string[]>([]);

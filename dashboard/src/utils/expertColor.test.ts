@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { PALETTE_SWATCH } from "../styles/themePalettes";
+import { DEFAULT_PALETTE, PALETTE_SWATCH } from "../styles/themePalettes";
 import {
   DEFAULT_SUBAGENT_ACCENT,
   expertPaletteColor,
@@ -14,9 +14,9 @@ describe("resolveExpertPalette", () => {
     expect(resolveExpertPalette("#6366F1")).toBe("indigo");
   });
 
-  it("falls back to rose when color is missing", () => {
-    expect(resolveExpertPalette(null)).toBe("rose");
-    expect(resolveExpertPalette(undefined)).toBe("rose");
+  it("falls back to the default palette when color is missing", () => {
+    expect(resolveExpertPalette(null)).toBe(DEFAULT_PALETTE);
+    expect(resolveExpertPalette(undefined)).toBe(DEFAULT_PALETTE);
   });
 
   it("snaps nearby template pastels onto the nearest swatch", () => {
