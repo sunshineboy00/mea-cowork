@@ -166,7 +166,7 @@ async def install_laya(
     request: Request,
     _: Any = Depends(require_permission("model_decision")),
 ) -> StreamingResponse:
-    """Install Laya into Octop's environment and stream the log.
+    """Install Laya into MEA Cowork's environment and stream the log.
 
     A second request attaches to an install that is already running.
     Closing the page does not stop the install.
@@ -194,5 +194,5 @@ async def stop_laya(
     request: Request,
     _: Any = Depends(require_permission("model_decision")),
 ) -> dict[str, Any]:
-    """Stop only the Laya process Octop started."""
+    """Stop only the Laya process MEA Cowork started."""
     return await get_laya_runtime().stop(resolve_request_locale(request))

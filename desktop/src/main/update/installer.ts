@@ -60,7 +60,7 @@ export function downloadFilename(asset: DownloadAsset, tag: string): string {
   const withoutDir = (asset.name.trim().split(/[\\/]/).pop() ?? "").replace(/\.[A-Za-z0-9]+$/, "");
   const safeStem =
     withoutDir.replace(/[^A-Za-z0-9._-]+/g, "-").replace(/^[-.]+/, "") ||
-    `Octop-${tag.replace(/[^A-Za-z0-9._-]+/g, "-")}`;
+    `MEA Cowork-${tag.replace(/[^A-Za-z0-9._-]+/g, "-")}`;
   return `${safeStem}.${ext}`;
 }
 

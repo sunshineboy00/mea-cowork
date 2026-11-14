@@ -7,7 +7,7 @@
  */
 
 export interface ShellErrorPayload {
-  /** Headline of the page. Defaults to "Octop 无法启动". */
+  /** Headline of the page. Defaults to "MEA Cowork 无法启动". */
   title?: string;
   /** What happened, phrased for the user — never a bare errno or stack trace. */
   message: string;
@@ -32,7 +32,7 @@ export const SHELL_ERROR_PARAM = "payload";
  */
 const MAX_DETAIL_LENGTH = 4000;
 
-export const FALLBACK_ERROR_MESSAGE = "启动过程中出现未预期的错误，请重新打开 Octop。";
+export const FALLBACK_ERROR_MESSAGE = "启动过程中出现未预期的错误，请重新打开 MEA Cowork。";
 
 function toBase64Url(text: string): string {
   const bytes = new TextEncoder().encode(text);

@@ -21,7 +21,7 @@ interface BackendFlagProps {
   config: Record<string, unknown> | null | undefined;
   /**
    * Missing specs use the local-shell default. Peer experts do too: an
-   * omitted backend is the same default on the other Octop.
+   * omitted backend is the same default on the other MEA Cowork.
    */
   assumeDefault?: boolean;
 }

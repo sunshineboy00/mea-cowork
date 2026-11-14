@@ -1,5 +1,5 @@
 #!/bin/bash
-# Octop 本地版 — 卸载后回调
+# MEA Cowork 本地版 — 卸载后回调
 # 根据卸载向导选择：完全删除时清理 data-share 用户数据；保留数据时不作处理。
 # 无论是否删除数据，都清理本包安装时写入的特权（sudoers）与可能残留的桌面服务。
 set -uo pipefail

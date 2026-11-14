@@ -1,4 +1,4 @@
-"""Applying a migration plan to Octop's stores and one expert workspace."""
+"""Applying a migration plan to MEA Cowork's stores and one expert workspace."""
 
 from __future__ import annotations
 

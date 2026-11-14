@@ -1,4 +1,4 @@
-"""Same-row leases that keep one Octop instance active for a cron run or channel."""
+"""Same-row leases that keep one MEA Cowork instance active for a cron run or channel."""
 
 from __future__ import annotations
 

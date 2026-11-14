@@ -16,25 +16,25 @@ function asset(name: string, ext: string): DownloadAsset {
 }
 
 test("installerKindFor maps manifest extensions", () => {
-  assert.equal(installerKindFor(asset("Octop.dmg", "dmg")), "dmg");
-  assert.equal(installerKindFor(asset("Octop.exe", "exe")), "exe");
-  assert.equal(installerKindFor(asset("Octop.AppImage", ".AppImage")), "appimage");
-  assert.equal(installerKindFor(asset("Octop.deb", "deb")), "deb");
-  assert.equal(installerKindFor(asset("Octop.pkg", "pkg")), "pkg");
-  assert.equal(installerKindFor(asset("Octop.msi", "msi")), "msi");
+  assert.equal(installerKindFor(asset("MEA Cowork.dmg", "dmg")), "dmg");
+  assert.equal(installerKindFor(asset("MEA Cowork.exe", "exe")), "exe");
+  assert.equal(installerKindFor(asset("MEA Cowork.AppImage", ".AppImage")), "appimage");
+  assert.equal(installerKindFor(asset("MEA Cowork.deb", "deb")), "deb");
+  assert.equal(installerKindFor(asset("MEA Cowork.pkg", "pkg")), "pkg");
+  assert.equal(installerKindFor(asset("MEA Cowork.msi", "msi")), "msi");
 });
 
 test("installerKindFor falls back to the file name, then refuses", () => {
-  assert.equal(installerKindFor(asset("Octop-1.0.3-arm64.DMG", "")), "dmg");
-  assert.equal(installerKindFor(asset("Octop-1.0.3-arm64.zip", "")), "unsupported");
-  assert.equal(installerKindFor(asset("Octop", "")), "unsupported");
+  assert.equal(installerKindFor(asset("MEA Cowork-1.0.3-arm64.DMG", "")), "dmg");
+  assert.equal(installerKindFor(asset("MEA Cowork-1.0.3-arm64.zip", "")), "unsupported");
+  assert.equal(installerKindFor(asset("MEA Cowork", "")), "unsupported");
   assert.equal(isSupportedKind("unsupported"), false);
 });
 
 test("downloadFilename never escapes the update directory", () => {
   assert.equal(
-    downloadFilename(asset("Octop-1.0.3-arm64.dmg", "dmg"), "v1.0.3"),
-    "Octop-1.0.3-arm64.dmg",
+    downloadFilename(asset("MEA Cowork-1.0.3-arm64.dmg", "dmg"), "v1.0.3"),
+    "MEA Cowork-1.0.3-arm64.dmg",
   );
   // Path components from a remote manifest are stripped.
   assert.equal(downloadFilename(asset("../../evil.dmg", "dmg"), "v1.0.3"), "evil.dmg");
@@ -43,25 +43,25 @@ test("downloadFilename never escapes the update directory", () => {
   // Shell-significant characters collapse into a single separator.
   assert.equal(downloadFilename(asset("Oct; rm -rf ~ .dmg", "dmg"), "v1.0.3"), "Oct-rm--rf-.dmg");
   // Empty name → version-based fallback that still carries the extension.
-  assert.equal(downloadFilename(asset("", "dmg"), "v1.0.3"), "Octop-v1.0.3.dmg");
+  assert.equal(downloadFilename(asset("", "dmg"), "v1.0.3"), "1.0.3.dmg");
 });
 
 test("planInstall keeps the shell-selected url and kind", () => {
   const plan = planInstall({
     tag: "v1.0.3",
-    asset: asset("Octop-1.0.3-arm64.dmg", "dmg"),
+    asset: asset("MEA Cowork-1.0.3-arm64.dmg", "dmg"),
     releasesUrl: "https://github.com/x/releases",
   });
   assert.deepEqual(plan, {
     kind: "dmg",
     url: "https://download.octop.cloud/x",
-    filename: "Octop-1.0.3-arm64.dmg",
+    filename: "MEA Cowork-1.0.3-arm64.dmg",
   });
 });
 
 const selected = {
   tag: "v1.0.3",
-  asset: asset("Octop-1.0.3-arm64.dmg", "dmg"),
+  asset: asset("MEA Cowork-1.0.3-arm64.dmg", "dmg"),
   releasesUrl: "https://github.com/x/releases",
 };
 
@@ -70,7 +70,7 @@ function hooks(overrides: Partial<InstallHooks> = {}) {
   const base: InstallHooks = {
     download: async () => {
       calls.push("download");
-      return "/tmp/octop-update/Octop-1.0.3-arm64.dmg";
+      return "/tmp/octop-update/MEA Cowork-1.0.3-arm64.dmg";
     },
     verify: async () => {
       calls.push("verify");
@@ -90,14 +90,14 @@ function hooks(overrides: Partial<InstallHooks> = {}) {
 test("installUpdate runs download → verify → clean exit → handoff", async () => {
   const { calls, hooks: h } = hooks();
   const outcome = await installUpdate(selected, h);
-  assert.deepEqual(outcome, { ok: true, path: "/tmp/octop-update/Octop-1.0.3-arm64.dmg" });
+  assert.deepEqual(outcome, { ok: true, path: "/tmp/octop-update/MEA Cowork-1.0.3-arm64.dmg" });
   assert.deepEqual(calls, ["download", "verify", "stop", "handoff"]);
 });
 
 test("unsupported asset is refused before anything is downloaded", async () => {
   const { calls, hooks: h } = hooks();
   const outcome = await installUpdate(
-    { ...selected, asset: asset("Octop-1.0.3-arm64.zip", "zip") },
+    { ...selected, asset: asset("MEA Cowork-1.0.3-arm64.zip", "zip") },
     h,
   );
   assert.equal(outcome.ok, false);
@@ -119,7 +119,7 @@ test("download failure aborts before Python is touched", async () => {
 test("an asset url outside the download host is refused", async () => {
   const { calls, hooks: h } = hooks();
   const outcome = await installUpdate(
-    { ...selected, asset: { ...selected.asset, url: "https://evil.example/Octop.dmg" } },
+    { ...selected, asset: { ...selected.asset, url: "https://evil.example/MEA Cowork.dmg" } },
     h,
   );
   assert.equal(outcome.ok === false && outcome.reason, "untrusted-url");

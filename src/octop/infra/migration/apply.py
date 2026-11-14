@@ -1,4 +1,4 @@
-"""Write a :class:`MigrationPlan` into Octop: providers, one expert's workspace
+"""Write a :class:`MigrationPlan` into MEA Cowork: providers, one expert's workspace
 files and skills, the owner's custom MCP servers, and the expert's channels.
 
 Nothing that already exists is replaced unless ``overwrite`` is set, and

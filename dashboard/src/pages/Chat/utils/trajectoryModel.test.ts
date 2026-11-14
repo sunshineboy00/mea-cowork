@@ -146,7 +146,7 @@ describe("toLedgerRow", () => {
       event({
         event_id: "s1",
         kind: "context",
-        summary: "You are Octop. Be helpful and use the workspace…",
+        summary: "You are MEA Cowork. Be helpful and use the workspace…",
         payload: {
           source: "model_system",
           label: "System prompt",

@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Propose an enhancement to Octop
+about: Propose an enhancement to MEA Cowork
 title: "[feature] "
 labels: enhancement
 ---

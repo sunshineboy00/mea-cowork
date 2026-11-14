@@ -60,7 +60,7 @@
 
 ### 6. 明确不在本期
 
-- 多 Octop 实例的 Cron/任务租约、专家晚加载/offload、无粘滞网关下的 turn 迁移
+- 多 MEA Cowork 实例的 Cron/任务租约、专家晚加载/offload、无粘滞网关下的 turn 迁移
 - IM 通道多活
 - 技能包/KB 的对象存储（S3/COS）——Store 接口可留扩展点，一期只实现本地与 PG
 - sqlite↔PG 数据迁移工具

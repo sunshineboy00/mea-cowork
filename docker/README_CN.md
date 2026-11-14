@@ -1,8 +1,8 @@
-# Octop Docker 部署
+# MEA Cowork Docker 部署
 
 ---
 
-本目录包含 Octop 的 Docker 构建与部署相关文件。
+本目录包含 MEA Cowork 的 Docker 构建与部署相关文件。
 
 ### 文件说明
 
@@ -14,7 +14,7 @@
 | `docker-compose.yml` | 本地开发 / 自托管一键启动 |
 | `docker-compose.cn.yml` | 同一套服务，拉取 `ghcr.nju.edu.cn/tencentcloud/octop:latest`（不本地构建） |
 | `docker-compose.postgres.yml` | 仅 PostgreSQL（+ pgvector）开发/测试库；扩展在 `postgres/init-vector.sql` |
-| `postgres/init-vector.sql` | 实例级 `CREATE EXTENSION vector`（initdb.d；**不**进 Octop 迁移） |
+| `postgres/init-vector.sql` | 实例级 `CREATE EXTENSION vector`（initdb.d；**不**进 MEA Cowork 迁移） |
 | `docker-entrypoint.sh` | 容器入口：首次初始化数据库并启动服务 |
 
 ### 快速开始

@@ -79,7 +79,7 @@ def test_install_is_idempotent_and_leaves_stdlib() -> None:
     install_shell_output_decoding()
     assert local_shell.subprocess is first
     # Harness 1.0.5 decodes inside execute() and exposes decode_child_output.
-    # Octop must leave the stdlib subprocess module in place.
+    # MEA Cowork must leave the stdlib subprocess module in place.
     assert hasattr(local_shell, "decode_child_output")
     assert first is subprocess
     assert bwrap_shell.subprocess is subprocess

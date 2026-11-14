@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # =============================================================================
-# 构建 Octop Docker 镜像
+# 构建 MEA Cowork Docker 镜像
 #
 # 用法:
 #   bash docker/docker_build.sh [镜像标签] [额外 docker build 参数...]
@@ -46,7 +46,7 @@ if [ -n "${APT_MIRROR:-}" ]; then
 fi
 
 echo "╔══════════════════════════════════════════════════╗"
-echo "║  正在构建 Octop Docker 镜像                      ║"
+echo "║  正在构建 MEA Cowork Docker 镜像                      ║"
 echo "║  标签: ${IMAGE_TAG}"
 echo "╚══════════════════════════════════════════════════╝"
 echo ""

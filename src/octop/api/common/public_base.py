@@ -36,7 +36,7 @@ def resolve_public_base(request: Request) -> str:
 
     Trusts ``X-Forwarded-Proto`` / ``X-Forwarded-Host`` when present (typical
     behind a reverse proxy). ``X-Forwarded-Port`` supplies a missing port;
-    an explicit host port takes precedence. Prefer deploying Octop behind a
+    an explicit host port takes precedence. Prefer deploying MEA Cowork behind a
     trusted proxy and keeping the dashboard same-origin with the API for OIDC cookies.
     """
     forwarded_proto = _first_header_value(request.headers.get("x-forwarded-proto"))

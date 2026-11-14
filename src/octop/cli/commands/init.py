@@ -1,4 +1,4 @@
-"""`octop init` — bootstrap a fresh Octop install (DB + first admin)."""
+"""`octop init` — bootstrap a fresh MEA Cowork install (DB + first admin)."""
 
 from __future__ import annotations
 
@@ -29,7 +29,7 @@ import click
     is_flag=True,
     default=False,
     help=(
-        "Delete Octop application state under ~/.octop before bootstrapping. "
+        "Delete MEA Cowork application state under ~/.octop before bootstrapping. "
         "Keeps the install runtime (venv/, bin/)."
     ),
 )
@@ -47,7 +47,7 @@ def init(
     force: bool,
     non_interactive: bool,
 ) -> None:
-    """Bootstrap an Octop server (~/.octop dir, DB migrations, first admin)."""
+    """Bootstrap an MEA Cowork server (~/.octop dir, DB migrations, first admin)."""
     from octop.config import load_config
     from octop.infra.agents.plugins.manager import PluginManager
     from octop.infra.db.factory import open_database
@@ -77,7 +77,7 @@ def init(
                 from octop.cli.support import prompts as _prompts
 
                 if not _prompts.confirm(
-                    f"Delete Octop data under {home}? The install runtime (venv, bin) is kept.",
+                    f"Delete MEA Cowork data under {home}? The install runtime (venv, bin) is kept.",
                     default=False,
                 ):
                     click.echo("aborted", err=True)
@@ -142,6 +142,6 @@ def init(
     finally:
         db.close()
 
-    click.echo(f"\u2705 Octop bootstrapped at {home}")
+    click.echo(f"\u2705 MEA Cowork bootstrapped at {home}")
     click.echo(f"   admin user: {username}")
     click.echo("   next: `octop run` (optional: `octop agent use <id>` to pin default agent)")

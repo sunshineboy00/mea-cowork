@@ -5,7 +5,7 @@
 
 ## 本机环境基线
 
-- Octop 运行在腾讯云 CVM 上，域名 `http://octop.devcloud.woa.com`，服务 `systemctl status octop`
+- MEA Cowork 运行在腾讯云 CVM 上，域名 `http://octop.devcloud.woa.com`，服务 `systemctl status octop`
 - 云账号：单账号，授权范围约 300–550 台 CVM，主要地域 `ap-guangzhou`（另有 `ap-qingyuan`、`ap-nanjing` 等）
 - 账号内有大量刚创建/已销毁的压测实例（名字形如 `inttest-*`、`it-*-1793xxxxx`）：**批量调用云 API 时它们会让整批请求失败**，必须做二分降级
 

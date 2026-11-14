@@ -30,7 +30,7 @@ def safe_relative_path(path: str) -> str | None:
 
 
 class ControlFileRepo:
-    """File bytes shared by every Octop process on this database."""
+    """File bytes shared by every MEA Cowork process on this database."""
 
     PLUGIN = "plugin"
     PUBLISHED_EXPERT = "published_expert"

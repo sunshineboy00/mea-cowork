@@ -24,7 +24,7 @@ def test_ensure_utf8_stdio_reconfigures_gbk_streams() -> None:
     assert out.encoding.lower() == "utf-8"
     assert err.encoding.lower() == "utf-8"
     # U+2705 (✅) is not representable in GBK; must encode without raising.
-    out.write("\u2705 Octop bootstrapped")
+    out.write("\u2705 MEA Cowork bootstrapped")
     out.flush()
 
 

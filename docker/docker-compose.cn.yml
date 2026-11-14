@@ -1,5 +1,5 @@
 # =============================================================================
-# Octop — Docker Compose（国内镜像）
+# MEA Cowork — Docker Compose（国内镜像）
 #
 # 不在本地构建。官方 GHCR（ghcr.io/tencentcloud/octop）拉取失败时用本文件，
 # 镜像来自南京大学 GHCR 源：ghcr.nju.edu.cn/tencentcloud/octop:latest

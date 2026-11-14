@@ -73,7 +73,7 @@ export function windowsAppMenuLabels(locale: string): WindowsAppMenuLabels {
       edit: "编辑",
       view: "视图",
       help: "帮助",
-      about: "关于 Octop",
+      about: "关于 MEA Cowork",
     };
   }
   return {
@@ -81,7 +81,7 @@ export function windowsAppMenuLabels(locale: string): WindowsAppMenuLabels {
     edit: "Edit",
     view: "View",
     help: "Help",
-    about: "About Octop",
+    about: "About MEA Cowork",
   };
 }
 

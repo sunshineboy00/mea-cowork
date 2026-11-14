@@ -84,14 +84,14 @@ function ErrorPage() {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, []);
 
-  const title = payload.title ?? "Octop 无法启动";
+  const title = payload.title ?? "MEA Cowork 无法启动";
   const { message, detail, version } = payload;
 
   const copyLabel =
     copyState === "copied" ? "已复制" : copyState === "failed" ? "复制失败" : "复制错误信息";
 
   const handleCopy = () => {
-    const text = [title, message, detail, version ? `Octop Desktop v${version}` : ""]
+    const text = [title, message, detail, version ? `MEA Cowork Desktop v${version}` : ""]
       .filter(Boolean)
       .join("\n\n");
     void writeClipboard(text).then((ok) => setCopyState(ok ? "copied" : "failed"));
@@ -164,7 +164,7 @@ function ErrorPage() {
         </div>
       </div>
 
-      {version ? <p className={styles.meta}>Octop 桌面端 v{version}</p> : null}
+      {version ? <p className={styles.meta}>MEA Cowork 桌面端 v{version}</p> : null}
     </main>
   );
 }

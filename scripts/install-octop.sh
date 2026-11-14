@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# Octop 安装脚本 (macOS / Linux)
+# MEA Cowork 安装脚本 (macOS / Linux)
 # 用法: bash scripts/install.sh              # 从 PyPI 安装（默认）
 #   或: bash scripts/install.sh --from-source  # 从本地源码安装
 #   或: curl -fsSL <url>/install.sh | bash   # 远程安装
 #
-# 将 Octop 安装到 ~/.octop，使用 uv 管理 Python 环境。
+# 将 MEA Cowork 安装到 ~/.octop，使用 uv 管理 Python 环境。
 # 用户无需预先安装 Python — uv 会处理一切。
 # 安装后会尽量把 octop 链接到已在 PATH 中的目录（如 /usr/local/bin），
 # 当前终端无需 source / 重开即可直接使用。
@@ -76,7 +76,7 @@ while [[ $# -gt 0 ]]; do
             PYPI_MIRROR="$2"; shift 2 ;;
         -h|--help)
             cat <<EOF
-Octop installer (macOS / Linux)
+MEA Cowork installer (macOS / Linux)
 
 Usage: bash install.sh [OPTIONS]
 
@@ -123,7 +123,7 @@ case "$OS" in
     *) die "Unsupported OS: $OS. Use install.ps1 or install.bat on Windows." ;;
 esac
 
-printf "${GREEN}[octop]${RESET} Installing Octop into ${BOLD}%s${RESET}\n" "$OCTOP_HOME"
+printf "${GREEN}[octop]${RESET} Installing MEA Cowork into ${BOLD}%s${RESET}\n" "$OCTOP_HOME"
 
 # ── 步骤 1: 确保 uv 可用 ────────────────────────────────────────────────────
 _install_uv_via_pip() {
@@ -562,7 +562,7 @@ if [ "$OS" = "Linux" ]; then
 fi
 _ensure_old_glibc_build_toolchain
 
-# ── 步骤 3: 安装 Octop ───────────────────────────────────────────────────────
+# ── 步骤 3: 安装 MEA Cowork ───────────────────────────────────────────────────────
 # playwright Python 包已是核心依赖；Chromium 浏览器仅在 --extras browser 时下载。
 _merge_install_extras() {
     local result="browser"
@@ -622,7 +622,7 @@ prepare_console() {
 
 # TEMP: mcp 2.x 移除 RequestContext，与 langchain-mcp-adapters 不兼容。
 # octop-harness>=0.9.18 已在依赖中 pin；此处在验证前再钉一次，覆盖仍拉取到
-# 旧版 harness / 镜像滞后的安装路径。待 Octop 发版跟上后可删除。
+# 旧版 harness / 镜像滞后的安装路径。待 MEA Cowork 发版跟上后可删除。
 _pin_mcp_compat() {
     info "Pinning mcp<2 (langchain-mcp-adapters compatibility; temporary)..."
     if ! _uv_pip_install_with_mirror_fallback "mcp>=1.27.1,<2"; then
@@ -644,7 +644,7 @@ _clone_source_workspace() {
     local workdir="$1"
     command -v git &>/dev/null || die "git is required to clone the repos. Install git or use --from-pypi."
     mkdir -p "$workdir"
-    info "Cloning octop-harness / octop-gateway / Octop sources..."
+    info "Cloning octop-harness / octop-gateway / MEA Cowork sources..."
     git clone --depth 1 "$HARNESS_AGENT_REPO" "$workdir/octop-harness"
     git clone --depth 1 "$HARNESS_GATEWAY_REPO" "$workdir/octop-gateway"
     git clone --depth 1 "$HARNESS_BROWSER_REPO" "$workdir/octop-browser"
@@ -688,7 +688,7 @@ _pin_mcp_compat || true
 _verify_install
 
 [ -x "$OCTOP_VENV/bin/octop" ] || die "Install failed: octop CLI not found in the virtualenv"
-info "Octop installed successfully"
+info "MEA Cowork installed successfully"
 
 if [ "$_CONSOLE_AVAILABLE" = 0 ]; then
     CONSOLE_CHECK="$("$OCTOP_VENV/bin/python" -c "import importlib.resources, octop; p=importlib.resources.files('octop')/'dashboard'/'index.html'; print('yes' if p.is_file() else 'no')" 2>/dev/null || echo 'no')"
@@ -911,14 +911,14 @@ mkdir -p "$OCTOP_BIN"
 
 cat > "$OCTOP_BIN/octop" << 'WRAPPER'
 #!/usr/bin/env bash
-# Octop CLI 包装脚本 — 委托给 uv 管理的环境。
+# MEA Cowork CLI 包装脚本 — 委托给 uv 管理的环境。
 set -euo pipefail
 
 OCTOP_HOME="${OCTOP_HOME:-$HOME/.octop}"
 REAL_BIN="$OCTOP_HOME/venv/bin/octop"
 
 if [ ! -x "$REAL_BIN" ]; then
-    echo "Error: Octop environment not found in $OCTOP_HOME/venv" >&2
+    echo "Error: MEA Cowork environment not found in $OCTOP_HOME/venv" >&2
     echo "Please re-run the installer" >&2
     exit 1
 fi
@@ -1019,7 +1019,7 @@ add_to_profile() {
         return 0
     fi
     if [ -f "$profile" ] || [ "$create" = "create" ]; then
-        printf '\n# Octop\n%s\n' "$PATH_ENTRY" >> "$profile"
+        printf '\n# MEA Cowork\n%s\n' "$PATH_ENTRY" >> "$profile"
         info "Updated $profile"
         return 0
     fi
@@ -1029,7 +1029,7 @@ add_to_profile() {
 _write_profile_d() {
     # CentOS / Ubuntu 登录 shell 会加载 /etc/profile.d/*.sh
     local dest="/etc/profile.d/octop.sh"
-    local content="# Octop CLI
+    local content="# MEA Cowork CLI
 export PATH=\"${OCTOP_BIN}:\$PATH\"
 "
     if [ -d /etc/profile.d ]; then
@@ -1070,7 +1070,7 @@ export PATH="$OCTOP_BIN:$PATH"
 
 # ── 完成 ──────────────────────────────────────────────────────────────────────
 echo ""
-printf "${GREEN}${BOLD}Octop installed successfully!${RESET}\n"
+printf "${GREEN}${BOLD}MEA Cowork installed successfully!${RESET}\n"
 echo ""
 printf "  Location:          ${BOLD}%s${RESET}\n" "$OCTOP_HOME"
 printf "  Python:            ${BOLD}%s${RESET}\n" "$("$OCTOP_VENV/bin/python" --version 2>&1)"

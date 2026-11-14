@@ -17,14 +17,14 @@ import {
 test("a payload survives the URL round trip", () => {
   const decoded = decodeShellError(
     encodeShellError({
-      title: "Octop 无法启动",
+      title: "MEA Cowork 无法启动",
       message: "检测到本机运行时版本为 0.9.20，当前安装的是 0.9.31。",
       detail: "已安装版本: 0.9.31\n路径: /Users/me/.octop/portable",
       version: "0.9.31",
     }),
   );
 
-  assert.equal(decoded.title, "Octop 无法启动");
+  assert.equal(decoded.title, "MEA Cowork 无法启动");
   assert.equal(decoded.message, "检测到本机运行时版本为 0.9.20，当前安装的是 0.9.31。");
   assert.equal(decoded.detail, "已安装版本: 0.9.31\n路径: /Users/me/.octop/portable");
   assert.equal(decoded.version, "0.9.31");

@@ -1,4 +1,4 @@
-"""Authenticated Streamable HTTP MCP endpoint for Octop expert agents."""
+"""Authenticated Streamable HTTP MCP endpoint for MEA Cowork expert agents."""
 
 from __future__ import annotations
 
@@ -30,7 +30,7 @@ def _service(server: Any) -> AgentMcpGatewayService:
     )
 
 
-@router.post("/mcp/agents", summary="Call Octop experts through MCP")
+@router.post("/mcp/agents", summary="Call MEA Cowork experts through MCP")
 async def agent_mcp_post(
     request: Request,
     user: Any = Depends(current_user),
@@ -65,7 +65,7 @@ async def agent_mcp_post(
     return JSONResponse(content=response, headers=headers)
 
 
-@router.get("/mcp/agents", summary="Open the Octop Agent MCP event stream")
+@router.get("/mcp/agents", summary="Open the MEA Cowork Agent MCP event stream")
 async def agent_mcp_get(
     request: Request,
     _user: Any = Depends(current_user),
@@ -86,7 +86,7 @@ async def agent_mcp_get(
     )
 
 
-@router.delete("/mcp/agents", status_code=204, summary="Close an Octop Agent MCP session")
+@router.delete("/mcp/agents", status_code=204, summary="Close an MEA Cowork Agent MCP session")
 async def agent_mcp_delete(_user: Any = Depends(current_user)) -> Response:
     """Acknowledge Streamable HTTP session cleanup."""
     return Response(status_code=204)

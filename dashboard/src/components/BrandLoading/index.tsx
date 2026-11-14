@@ -35,7 +35,7 @@ export default function BrandLoading({ label, viewport }: BrandLoadingProps) {
         <img
           className={styles.logo}
           src={logoSrc}
-          alt="Octop"
+          alt="MEA Cowork"
           height={72}
         />
         <p className={styles.status}>

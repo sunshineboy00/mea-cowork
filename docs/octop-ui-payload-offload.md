@@ -1,6 +1,6 @@
 # octop_ui 大 payload 旁路设计 Spec（artifact 剥离方案）
 
-> 关联 issue：TencentCloud/Octop #1032（bilibili 插件返回结果过大）
+> 关联 issue：TencentCloud/MEA Cowork #1032（bilibili 插件返回结果过大）
 > 状态：v2 · 三方评审已合入（2026-09-23）
 > 评审：step-5-preview / mimo-v2.6-pro / MiniMax-M3 三方独立审核，一致 **APPROVE WITH CHANGES**，必改项已全部合入本文（评审记录见 `tmp/spec-review-*.log`）。
 > 本文所有论断均经代码阅读 + 运行时 PoC 双重验证（`tmp/verify_offload_poc.py`，真实 LangGraph agent loop，含原地修改模式复验）。
@@ -31,7 +31,7 @@
 
 | # | 事实 | 证据 |
 |---|---|---|
-| F1 | `AgentMiddleware.awrap_tool_call` 可拦截工具结果并替换 ToolMessage（langchain 1.3.18）；只写 sync 版会 NotImplementedError | `langchain/agents/middleware/types.py:756-823`；Octop 先例 `infra/agents/middleware/thread_artifacts.py:186-193` |
+| F1 | `AgentMiddleware.awrap_tool_call` 可拦截工具结果并替换 ToolMessage（langchain 1.3.18）；只写 sync 版会 NotImplementedError | `langchain/agents/middleware/types.py:756-823`；MEA Cowork 先例 `infra/agents/middleware/thread_artifacts.py:186-193` |
 | F2 | 中间件链组装处可闭包注入 `row`/`ws` | `manager.py:3026-3041`（`ws` 于 `manager.py:2912-2917` 构造） |
 | F3 | 模型请求转换（`convert_to_openai_messages`）不含 artifact 字段，artifact 不进模型上下文 | `langchain_core/messages/utils.py:1653-1680`；PoC [3]；harness 的 memory/compaction 模块均不读 artifact（grep 实证） |
 | F4 | WS 实时帧经 `model_dump()` 序列化，含 artifact；team relay 亦原样透传 | `api/routers/chat/sse.py:9-21`、`ws.py:70-75`、`teams/team_manager.py:754-773`；PoC [5] |
@@ -69,7 +69,7 @@
    - `result.content = 去掉 data 的 envelope + "data_ref": "artifact"`；
 4. 任何异常：记 warning + METRICS 计数，原样返回。
 
-**挂载位置**：追加到 `agent_middleware` 列表**末尾（最内层）**，在 `manager.py:3026-3041` 组装。理由：langchain 语义「列表首位 = 最外层」，最内层最先看到工具原始返回、剥离后外层所有中间件（harness PII/媒体、Octop 各中间件）观测面一致。对 `ThreadArtifactsMiddleware._paths_from_content` 的影响已由 F20 + `file://` 守护条件双重兜底。
+**挂载位置**：追加到 `agent_middleware` 列表**末尾（最内层）**，在 `manager.py:3026-3041` 组装。理由：langchain 语义「列表首位 = 最外层」，最内层最先看到工具原始返回、剥离后外层所有中间件（harness PII/媒体、MEA Cowork 各中间件）观测面一致。对 `ThreadArtifactsMiddleware._paths_from_content` 的影响已由 F20 + `file://` 守护条件双重兜底。
 
 **为什么中间件优于改插件 SDK（`response_format="content_and_artifact"`）**：`_to_structured_tool` 目前不透传 response_format（F12），改 SDK 还需每个插件改返回值；中间件对现有 26 个 octop_ui 插件零改动生效，并自动覆盖未来插件。
 

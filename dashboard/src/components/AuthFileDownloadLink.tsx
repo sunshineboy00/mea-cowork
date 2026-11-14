@@ -1,5 +1,5 @@
 /**
- * Download an authenticated Octop API file URL via blob (Bearer token),
+ * Download an authenticated MEA Cowork API file URL via blob (Bearer token),
  * instead of navigating the browser tab (which would drop JWT and land on the SPA).
  */
 

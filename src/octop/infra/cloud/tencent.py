@@ -1071,7 +1071,7 @@ _TCCLI_ISOLATION_ENV = "OCTOP_TCCLI_PROFILE_ISOLATION"
 def tccli_profile_for_user(uid: int | None) -> str:
     """tccli profile the mirror writes to.
 
-    Multi-user isolation (``octop-<uid>``) stops two Octop accounts from
+    Multi-user isolation (``octop-<uid>``) stops two MEA Cowork accounts from
     overwriting each other's machine-wide ``~/.tccli`` login. It stays opt-in
     (``OCTOP_TCCLI_PROFILE_ISOLATION=1``) because plain ``tccli`` without
     ``--profile`` always reads ``default``.

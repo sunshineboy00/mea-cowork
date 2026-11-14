@@ -1,1 +1,1 @@
-"""Octop Gateway — global AI interaction entry point."""
+"""MEA Cowork Gateway — global AI interaction entry point."""

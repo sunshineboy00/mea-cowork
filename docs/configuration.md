@@ -1,6 +1,6 @@
 # Configuration
 
-Octop stores all of its state under `~/.octop/`. The directory is created
+MEA Cowork stores all of its state under `~/.octop/`. The directory is created
 on first server start (or by `octop init` / `octop run`).
 
 ## Filesystem layout
@@ -32,8 +32,8 @@ file are left alone). Every running agent inherits those keys:
   cannot be overridden from `.env`). New agents store that file at
   `{workspace}/.octop/.env`; existing agents keep `{workspace}/.env` when
   their stored internal system-files prefix uses the legacy layout. Remote
-  object-store workspaces are not read from the host path — Octop/harness
-  also reads `.env` through the agent backend on each execute. Octop also
+  object-store workspaces are not read from the host path — MEA Cowork/harness
+  also reads `.env` through the agent backend on each execute. MEA Cowork also
   injects `OCTOP_AGENT_ID`, `OCTOP_AUTH_DIR` (under `{workspace}/.octop/auth`
   for new agents; legacy agents keep `{workspace}/.octop-auth`),
   and `OCTOP_HOME` into shell/sandbox env.
@@ -224,7 +224,7 @@ originals are stored in that same database (`public.skill_package_files` and
 `public.knowledge_files`), and knowledge vectors use pgvector
 (`public.knowledge_chunks`). Names sit next to `skill_packages` and
 `knowledge_bases`. SQLite keeps the local `skill-packages/` and
-`knowledge/` directories. The `vector` extension is not created by Octop
+`knowledge/` directories. The `vector` extension is not created by MEA Cowork
 migrations; enable it with `docker/postgres/init-vector.sql` or
 `CREATE EXTENSION vector` before indexing knowledge. There is no sqlite→PostgreSQL
 content migration in this release — pick the driver at install time.
@@ -330,12 +330,12 @@ Per-agent provider credentials (e.g. API keys) live in the SQLite
 
 ## Retired segmented history archive
 
-Octop ignores the former `history_v2_enabled` and `OCTOP_HISTORY_V2_ENABLED` settings.
-At startup, Octop migrates existing archive messages and supported trajectory events into the
+MEA Cowork ignores the former `history_v2_enabled` and `OCTOP_HISTORY_V2_ENABLED` settings.
+At startup, MEA Cowork migrates existing archive messages and supported trajectory events into the
 control-plane database before starting agents. Successful migrations retain the original
 `history_v2.sqlite` and `history_v2.required` with a `.migrated-<timestamp>` suffix.
 If a message or checkpoint anchor cannot be read, startup reports the affected thread and
 leaves the source archive in place so the data can be recovered and migration retried.
 Stop the old server before upgrading an installation with a v2 archive. Keep checkpoint
 retention disabled if the old server must run with the new Harness before migration.
-Restore a system backup containing a v2 archive with the offline backup CLI, then start Octop.
+Restore a system backup containing a v2 archive with the offline backup CLI, then start MEA Cowork.

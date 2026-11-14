@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 # =============================================================================
-# Octop — 多阶段 Docker 构建
+# MEA Cowork — 多阶段 Docker 构建
 #
 # 阶段 1: 构建 React/TypeScript 前端
 # 阶段 2: Python 运行时 + 预构建前端
@@ -73,7 +73,7 @@ RUN NODE_ENV=production NODE_OPTIONS="--max-old-space-size=${NODE_MAX_OLD_SPACE_
 FROM python:3.12-slim AS runtime
 
 LABEL maintainer="OrcaKit Team"
-LABEL org.opencontainers.image.title="Octop"
+LABEL org.opencontainers.image.title="MEA Cowork"
 LABEL org.opencontainers.image.description="Smarter self-hosted AI assistant — multi-user, multi-agent."
 LABEL org.opencontainers.image.source="https://github.com/TencentCloud/orca"
 LABEL org.opencontainers.image.licenses="MIT"

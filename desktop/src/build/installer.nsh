@@ -99,7 +99,7 @@ octop_fin_pre_end:
 !macroend
 
 ; Same rule as DeepSeek Harness customCheckAppRunning: match this install's
-; executable, not another Octop.exe. An update waits up to 10s for the shell
+; executable, not another MEA Cowork.exe. An update waits up to 10s for the shell
 ; to leave the tray. Otherwise stop and ask the user to quit. Never taskkill.
 !macro customCheckAppRunning
   Push $0
@@ -184,7 +184,7 @@ octop_rt_log_done:
   IfFileExists "$0\portable-version.json" octop_rt_find octop_rt_fail
 octop_rt_find:
   ClearErrors
-  FindFirst $1 $2 "$0\Octop-portable-*.zip"
+  FindFirst $1 $2 "$0\-*.zip"
   IfErrors octop_rt_fail
   StrCpy $3 "$INSTDIR\resources\sidecar"
   RMDir /r "$3"

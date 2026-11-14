@@ -15,10 +15,10 @@ test("isSafeEntryPath allows normal relative paths", () => {
   assert.equal(isSafeEntryPath("packages/foo/bar.py"), true);
 });
 
-test("detectSingleRoot finds the Octop-<plat> wrapper", () => {
+test("detectSingleRoot finds the MEA Cowork-<plat> wrapper", () => {
   assert.equal(
-    detectSingleRoot(["Octop-darwin-arm64/launch.py", "Octop-darwin-arm64/runtime/bin/python3"]),
-    "Octop-darwin-arm64",
+    detectSingleRoot(["64/launch.py", "64/runtime/bin/python3"]),
+    "64",
   );
   assert.equal(detectSingleRoot(["launch.py", "runtime/bin/python3"]), null);
   assert.equal(detectSingleRoot(["a/x", "b/y"]), null);

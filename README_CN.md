@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/assets/readme-banner-zh.png" alt="Octop Banner" width="600" />
+  <img src="docs/assets/readme-banner-zh.png" alt="MEA Cowork Banner" width="600" />
 </p>
 
 <p align="center">
@@ -8,18 +8,18 @@
 
 <p align="center">
   <a href="https://trendshift.io/repositories/95504?utm_source=repository-badge&utm_medium=badge&utm_campaign=badge-repository-95504" target="_blank" rel="noopener noreferrer">
-    <img src="https://trendshift.io/api/badge/repositories/95504" alt="TencentCloud/Octop | Trendshift" width="250" height="55" />
+    <img src="https://trendshift.io/api/badge/repositories/95504" alt="TencentCloud/MEA Cowork | Trendshift" width="250" height="55" />
   </a>
 </p>
 
 <p align="center">
   <a href="https://www.python.org/downloads/"><img alt="Python 3.12+" src="https://img.shields.io/badge/python-3.12%2B-blue?logo=python&logoColor=white" /></a>
-  <a href="https://github.com/TencentCloud/Octop/blob/main/LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-green" /></a>
-  <a href="https://github.com/TencentCloud/Octop/releases"><img alt="Version" src="https://img.shields.io/badge/version-1.0.3b5-orange" /></a>
+  <a href="https://github.com/TencentCloud/MEA Cowork/blob/main/LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-green" /></a>
+  <a href="https://github.com/TencentCloud/MEA Cowork/releases"><img alt="Version" src="https://img.shields.io/badge/version-1.0.3b5-orange" /></a>
   <a href="https://pypi.org/project/octop/"><img src="https://img.shields.io/pypi/v/octop" alt="PyPI" /></a>
   <a href="https://github.com/astral-sh/ruff"><img alt="Code Style: Ruff" src="https://img.shields.io/badge/code%20style-ruff-000000?logo=ruff&logoColor=white" /></a>
-  <a href="https://github.com/TencentCloud/Octop"><img alt="GitHub stars" src="https://img.shields.io/github/stars/TencentCloud/Octop?style=social" /></a>
-  <a href="https://github.com/TencentCloud/Octop/fork"><img alt="GitHub forks" src="https://img.shields.io/github/forks/TencentCloud/Octop?style=social" /></a>
+  <a href="https://github.com/TencentCloud/MEA Cowork"><img alt="GitHub stars" src="https://img.shields.io/github/stars/TencentCloud/MEA Cowork?style=social" /></a>
+  <a href="https://github.com/TencentCloud/MEA Cowork/fork"><img alt="GitHub forks" src="https://img.shields.io/github/forks/TencentCloud/MEA Cowork?style=social" /></a>
   <a href="https://discord.gg/QnWdhJxq9h"><img alt="Discord" src="https://img.shields.io/badge/Discord-%E5%8A%A0%E5%85%A5-5865F2?logo=discord&logoColor=white" /></a>
 </p>
 
@@ -39,7 +39,7 @@
 
 ---
 
-**Octop** 是一个开源、自托管的 AI 助手。它不仅是工具，更是可并行运作的数字生命体。通过多 Agent 架构，它为团队、家庭和个人构建了既独立又协作的智能环境。并且这一切都运行在你的机器上——完全自托管的设计让隐私不再是妥协，而单进程启动的便捷性，则让强大的 Web 控制台、CLI 与 IM 集成触手可及。
+**MEA Cowork** 是一个开源、自托管的 AI 助手。它不仅是工具，更是可并行运作的数字生命体。通过多 Agent 架构，它为团队、家庭和个人构建了既独立又协作的智能环境。并且这一切都运行在你的机器上——完全自托管的设计让隐私不再是妥协，而单进程启动的便捷性，则让强大的 Web 控制台、CLI 与 IM 集成触手可及。
 
 借助飞书、钉钉、QQ、微信、企业微信或 HTTP/SSE/WebSocket API 与任意 Agent 对话；通过**专家库**一键创建专业角色，通过 **Connector**（OAuth + MCP）接入外部服务，通过 **ACP** 与 IDE / 终端 AI 工具双向协作。
 
@@ -48,13 +48,13 @@
 | | 特性 | 说明 |
 |---|------|------|
 | 👥 | **多用户多 Agent 专家团** | 一人管理，全家共用；内置专家库与专家市场，按场景切换专业角色 |
-| 🤝 | **云端协作** | 将本机 Octop 连接到另一实例，可浏览对端专家并跨实例对话；对话记录保留在专家所在侧 |
+| 🤝 | **云端协作** | 将本机 MEA Cowork 连接到另一实例，可浏览对端专家并跨实例对话；对话记录保留在专家所在侧 |
 | 🎭 | **MBTI 人格** | 16 种人格模板与互动测试，为每个 Agent 赋予鲜明性格 |
 | 🎯 | **AgentTeams** *（Beta）* | 协调者调度多位专家协作完成多步骤任务；[详见](docs/expert-teams.md) |
 | 🔒 | **更安全** | JWT 多用户隔离、工具审批、Shell 命令防护与敏感信息脱敏，数据留在本地 |
 | 🔌 | **Connector 拓展体系** | 一键接入腾讯全家桶（文档 / 会议 / 新闻等），OAuth 与 MCP 网关轻松扩展 — [支持的连接器](docs/connectors.md) |
 | 💾 | **可插拔工作区后端** | 本地目录、Docker 沙箱、PostgreSQL 或 COS/S3 存放 Agent 文件 — 与控制面数据库分离 |
-| 🧠 | **可迁移记忆系统** | 基于 [Octop Memory](https://github.com/TencentCloud/octop-memory)，记忆随工作区迁移 |
+| 🧠 | **可迁移记忆系统** | 基于 [MEA Cowork Memory](https://github.com/TencentCloud/octop-memory)，记忆随工作区迁移 |
 | 📚 | **知识库** | 基于文档的 RAG 检索；支持同实例共享语料，让回答锚定私有知识 |
 | 🧩 | **插件** | 支持第三方插件扩展；内置插件随安装注入，按需一键启用 |
 | ↔️ | **ACP 双向集成** | `octop acp` 增强 IDE 与终端 AI；对话中委派 OpenCode / Claude Code 等 |
@@ -66,12 +66,12 @@
 
 ## 📌 概述
 
-Octop 是面向家庭与小团队的自托管 AI 助手平台。单进程同时提供 Web 控制台、CLI、IM 通道（飞书、钉钉、QQ、微信、企业微信等）与定时任务，共享 `~/.octop/` 下的控制面数据库（默认 SQLite；可选 PostgreSQL）。
+MEA Cowork 是面向家庭与小团队的自托管 AI 助手平台。单进程同时提供 Web 控制台、CLI、IM 通道（飞书、钉钉、QQ、微信、企业微信等）与定时任务，共享 `~/.octop/` 下的控制面数据库（默认 SQLite；可选 PostgreSQL）。
 
-> Octop 的设计目标：让每一次对话、工作区与凭据都留在你自己的机器上，同时为每个用户配备一组可按场景切换的专业 Agent。
+> MEA Cowork 的设计目标：让每一次对话、工作区与凭据都留在你自己的机器上，同时为每个用户配备一组可按场景切换的专业 Agent。
 
 <details>
-<summary>🐾 你能用 Octop 做什么</summary>
+<summary>🐾 你能用 MEA Cowork 做什么</summary>
 
 - **个人助理** — 让专属 Agent 帮你写周报、整理资料、定日程，记忆随工作区长期保留。
 - **家庭共享** — 一个管理员账号，全家共用；按成员分配不同 Agent 与专家角色，也可共享专家与知识库。
@@ -90,22 +90,22 @@ Octop 是面向家庭与小团队的自托管 AI 助手平台。单进程同时�
 |------|------|
 | **语言** | Python 3.12+ |
 | **Web 框架** | FastAPI + uvicorn |
-| **Agent 运行时** | [Octop Harness](https://github.com/TencentCloud/octop-harness) |
-| **IM 桥接** | [Octop Gateway](https://github.com/TencentCloud/octop-gateway) |
+| **Agent 运行时** | [MEA Cowork Harness](https://github.com/TencentCloud/octop-harness) |
+| **IM 桥接** | [MEA Cowork Gateway](https://github.com/TencentCloud/octop-gateway) |
 | **控制平面数据库** | SQLite (WAL，默认) 或 PostgreSQL（可选） |
 | **前端** | React 18 + TypeScript + Vite + Ant Design |
 | **调度** | APScheduler |
 | **ACP** | agent-client-protocol |
 | **构建 / 质量** | hatchling · ruff · mypy · pytest |
 
-Octop 基于一系列 Octop Harness 工程实践构建——它将这些专注的运行时组合进同一个进程：
+MEA Cowork 基于一系列 MEA Cowork Harness 工程实践构建——它将这些专注的运行时组合进同一个进程：
 
-- **[Octop Harness](https://github.com/TencentCloud/octop-harness)** — Agent 运行时：模型路由、工具、技能与对话检查点。
-- **[Octop Gateway](https://github.com/TencentCloud/octop-gateway)** — 多平台 IM 通道桥接，将各类入站消息归一为统一的处理管线。
-- **[Octop Memory](https://github.com/TencentCloud/octop-memory)** — 分层记忆与全文检索，让 Agent 的记忆随工作区一同迁移。
-- **[Octop Browser](https://github.com/TencentCloud/octop-browser)** — 基于 CDP 的浏览器自动化，支持持久化配置，用于网页类任务。
+- **[MEA Cowork Harness](https://github.com/TencentCloud/octop-harness)** — Agent 运行时：模型路由、工具、技能与对话检查点。
+- **[MEA Cowork Gateway](https://github.com/TencentCloud/octop-gateway)** — 多平台 IM 通道桥接，将各类入站消息归一为统一的处理管线。
+- **[MEA Cowork Memory](https://github.com/TencentCloud/octop-memory)** — 分层记忆与全文检索，让 Agent 的记忆随工作区一同迁移。
+- **[MEA Cowork Browser](https://github.com/TencentCloud/octop-browser)** — 基于 CDP 的浏览器自动化，支持持久化配置，用于网页类任务。
 
-Octop 不依赖外部消息队列或中间件，而是通过进程内的 `HarnessProcessor` 统一路由所有入口——Web UI、IM 与定时任务。最终呈现为一个可重启恢复的单进程：启动时整个状态都从控制面数据库重建（默认 `~/.octop/octop.db`，亦可配置 PostgreSQL）。
+MEA Cowork 不依赖外部消息队列或中间件，而是通过进程内的 `HarnessProcessor` 统一路由所有入口——Web UI、IM 与定时任务。最终呈现为一个可重启恢复的单进程：启动时整个状态都从控制面数据库重建（默认 `~/.octop/octop.db`，亦可配置 PostgreSQL）。
 
 ## 🤔 功能特性
 
@@ -139,14 +139,14 @@ Octop 不依赖外部消息队列或中间件，而是通过进程内的 `Harnes
 
 ### ACP（Agent Client Protocol）
 
-Octop 支持两个方向的 ACP 集成：
+MEA Cowork 支持两个方向的 ACP 集成：
 
-1. **入站** — 外部工具使用**你的** Octop Agent
+1. **入站** — 外部工具使用**你的** MEA Cowork Agent
    ```bash
    octop acp --agent main   # 为 Zed、OpenCode 等提供 stdio ACP 服务
    ```
 
-2. **出站** — Octop 委派给外部编程 Agent
+2. **出站** — MEA Cowork 委派给外部编程 Agent
    - 控制台 → **ACP**（`/acp`）：配置 Runner（按用户全局）
    - 为 Agent 启用 **acp_runner** 后，在对话中委派任务
 
@@ -172,9 +172,9 @@ Octop 支持两个方向的 ACP 集成：
 - [ ] **自进化能力** — 将日常对话自动沉淀为技能，让助手随使用不断成长。
 - [ ] **Managed Agents** — 平台托管的 Agent 生命周期（开通、伸缩与运维），无需自行维护完整自托管栈。
 - [ ] **Project** — 以项目为边界组织 Agent、文件与会话，围绕同一目标协作。
-- [ ] **云边端一体** — 本地运行 Octop，同时可将选定任务调度到云端执行：轻量工作留在本地，重活按需上云。
-- [ ] **插件市场** — 搭建插件市场，支持在 Octop 内发现、安装与更新第三方插件。
-- [ ] **对话式控制面** — 完善 Octop 自身 Skill，让对话即可覆盖当前控制台的完整能力：创建专家、配置通道、管理知识库，并支持开发插件。
+- [ ] **云边端一体** — 本地运行 MEA Cowork，同时可将选定任务调度到云端执行：轻量工作留在本地，重活按需上云。
+- [ ] **插件市场** — 搭建插件市场，支持在 MEA Cowork 内发现、安装与更新第三方插件。
+- [ ] **对话式控制面** — 完善 MEA Cowork 自身 Skill，让对话即可覆盖当前控制台的完整能力：创建专家、配置通道、管理知识库，并支持开发插件。
 
 规划会随社区发展动态调整，以上仅供参考。
 
@@ -224,14 +224,14 @@ curl -fsSL https://download.octop.cloud/octop/scripts/install.sh | bash -s -- --
 
 完整安装选项见 [scripts/README.md](scripts/README.md)（`--version`、`--from-source`、`--mirror` 及 Windows 参数）。
 
-**桌面客户端**（图形界面，无需终端）— 从 [GitHub Releases](https://github.com/TencentCloud/Octop/releases/latest) 下载对应平台的安装包：
+**桌面客户端**（图形界面，无需终端）— 从 [GitHub Releases](https://github.com/TencentCloud/MEA Cowork/releases/latest) 下载对应平台的安装包：
 
 | 平台 | 制品 |
 |------|------|
-| Windows | `Octop-desktop-windows-amd64-<version>.exe`（64 位）/ `Octop-desktop-windows-arm64-<version>.exe`（ARM64）— NSIS 安装程序 |
-| macOS | `Octop-desktop-darwin-arm64-<version>.dmg`（Apple 芯片）/ `Octop-desktop-darwin-amd64-<version>.dmg`（Intel） |
-| Linux | `Octop-desktop-linux-amd64-<version>.tar.gz` / `Octop-desktop-linux-arm64-<version>.tar.gz` |
-| 飞牛 NAS（FnOS） | `Octop-fnos-docker-lite-<version>.fpk`（精简镜像）/ `Octop-fnos-docker-<version>.fpk`（完整版：桌面、OCR、本地向量）/ `Octop-fnos-native-amd64-<version>.fpk`（x86_64，无需 Docker）/ `Octop-fnos-native-arm64-<version>.fpk`（ARM64，无 Docker 时再用）— 通过应用中心安装 |
+| Windows | `64-<version>.exe`（64 位）/ `64-<version>.exe`（ARM64）— NSIS 安装程序 |
+| macOS | `64-<version>.dmg`（Apple 芯片）/ `64-<version>.dmg`（Intel） |
+| Linux | `64-<version>.tar.gz` / `64-<version>.tar.gz` |
+| 飞牛 NAS（FnOS） | `-<version>.fpk`（精简镜像）/ `-<version>.fpk`（完整版：桌面、OCR、本地向量）/ `64-<version>.fpk`（x86_64，无需 Docker）/ `64-<version>.fpk`（ARM64，无 Docker 时再用）— 通过应用中心安装 |
 
 桌面安装包只带 `browser`。桌面控制、OCR 和本地向量留在 Docker 镜像标签 `:<version>-full`。
 
@@ -359,7 +359,7 @@ docker run -d \
 `octop update` 只替换 wheel / 二进制，你的 `~/.octop/` 数据库、工作区、密钥与 `config.json` 均会保留：
 
 ```bash
-octop update          # 获取并安装最新版 Octop，若已注册系统服务则自动重启
+octop update          # 获取并安装最新版 MEA Cowork，若已注册系统服务则自动重启
 ```
 
 数据库结构会在下次启动时自动迁移；仅当设置向导提示需要迁移时才运行 `octop init`。跨版本升级前请务必先备份（`octop backup`）。
@@ -416,7 +416,7 @@ OpenAI 兼容 API、DashScope（千问）、Ollama 等预设 — 在控制台或
 | 命令 | 说明 |
 |------|------|
 | `octop init` | 初始化 `~/.octop/`（数据库、管理员、JWT 密钥） |
-| `octop run` | 前台启动 Octop |
+| `octop run` | 前台启动 MEA Cowork |
 | `octop service start` | 安装并启动系统服务 |
 | `octop service stop` | 停止系统服务 |
 | `octop agent` | 创建、列出、启停 Agent |
@@ -447,7 +447,7 @@ OpenAI 兼容 API、DashScope（千问）、Ollama 等预设 — 在控制台或
 `octop run` 启动后访问 **http://127.0.0.1:8088**。
 
 <p align="center">
-  <img src="docs/assets/readme-chat-zh.png" alt="Octop Web 控制台" width="800" />
+  <img src="docs/assets/readme-chat-zh.png" alt="MEA Cowork Web 控制台" width="800" />
 </p>
 
 - **对话** — 与专家 / 团队实时聊天
@@ -567,10 +567,10 @@ cd dashboard && npx tsc -b
 
 | 项目 | 描述 |
 |------|------|
-| [Octop Harness](https://github.com/TencentCloud/octop-harness) | Agent 运行时 — 模型路由、工具、Skill、检查点 |
-| [Octop Gateway](https://github.com/TencentCloud/octop-gateway) | 多平台 IM 通道桥接 |
-| [Octop Memory](https://github.com/TencentCloud/octop-memory) | 层级召回与全文搜索 |
-| [Octop Browser](https://github.com/TencentCloud/octop-browser) | CDP 浏览器自动化，支持 profile 持久登录 |
+| [MEA Cowork Harness](https://github.com/TencentCloud/octop-harness) | Agent 运行时 — 模型路由、工具、Skill、检查点 |
+| [MEA Cowork Gateway](https://github.com/TencentCloud/octop-gateway) | 多平台 IM 通道桥接 |
+| [MEA Cowork Memory](https://github.com/TencentCloud/octop-memory) | 层级召回与全文搜索 |
+| [MEA Cowork Browser](https://github.com/TencentCloud/octop-browser) | CDP 浏览器自动化，支持 profile 持久登录 |
 
 ## 💬 社区
 

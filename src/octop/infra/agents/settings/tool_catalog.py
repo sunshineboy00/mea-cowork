@@ -84,7 +84,7 @@ BUILTIN_TOOL_CATALOG: tuple[BuiltinToolEntry, ...] = (
     BuiltinToolEntry("memory_get", "memory"),
     BuiltinToolEntry("memory_save", "memory"),
     BuiltinToolEntry("acp_runner", "misc"),
-    # Octop host tools
+    # MEA Cowork host tools
     BuiltinToolEntry("cronjob_list", "cron"),
     BuiltinToolEntry("cronjob_get", "cron"),
     BuiltinToolEntry("cronjob_create", "cron"),

@@ -1,4 +1,4 @@
-"""Service validation tests for the Octop Agent MCP Gateway."""
+"""Service validation tests for the MEA Cowork Agent MCP Gateway."""
 
 from __future__ import annotations
 

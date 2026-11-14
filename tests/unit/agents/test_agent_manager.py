@@ -1679,7 +1679,7 @@ def test_build_harness_config_keeps_fs_permissions_for_local_shell_guard(
 ) -> None:
     """local_shell keeps permissions on config; harness mounts FilesystemGuard.
 
-    Octop must not re-mount the guard (or ModelSettings) via cfg.middleware.
+    MEA Cowork must not re-mount the guard (or ModelSettings) via cfg.middleware.
     """
     from octop_harness.middleware.filesystem_guard import FilesystemGuardMiddleware
     from octop_harness.middleware.model_settings import ModelSettingsMiddleware

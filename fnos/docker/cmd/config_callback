@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Octop — 配置后回调（应用「设置」窗口提交后执行）
+# MEA Cowork — 配置后回调（应用「设置」窗口提交后执行）
 #
 # 只处理管理员改密：两栏都空则保持不变；填了则更新 docker/.env、
 # data-share 引导文件、octop-login.txt 应急备份，容器在运行时

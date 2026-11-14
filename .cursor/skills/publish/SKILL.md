@@ -1,7 +1,7 @@
 ---
 name: publish
 description: >-
-  Publish the Octop Python package: cut a release branch from develop, bump
+  Publish the MEA Cowork Python package: cut a release branch from develop, bump
   version, update CHANGELOG, open a PR to main; after merge, Actions tag on
   main (PyPI / Docker Hub + GHCR) and sync main into develop. Use when the user asks
   to publish, release, bump version, cut a release, or run /publish.
@@ -10,7 +10,7 @@ disable-model-invocation: true
 
 # Publish
 
-自动化 Octop Python 包的完整发布流程。
+自动化 MEA Cowork Python 包的完整发布流程。
 
 **开始时宣告：** "正在使用 publish 技能发布版本 {VERSION}。"
 

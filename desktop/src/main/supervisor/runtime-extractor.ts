@@ -18,9 +18,9 @@ export function runtimeInterpreterRelative(platform: string): string {
   return join("runtime", platform === "win32" ? "python.exe" : "bin/python3");
 }
 
-/** Zip name the shell accepts: ``Octop-portable-<plat>-<version>.zip``. */
+/** Zip name the shell accepts: ``-<plat>-<version>.zip``. */
 export function portableZipName(platformTag: string, version: string): string {
-  return `Octop-portable-${platformTag}-${version}.zip`;
+  return `-${platformTag}-${version}.zip`;
 }
 
 /** Dashboard files inside the portable tree. The shell serves this copy. */
@@ -156,7 +156,7 @@ function restoreSymlinks(zip: AdmZip, staging: string): void {
 
 /**
  * Extract the green portable zip into ``destDir`` atomically (§2.2).
- * The archive wraps everything in a single ``Octop-<plat>/`` folder, so that
+ * The archive wraps everything in a single ``MEA Cowork-<plat>/`` folder, so that
  * wrapper is stripped before the swap.
  */
 export function extractPortableZip(zipPath: string, destDir: string): void {

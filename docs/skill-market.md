@@ -1,16 +1,16 @@
 # 自建技能市场
 
-控制台「技能」里的 SkillHub 技能市场默认请求 `https://api.skillhub.cn`。访问不了公网时，可以在局域网里按本文的 HTTP 接口自建一个兼容源站。Octop 只认下面三个读接口，不需要部署完整的 SkillHub。
+控制台「技能」里的 SkillHub 技能市场默认请求 `https://api.skillhub.cn`。访问不了公网时，可以在局域网里按本文的 HTTP 接口自建一个兼容源站。MEA Cowork 只认下面三个读接口，不需要部署完整的 SkillHub。
 
 插件市场和专家市场是另一套目录，见 [内网自建市场](private-market.md)。技能包页「从技能市场导入」读取的技能集是另一份目录，用 `SKILLSET_ORIGIN`（未设置时同样是 `https://api.skillhub.cn`）。集内每个技能的压缩包仍走本文的下载接口，因此落到 `SKILL_MARKET_ORIGIN`。
 
-## Octop 怎么访问
+## MEA Cowork 怎么访问
 
 ```
 控制台打开技能市场
         │
         ▼
-Octop 进程  GET {SKILL_MARKET_ORIGIN}/api/v1/showcase/hot
+MEA Cowork 进程  GET {SKILL_MARKET_ORIGIN}/api/v1/showcase/hot
             GET …/featured  …/newest  …/recommended  …/trending  …/paid
         │
         │  六个榜单各自请求；某一个失败时，其余榜单仍返回
@@ -18,23 +18,23 @@ Octop 进程  GET {SKILL_MARKET_ORIGIN}/api/v1/showcase/hot
 用户搜索
         │
         ▼
-Octop 进程  GET {SKILL_MARKET_ORIGIN}/api/v1/search?q=…&limit=…
+MEA Cowork 进程  GET {SKILL_MARKET_ORIGIN}/api/v1/search?q=…&limit=…
         │
 用户点击安装
         │
         ▼
-Octop 进程  GET {SKILL_MARKET_ORIGIN}/api/v1/download?slug=…
+MEA Cowork 进程  GET {SKILL_MARKET_ORIGIN}/api/v1/download?slug=…
 ```
 
 请求不带登录态。把市场放在内网，靠网络边界限制谁能访问。
 
 搜索和榜单超时 **10 秒**，单次 JSON 不超过 **4 MiB**。下载超时 **30 秒**，压缩包不超过 **32 MiB**。请求头带 `User-Agent: octop-skillhub-market/1.0`。搜索和榜单的 `Accept` 是 `application/json`；下载的 `Accept` 是 `application/zip,application/octet-stream,*/*`。
 
-空关键字会被换成 `a`。`limit` 会被夹到 1–100。榜单没有单独的 `all` 路径：Octop 自己并发请求上面六个路径，再拼成 `{ "rankings": { "hot": …, … } }`。
+空关键字会被换成 `a`。`limit` 会被夹到 1–100。榜单没有单独的 `all` 路径：MEA Cowork 自己并发请求上面六个路径，再拼成 `{ "rankings": { "hot": …, … } }`。
 
-这些请求失败时直接报错。Octop 不会再调用本机的 `skillhub` 命令行。
+这些请求失败时直接报错。MEA Cowork 不会再调用本机的 `skillhub` 命令行。
 
-## 让 Octop 指向自建市场
+## 让 MEA Cowork 指向自建市场
 
 在 **跑 `octop run` 的那台机器** 上设置环境变量，然后重启进程。可以写进 `~/.octop/env`（服务启动时会载入），也可以写进 systemd 的 `Environment=`。
 
@@ -49,10 +49,10 @@ SKILL_MARKET_ORIGIN=http://market.internal:9000
 ```yaml
 openapi: 3.0.3
 info:
-  title: Octop private skill market
+  title: MEA Cowork private skill market
   version: "1"
   description: >
-    Read by the Octop server. Search and the six showcase paths return
+    Read by the MEA Cowork server. Search and the six showcase paths return
     JSON. Download returns a ZIP. There is no combined rankings path.
 servers:
   - url: http://market.internal:9000
@@ -89,7 +89,7 @@ paths:
             enum: [hot, featured, newest, recommended, trending, paid]
       responses:
         "200":
-          description: Ranking object. Octop passes it through.
+          description: Ranking object. MEA Cowork passes it through.
           content:
             application/json:
               schema:
@@ -153,9 +153,9 @@ components:
 
 榜单对象原样返回。控制台读的是每个榜单里的 `skills` 数组，元素字段和搜索相同。`section` 和 `total` 可以带，不参与安装。
 
-下载必须是 ZIP。包内要有根上的 `SKILL.md`；如果所有文件都在同一个顶层目录里，且该目录下有 `SKILL.md`，Octop 会剥掉这一层。解压后条目不超过 **2000** 个，未压缩总体积不超过 **64 MiB**。符号链接、绝对路径、`..` 和加密条目会被拒绝。HTTP 404 表示这个 slug 没有安装包。
+下载必须是 ZIP。包内要有根上的 `SKILL.md`；如果所有文件都在同一个顶层目录里，且该目录下有 `SKILL.md`，MEA Cowork 会剥掉这一层。解压后条目不超过 **2000** 个，未压缩总体积不超过 **64 MiB**。符号链接、绝对路径、`..` 和加密条目会被拒绝。HTTP 404 表示这个 slug 没有安装包。
 
-`iconUrl` 由**浏览器**直接加载，不要指向 Octop 进程才访问得到的地址。
+`iconUrl` 由**浏览器**直接加载，不要指向 MEA Cowork 进程才访问得到的地址。
 
 ## 最小部署
 
@@ -221,24 +221,24 @@ server {
 }
 ```
 
-然后在 Octop 上设好 `SKILL_MARKET_ORIGIN` 并重启。打开控制台的技能市场，榜单和搜索应出现自建条目；安装时 Octop 只会向这个源站要压缩包。
+然后在 MEA Cowork 上设好 `SKILL_MARKET_ORIGIN` 并重启。打开控制台的技能市场，榜单和搜索应出现自建条目；安装时 MEA Cowork 只会向这个源站要压缩包。
 
 ## 技能集
 
-技能包页的「从技能市场导入」不读上面的榜单。它先列出专家市场里的卡片，用户点导入后，Octop 按卡片的 `slug` 向技能集源站要这一份技能集，再按里面的技能 slug 回到 `SKILL_MARKET_ORIGIN` 下载每个技能。
+技能包页的「从技能市场导入」不读上面的榜单。它先列出专家市场里的卡片，用户点导入后，MEA Cowork 按卡片的 `slug` 向技能集源站要这一份技能集，再按里面的技能 slug 回到 `SKILL_MARKET_ORIGIN` 下载每个技能。
 
 ```
 用户在技能包页导入
         │
         ▼
-Octop 进程  GET {SKILLSET_ORIGIN}/api/v1/skillsets/{slug}
+MEA Cowork 进程  GET {SKILLSET_ORIGIN}/api/v1/skillsets/{slug}
         │
         │  详情里没有 skillSlugs 时再要压缩包
         ▼
-Octop 进程  GET {SKILLSET_ORIGIN}/api/v1/skillsets/{slug}/download
+MEA Cowork 进程  GET {SKILLSET_ORIGIN}/api/v1/skillsets/{slug}/download
         │
         ▼
-Octop 进程  GET {SKILL_MARKET_ORIGIN}/api/v1/download?slug=…   （集内每个技能）
+MEA Cowork 进程  GET {SKILL_MARKET_ORIGIN}/api/v1/download?slug=…   （集内每个技能）
 ```
 
 在跑 `octop run` 的机器上设置后重启。写法和 `SKILL_MARKET_ORIGIN` 相同：只留协议、主机和端口；裸主机按 `https://` 补协议；路径和查询会被丢掉。未设置或空字符串时用 `https://api.skillhub.cn`。协议不是 `http`/`https`，或没有主机名，则这次导入失败，不会改回公网。
@@ -254,11 +254,11 @@ SKILLSET_ORIGIN=http://market.internal:9000
 | `slug` | 技能集标识，须与路径里的 slug 一致 |
 | `displayName` 或 `name` | 新建技能包的名称 |
 | `summary` 或 `description` | 技能包说明 |
-| `iconUrl` | 技能包图标。须是 Octop 能访问的 `http(s)` 地址 |
+| `iconUrl` | 技能包图标。须是 MEA Cowork 能访问的 `http(s)` 地址 |
 | `scene` | 没有图标时用来选一个内置图标名 |
 | `skillSlugs` | 要下载的技能 slug 列表 |
 
-带上 `skillSlugs` 时，Octop 不再请求 `/download`。没带时，`/download` 必须返回 ZIP，里面有 `manifest.json`，并用 `skillSlugs` 或 `skillSets[].skillSlugs` 列出技能。压缩包里还要有一份工作流说明：优先 `skillsets/{slug}.md`，否则任意 `skillsets/*.md`，再否则 `identify.md`。详情和压缩包的超时都是 **30 秒**，单次响应不超过 **32 MiB**。请求头带 `Accept: application/json`（下载为 `application/zip,*/*`）和 `User-Agent: octop-expert-skillhub/1.0`。
+带上 `skillSlugs` 时，MEA Cowork 不再请求 `/download`。没带时，`/download` 必须返回 ZIP，里面有 `manifest.json`，并用 `skillSlugs` 或 `skillSets[].skillSlugs` 列出技能。压缩包里还要有一份工作流说明：优先 `skillsets/{slug}.md`，否则任意 `skillsets/*.md`，再否则 `identify.md`。详情和压缩包的超时都是 **30 秒**，单次响应不超过 **32 MiB**。请求头带 `Accept: application/json`（下载为 `application/zip,*/*`）和 `User-Agent: octop-expert-skillhub/1.0`。
 
 控制台导入不会拉取 `GET /api/v1/skillsets` 全量列表。
 
@@ -266,7 +266,7 @@ SKILLSET_ORIGIN=http://market.internal:9000
 
 | 现象 | 原因 |
 |---|---|
-| 技能市场仍是公网内容 | `SKILL_MARKET_ORIGIN` 没进 `octop run` 的环境，或改完没有重启。在 Octop 机器上 `curl` 搜索地址，确认 10 秒内返回带 `results` 的 JSON。 |
+| 技能市场仍是公网内容 | `SKILL_MARKET_ORIGIN` 没进 `octop run` 的环境，或改完没有重启。在 MEA Cowork 机器上 `curl` 搜索地址，确认 10 秒内返回带 `results` 的 JSON。 |
 | 市场直接报错 | 源站协议或主机名无效，或榜单 / 搜索没有在时限内返回合法 JSON。 |
 | 卡片在，安装失败 | `GET /api/v1/download?slug=` 不是 ZIP，包内没有 `SKILL.md`，或超过体积限制。404 表示这个 slug 没有包。 |
 | 图标空白 | `iconUrl` 仍指向公网，或浏览器打不开该地址。 |

@@ -2,7 +2,7 @@
 
 Covers ``openclaw.json`` (JSON5, ``$include``, ``${VAR}`` and env SecretRefs),
 the state ``.env``, the default agent workspace, workspace and managed skills,
-``mcp.servers`` and the chat channels Octop also has.
+``mcp.servers`` and the chat channels MEA Cowork also has.
 """
 
 from __future__ import annotations
@@ -47,7 +47,7 @@ _API_KINDS = {
     "ollama": "openai",
     "anthropic-messages": "anthropic",
 }
-# OpenClaw channel -> (Octop kind, {OpenClaw field: Octop field}).
+# OpenClaw channel -> (MEA Cowork kind, {OpenClaw field: MEA Cowork field}).
 _CHANNELS: dict[str, tuple[str, dict[str, str]]] = {
     "telegram": ("telegram", {"botToken": "bot_token"}),
     "discord": ("discord", {"token": "bot_token"}),
@@ -91,7 +91,7 @@ def read_openclaw(home: Path, *, env: Mapping[str, str] | None = None) -> Migrat
     add_skills(plan, discover_skills(workspace / "skills"))
     add_skills(plan, discover_skills(home / "skills"))
     for name, raw in as_dict(as_dict(config.get("mcp")).get("servers")).items():
-        # OpenClaw's remote default is SSE, which Octop's custom MCP cannot speak.
+        # OpenClaw's remote default is SSE, which MEA Cowork's custom MCP cannot speak.
         add_mcp_server(plan, name, raw, resolve=substitute, default_remote_transport="sse")
     _read_channels(plan, config, resolve)
 

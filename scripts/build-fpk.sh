@@ -1,24 +1,24 @@
 #!/usr/bin/env bash
 # =============================================================================
-# 构建 Octop 飞牛 FnOS 安装包 (.fpk)
+# 构建 MEA Cowork 飞牛 FnOS 安装包 (.fpk)
 #
 # 直接使用官方 fnpack CLI 打包（fnpack 在生成 .fpk 前会校验 manifest / cmd /
 # config / wizard / app 等结构，确保产物与飞牛 fnOS 安装校验完全一致）。
 #
 # 用法（在仓库根目录执行):
-#   bash scripts/build-fpk.sh docker      # 完整 Docker 版 -> dist/Octop-fnos-docker-<ver>.fpk
-#   bash scripts/build-fpk.sh docker-lite # 精简 Docker 版 -> dist/Octop-fnos-docker-lite-<ver>.fpk
-#   bash scripts/build-fpk.sh native      # 构建本地版(非Docker) -> dist/Octop-fnos-native-amd64-<ver>.fpk
+#   bash scripts/build-fpk.sh docker      # 完整 Docker 版 -> dist/MEA-Cowork-fnos-docker-<ver>.fpk
+#   bash scripts/build-fpk.sh docker-lite # 精简 Docker 版 -> dist/MEA-Cowork-fnos-docker-lite-<ver>.fpk
+#   bash scripts/build-fpk.sh native      # 构建本地版(非Docker) -> dist/MEA-Cowork-fnos-native-amd64-<ver>.fpk
 #   bash scripts/build-fpk.sh             # 完整 Docker、精简 Docker、本地版都构建
 #
 # 环境变量：
 #   FPK_NAME_PREFIX  输出文件名前缀，默认 "octop"
-#                    例如 FPK_NAME_PREFIX=Octop-fnos 会生成 Octop-fnos-docker-<ver>.fpk / Octop-fnos-native-amd64-<ver>.fpk
+#                    例如 FPK_NAME_PREFIX= 会生成 MEA-Cowork-fnos-docker-<ver>.fpk / MEA-Cowork-fnos-native-amd64-<ver>.fpk
 #   FPK_ITER         迭代号，默认空
 #                    例如 FPK_ITER=01 会生成 ...-<ver>-01.fpk（通常不需要，按版本号发布）
-#   FPK_ARCH         本地版架构。arm64 → Octop-fnos-native-arm64-<ver>.fpk，
+#   FPK_ARCH         本地版架构。arm64 → MEA-Cowork-fnos-native-arm64-<ver>.fpk，
 #                    并写入 manifest platform=arm（fnpack 只认 x86/arm/all）。
-#                    空或其它值 → Octop-fnos-native-amd64-<ver>.fpk，并写入 platform=x86。
+#                    空或其它值 → MEA-Cowork-fnos-native-amd64-<ver>.fpk，并写入 platform=x86。
 #                    fnpack 官方只有 linux-amd64，ARM 包应在 amd64 主机上打包
 #                    （site-packages 先在 aarch64 上装好再拷过来）。
 #
@@ -53,9 +53,9 @@ esac
 # shellcheck source=scripts/fnos/store_version.sh
 source "$ROOT/scripts/fnos/store_version.sh"
 STORE_VER="$(fnos_store_version "$VER")"
-echo "[build-fpk] Octop 版本: $VER (飞牛商店: $STORE_VER)"
+echo "[build-fpk] MEA Cowork 版本: $VER (飞牛商店: $STORE_VER)"
 
-# 输出文件名前缀与迭代号（由 CI 传入，实现 Octop-fnos-docker-0.9.30.fpk 风格）
+# 输出文件名前缀与迭代号（由 CI 传入，实现 -0.9.30.fpk 风格）
 PREFIX="${FPK_NAME_PREFIX:-octop}"
 ITER_SUFFIX=""
 if [ -n "${FPK_ITER:-}" ]; then

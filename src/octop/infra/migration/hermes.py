@@ -2,7 +2,7 @@
 
 Covers ``config.yaml`` (model, ``providers`` / legacy ``custom_providers``,
 ``mcp_servers``), the ``.env`` secrets, ``SOUL.md``, the ``memories/`` files,
-user-installed skills and the chat platforms Octop also has.
+user-installed skills and the chat platforms MEA Cowork also has.
 """
 
 from __future__ import annotations
@@ -31,7 +31,7 @@ from octop.infra.utils.env_file import load_env_file
 SOURCE = "hermes"
 
 _CUSTOM_PROVIDER = "hermes-custom"
-# Hermes provider id -> the id Octop's presets use.
+# Hermes provider id -> the id MEA Cowork's presets use.
 _PROVIDER_ALIASES = {
     "openai-api": "openai",
     "gemini": "google",
@@ -40,7 +40,7 @@ _PROVIDER_ALIASES = {
 }
 _LOCAL_PROVIDERS = frozenset({"custom", "ollama", "vllm", "llamacpp"})
 _TRANSPORT_KINDS = {"chat_completions": "openai", "anthropic_messages": "anthropic"}
-# Octop kind -> {Octop field: Hermes .env variable}.
+# MEA Cowork kind -> {MEA Cowork field: Hermes .env variable}.
 _CHANNELS: dict[str, dict[str, str]] = {
     "telegram": {"bot_token": "TELEGRAM_BOT_TOKEN"},
     "discord": {"bot_token": "DISCORD_BOT_TOKEN"},

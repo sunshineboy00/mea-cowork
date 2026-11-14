@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Octop — 升级后回调
+# MEA Cowork — 升级后回调
 # 升级会重装包内向导文件（wizard/config 恢复成带占位符的模板），
 # 这里用现有 docker/.env 的用户名重新渲染「设置」窗口，
 # 并确认应急备份 octop-login.txt 存在（不覆盖用户已在 Web 内修改的密码，

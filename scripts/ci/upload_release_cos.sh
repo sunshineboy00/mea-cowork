@@ -51,7 +51,7 @@ for path in "$src_dir"/*; do
   fi
   name="$(basename "$path")"
   # Python wheel and sdist stay on PyPI / GitHub Release. Installer names use an
-  # uppercase Octop- prefix, so this does not drop desktop archives.
+  # uppercase MEA Cowork- prefix, so this does not drop desktop archives.
   if [[ "$name" == *.whl || "$name" == octop-*.tar.gz ]]; then
     echo "Skipping non-installer package: ${name}"
     continue

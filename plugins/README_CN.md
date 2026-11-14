@@ -1,8 +1,8 @@
-# Octop 插件示例
+# MEA Cowork 插件示例
 
 [English](./README.md)
 
-本目录提供插件 demo，对应 Octop / octop-harness 支持的 `kind`，以及**前后端一体**的 UI 渲染示例。
+本目录提供插件 demo，对应 MEA Cowork / octop-harness 支持的 `kind`，以及**前后端一体**的 UI 渲染示例。
 结构参考 [octop-toolkit](https://github.com/veenyi/octop-plugins/tree/main/octop-toolkit)。
 
 产品插件在插件市场里安装。安装包不再自带这批插件。

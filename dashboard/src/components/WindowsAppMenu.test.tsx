@@ -40,7 +40,7 @@ const state = vi.hoisted(() => ({
         {
           kind: "command" as const,
           id: "about",
-          label: "关于 Octop",
+          label: "关于 MEA Cowork",
           accelerator: null,
         },
       ],

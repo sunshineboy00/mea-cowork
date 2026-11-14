@@ -1,6 +1,6 @@
 # 脚本
 
-这些脚本经 `tat-exec.sh --file` 下发到目标 CVM，不在 Octop 本机上跑。
+这些脚本经 `tat-exec.sh --file` 下发到目标 CVM，不在 MEA Cowork 本机上跑。
 
 | 脚本 | 用途 |
 |---|---|

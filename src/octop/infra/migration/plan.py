@@ -10,7 +10,7 @@ from typing import Any
 @dataclass(frozen=True)
 class ProviderImport:
     name: str
-    kind: str  # Octop provider kind: "openai" (compatible) or "anthropic"
+    kind: str  # MEA Cowork provider kind: "openai" (compatible) or "anthropic"
     base_url: str
     api_key: str | None
     models: tuple[str, ...] = ()

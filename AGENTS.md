@@ -35,13 +35,13 @@ Navigation guide for AI coding agents working in this repository.
 
 ## 2. What this is
 
-**Octop** — self-hosted AI assistant platform (multi-user, multi-agent).
+**MEA Cowork** — self-hosted AI assistant platform (multi-user, multi-agent).
 One Python wheel: FastAPI backend + React dashboard + Click CLI.
 No external queue. No required services beyond an LLM provider.
 
 ### Runtime libraries
 
-Octop hosts four libraries. Put the change in the library that owns the behavior. This repo only wires users, the control-plane database, HTTP, CLI, dashboard, and cron.
+MEA Cowork hosts four libraries. Put the change in the library that owns the behavior. This repo only wires users, the control-plane database, HTTP, CLI, dashboard, and cron.
 
 | Change | Repository |
 |--------|------------|
@@ -74,7 +74,7 @@ Do not copy that behavior into `src/octop/`. Follow the library's `AGENTS.md`. W
 High-level tree — see [§5 Module boundaries](#5-module-boundaries) for what each folder owns and what it may import.
 
 ```
-Octop (`octop/` workspace directory)     Python package root (`src/octop/`)
+MEA Cowork (`octop/` workspace directory)     Python package root (`src/octop/`)
   config.py
   launch.py                   composition root: OctopServer + FastAPI + uvicorn
   i18n/                       locale JSON bundles + tr() + domain helpers
@@ -181,7 +181,7 @@ Only `launch.py` may import both `infra/server` and `api/app` in the same module
 | **Offline** | Read/write local `~/.octop` SQLite only | `user *`, `provider *`, `cron` list/create/delete, `agent list/delete`, `chats` CRUD, `models` presets/list/active, `channel` CRUD, `admin`, `skills` enable/disable, `bridge` list/get |
 | **Embedded** | Needs harness/gateway runtime; boots in-process `OctopServer` | `chats send/repl`, `chats get` (history), `cron run-now`, `agent` create/start/stop/reload, `provider test`, `channel test`, `skills list`, `acp` |
 | **Embedded (bridge)** | In-process `BridgeManager` (no full server); CLI cannot keep Bridge WS after exit | `bridge` probe/create/patch/delete/connect/disconnect/agents |
-| **External** | Talks to OS/daemon directly, no Octop HTTP | `models ollama-*`, channel QR bind (WeCom/WeChat), Feishu bot-creator subprocess |
+| **External** | Talks to OS/daemon directly, no MEA Cowork HTTP | `models ollama-*`, channel QR bind (WeCom/WeChat), Feishu bot-creator subprocess |
 
 No `octop user login` — CLI trusts local filesystem access to `~/.octop`. Pin acting user with `octop config set-user` or root `--user`; pin agent with `octop agent use` or root `--agent`. If `octop run` is already running, config CLI writes take effect after server restart (cron, channels loaded at boot).
 
@@ -198,7 +198,7 @@ No `octop user login` — CLI trusts local filesystem access to `~/.octop`. Pin 
 | `locales/` | i18n strings | — |
 | `utils/` | Frontend pure helpers | API or server knowledge |
 
-Frontend talks to Octop **only** via `/api` HTTP — never import or assume Python module layout.
+Frontend talks to MEA Cowork **only** via `/api` HTTP — never import or assume Python module layout.
 
 ## 6. Run commands
 
@@ -223,9 +223,9 @@ make build-frontend                     # dashboard/ → src/octop/dashboard/
 
 **DI:** Routers receive `server: OctopServer = Depends(get_server)`; core services live on `server.services` (`SharedServices` from `infra/db/services.py`). Never import repos at module level outside `SharedServices` / `RepoBundle`.
 
-**Agent scope:** Most agent routes use `/api/agents/{agent_id}/…` in the URL. A few legacy endpoints (e.g. MBTI) still take `X-Octop-Agent-Id`. Always validate ownership: load the agent row → `_assert_agent_owner(row, user)` (or admin bypass).
+**Agent scope:** Most agent routes use `/api/agents/{agent_id}/…` in the URL. A few legacy endpoints (e.g. MBTI) still take `X-`. Always validate ownership: load the agent row → `_assert_agent_owner(row, user)` (or admin bypass).
 
-**Agent workspace I/O:** All reads/writes of agent workspace **content files** go through `HarnessAgent.workspace` (`BackendWorkspace` from `octop-harness`). Do **not** use `agent.backend` directly, `resolve_harness_backend`, or `Path.write_text` / `read_text` on `~/.octop/agents/<id>/` for workspace content. Do **not** branch on backend type or `virtual_mode` in Octop — path rules live in `BackendWorkspace`.
+**Agent workspace I/O:** All reads/writes of agent workspace **content files** go through `HarnessAgent.workspace` (`BackendWorkspace` from `octop-harness`). Do **not** use `agent.backend` directly, `resolve_harness_backend`, or `Path.write_text` / `read_text` on `~/.octop/agents/<id>/` for workspace content. Do **not** branch on backend type or `virtual_mode` in MEA Cowork — path rules live in `BackendWorkspace`.
 
 New agents additionally keep system-scoped files under `{workspace}/.octop/` (e.g. sessions/sqlite, skills/agents system trees, auth tokens under `.octop/auth`). `system_files_path` is internal and not user-configurable; the `.octop` directory is created on first harness workspace init. Legacy agents keep auth at `{workspace}/.octop-auth`.
 
@@ -327,7 +327,7 @@ User-facing datetime display and cron/scheduling defaults MUST use the server ti
 
 **Language:** Keep the existing locale resolution (user preference → `Accept-Language` / dashboard i18n → channel hints → `DEFAULT_LOCALE`). Language is **not** a `config.json` key — do not add one unless explicitly requested.
 
-**Workspace storage:** `infra/backend/resolver.py` resolves harness `BackendProtocol` from agent config; remote backends use `probe.py` for fast tree listing. Docker sandbox (`type: "docker"` / storage `kind=docker`) uses `sandbox_scope` + `sandbox_prefix` (Octop default `octop_sandbox`) — see `docs/agent-backend-file-io.md` §13.
+**Workspace storage:** `infra/backend/resolver.py` resolves harness `BackendProtocol` from agent config; remote backends use `probe.py` for fast tree listing. Docker sandbox (`type: "docker"` / storage `kind=docker`) uses `sandbox_scope` + `sandbox_prefix` (MEA Cowork default `octop_sandbox`) — see `docs/agent-backend-file-io.md` §13.
 
 **Connectors:** `infra/connectors/` — catalog, OAuth registry, MCP gateway; HTTP surface in `api/routers/connectors.py`.
 
@@ -341,7 +341,7 @@ User-facing datetime display and cron/scheduling defaults MUST use the server ti
 - Document non-obvious fields with `Field(..., description="…")`; name models clearly.
 - Spot-check `/api/docs` after API changes — a route that renders as an empty card or untyped blob is unfinished.
 
-**Cross-platform tests:** Octop CI runs on both Linux and Windows, so tests must not assume a single platform:
+**Cross-platform tests:** MEA Cowork CI runs on both Linux and Windows, so tests must not assume a single platform:
 
 - Guard POSIX-only behavior with the repo convention `@pytest.mark.skipif(os.name != "posix", reason="…")`; prefer a module-level `posix_only = pytest.mark.skipif(os.name != "posix", reason="…")` alias. Use `pytest.mark.skipif(os.name == "nt", reason="…")` when a case is Linux/macOS-only for a different reason (e.g. forbidden path characters).
 - Do not hard-code POSIX paths (`/`, `/proc`, `/etc`, `/root`, `/usr/bin/…`, `~` → HOME) in assertions that run on every platform — they resolve differently on Windows (e.g. `/` → `D:\`). Prefer opaque mock tokens via `tests.support.fakes.fake_bin_path("tool")` (uses `pathlib` / `os.sep`) when stubbing `shutil.which` / `resolve_binary`.

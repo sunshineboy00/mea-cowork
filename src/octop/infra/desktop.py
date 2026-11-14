@@ -1,4 +1,4 @@
-"""Desktop shell ownership for the Octop Python sidecar.
+"""Desktop shell ownership for the MEA Cowork Python sidecar.
 
 The Electron shell marks the Python process it owns with
 ``OCTOP_DESKTOP_SHELL=1``.  This flag is authoritative for "this process is the

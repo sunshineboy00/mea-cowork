@@ -32,7 +32,7 @@ interface BrowserStreamCallbacks {
 interface ConnectOptions {
   /** Harness profile for the current user. The WebSocket also binds from JWT. */
   sessionId?: string | null;
-  /** When set, screencast is relayed to the peer Octop via Bridge. */
+  /** When set, screencast is relayed to the peer MEA Cowork via Bridge. */
   bridgeConnectionId?: string | null;
 }
 

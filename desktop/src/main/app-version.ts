@@ -8,7 +8,7 @@
  * in a packaged build, and the dev runtime's `version.json` covers `pnpm dev`.
  *
  * The resolved value feeds three things, all of which break on a wrong number:
- * the update release selection (§6.1), the expected `Octop-portable-*.zip`
+ * the update release selection (§6.1), the expected `-*.zip`
  * filename (§2.3), and the version shown on the update page.
  */
 

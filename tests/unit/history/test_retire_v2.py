@@ -281,7 +281,7 @@ def test_offline_backup_restore_installs_legacy_archive_for_next_start(stores, t
     target = SqlitePool(destination.db)
     try:
         run_migrations(target)
-        with pytest.raises(OctopError, match="Stop Octop"):
+        with pytest.raises(OctopError, match="Stop MEA Cowork"):
             restore_system_backup(
                 legacy,
                 paths=destination,

@@ -1,4 +1,4 @@
-"""Tests for Octop context-usage adapter over octop-harness."""
+"""Tests for MEA Cowork context-usage adapter over octop-harness."""
 
 from __future__ import annotations
 

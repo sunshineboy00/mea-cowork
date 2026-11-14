@@ -87,9 +87,9 @@ test("extractPortableZip restores the python3 symlink and the executable bit", p
   const dir = mkdtempSync(join(tmpdir(), "octop-extract-"));
   try {
     const zipPath = writeModeZip(dir, [
-      { name: "Octop-darwin-arm64/launch.py", data: "print(1)\n", mode: 0o100644 },
-      { name: "Octop-darwin-arm64/runtime/bin/python3.12", data: "#!/bin/sh\n", mode: 0o100755 },
-      { name: "Octop-darwin-arm64/runtime/bin/python3", data: "python3.12", mode: 0o120755 },
+      { name: "64/launch.py", data: "print(1)\n", mode: 0o100644 },
+      { name: "64/runtime/bin/python3.12", data: "#!/bin/sh\n", mode: 0o100755 },
+      { name: "64/runtime/bin/python3", data: "python3.12", mode: 0o120755 },
     ]);
     const dest = join(dir, "portable");
     extractPortableZip(zipPath, dest);
@@ -107,8 +107,8 @@ test("extractPortableZip rejects a symlink that escapes the tree", () => {
   const dir = mkdtempSync(join(tmpdir(), "octop-extract-"));
   try {
     const zipPath = writeModeZip(dir, [
-      { name: "Octop-darwin-arm64/launch.py", data: "print(1)\n", mode: 0o100644 },
-      { name: "Octop-darwin-arm64/runtime/bin/python3", data: "../../outside", mode: 0o120755 },
+      { name: "64/launch.py", data: "print(1)\n", mode: 0o100644 },
+      { name: "64/runtime/bin/python3", data: "../../outside", mode: 0o120755 },
     ]);
     const dest = join(dir, "portable");
     assert.throws(() => extractPortableZip(zipPath, dest), /unsafe symlink/);
@@ -130,7 +130,7 @@ function statExists(path: string): boolean {
 test("portableZipName is the unsuffixed release zip", () => {
   assert.equal(
     portableZipName("windows-amd64", "1.0.3b4"),
-    "Octop-portable-windows-amd64-1.0.3b4.zip",
+    "64-1.0.3b4.zip",
   );
 });
 
@@ -168,7 +168,7 @@ test("installedRuntimeDir uses the expanded macOS tree", () => {
 
 test("installedRuntimeDir ignores a directory that only contains the zip", () => {
   const root = join("resources");
-  const present = new Set([join(root, "portable", "Octop-portable-linux-amd64-1.0.3.zip")]);
+  const present = new Set([join(root, "portable", "64-1.0.3.zip")]);
   assert.equal(installedRuntimeDir(root, "linux", (path) => present.has(path)), null);
 });
 

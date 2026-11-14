@@ -1,4 +1,4 @@
-"""Discord routing and diagnostics through Octop's real gateway contracts."""
+"""Discord routing and diagnostics through MEA Cowork's real gateway contracts."""
 
 from __future__ import annotations
 

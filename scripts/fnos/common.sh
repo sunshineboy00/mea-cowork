@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Octop FnOS 打包共享函数库。
+# MEA Cowork FnOS 打包共享函数库。
 # 仓库唯一来源：scripts/fnos/common.sh
 # 打包时由 scripts/build-fpk.sh 注入到包内 cmd/common.sh；
 # fnos/docker/ 与 fnos/native/ 的 cmd 脚本及 app/bin 脚本统一 source 本文件，
@@ -75,7 +75,7 @@ octop_signal_pids() {
 }
 
 # ---------------------------------------------------------------------------
-# 释放 Octop 端口并清理本应用残留进程。
+# 释放 MEA Cowork 端口并清理本应用残留进程。
 # 无参数：8088=Docker 版 + 8089=本地版（安装/卸载用）。
 # 有参数：只释放指定端口（本地版 stop 只清 8089，避免误伤 Docker 版）。
 # 仅清理：(1) 占用这些端口的进程；(2) 本安装目录下尚未 exec 的启动器；
@@ -213,7 +213,7 @@ octop_assert_native_arch() {
     [ -n "$packed" ] || return 0
     host="$(octop_host_fpk_arch)"
     if [ "$packed" != "$host" ]; then
-        echo "此本地版安装包是 ${packed}，当前设备是 ${host}。请改用对应架构的包：x86_64 用 Octop-fnos-native-amd64，ARM64 用 Octop-fnos-native-arm64。ARM 飞牛已装 Docker 时优先用 Docker 版。"
+        echo "此本地版安装包是 ${packed}，当前设备是 ${host}。请改用对应架构的包：x86_64 用 64，ARM64 用 64。ARM 飞牛已装 Docker 时优先用 Docker 版。"
         return 1
     fi
     return 0
@@ -690,7 +690,7 @@ elif [ ! -f "$APPLIED" ]; then
     octop user passwd "$USER_NAME" --password "$PASSWORD" || true
     : > "$APPLIED"
 fi
-echo "[fnos-boot] 正在启动 Octop，端口 $PORT ..."
+echo "[fnos-boot] 正在启动 MEA Cowork，端口 $PORT ..."
 exec octop run --host 0.0.0.0 --port "$PORT"
 EOF
     chmod 755 "${data_dir}/fnos-boot.sh" 2>/dev/null || true
@@ -744,7 +744,7 @@ octop_write_login_file() {
     file="${data_dir}/octop-login.txt"
     cat > "$file" << EOF
 ==========================================================
- Octop 管理员登录信息（请妥善保管，勿泄露给他人）
+ MEA Cowork 管理员登录信息（请妥善保管，勿泄露给他人）
 ==========================================================
 访问地址：http://<飞牛IP>:${port}
 管理员账号：${username}
@@ -768,7 +768,7 @@ octop_render_config_wizard() {
     [ -d "$wizard_dir" ] || return 0
     target="${wizard_dir}/config"
     content="$(cat "$template" 2>/dev/null)" || return 0
-    dir_label="${data_dir:-应用共享 / Octop 数据目录}"
+    dir_label="${data_dir:-应用共享 / MEA Cowork 数据目录}"
     content="${content//<octop-current-username>/${username}}"
     content="${content//<octop-current-password>/${password}}"
     content="${content//<octop-data-dir>/${dir_label}}"

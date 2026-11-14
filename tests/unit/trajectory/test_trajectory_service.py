@@ -284,7 +284,7 @@ def test_has_kind_detects_system_events(tmp_path: Path) -> None:
     service.observe_chunk(
         "A1",
         "T1",
-        {"type": "system", "label": "Initial System Prompt", "content": "You are Octop."},
+        {"type": "system", "label": "Initial System Prompt", "content": "You are MEA Cowork."},
     )
     assert service.has_kind("T1", "system") is True
     assert service.has_kind("T1", "context") is False
@@ -366,7 +366,7 @@ def test_list_from_seq_returns_inclusive_tail(tmp_path: Path) -> None:
 def test_record_model_system_prompt_stores_full_text_once_per_turn(tmp_path: Path) -> None:
     service, _bus = _service(tmp_path)
     service.observe_chunk("A1", "T1", {"type": "user", "content": "hi"})
-    prompt = "You are Octop.\n\n<agent_memory>\n/ws/AGENTS.md\n\n# 效率专家\n</agent_memory>\n"
+    prompt = "You are MEA Cowork.\n\n<agent_memory>\n/ws/AGENTS.md\n\n# 效率专家\n</agent_memory>\n"
     assert service.record_model_system_prompt("A1", "T1", prompt) is True
     assert service.record_model_system_prompt("A1", "T1", prompt + "again") is True
     listed = service.list_events("T1", before_seq=None, limit=20, kinds=["context"])

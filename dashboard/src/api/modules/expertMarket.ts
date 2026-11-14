@@ -26,7 +26,7 @@ export interface MarketExpert {
   skill_slugs?: string[];
   skill_count?: number;
   source?: string;
-  /** True when this card is a template that ships with Octop. */
+  /** True when this card is a template that ships with MEA Cowork. */
   featured?: boolean;
   content?: LocalizedText;
   quick_prompts?: ExpertMarketQuickPrompt[];

@@ -1,6 +1,6 @@
 # 专家压缩包
 
-专家就是一个目录，打成 ZIP 安装。Octop 把它放到 `~/.octop/expert_market/<id>/`，建 Agent 时再把里面的文件拷进工作区。
+专家就是一个目录，打成 ZIP 安装。MEA Cowork 把它放到 `~/.octop/expert_market/<id>/`，建 Agent 时再把里面的文件拷进工作区。
 
 安装包里只留空白模板 `default`。其他模板从专家市场安装。照着下面的目录结构打 ZIP 就行。
 
@@ -109,7 +109,7 @@ ops-engineer/
 | `description` | 简介 |
 | `welcome_message` | 对话页欢迎语 |
 | `icon_name` | 内置图标名，例如 `terminal` |
-| `icon_url` | `http(s)` 图片地址。创建 Agent 时由 Octop 进程下载；失败则不用这张图，创建继续 |
+| `icon_url` | `http(s)` 图片地址。创建 Agent 时由 MEA Cowork 进程下载；失败则不用这张图，创建继续 |
 | `color` | 卡片颜色，例如 `#16a34a` |
 | `prompt_files` | 根目录人格 Markdown 文件名列表 |
 | `quick_prompts` | 欢迎页快捷提示，见下文 |

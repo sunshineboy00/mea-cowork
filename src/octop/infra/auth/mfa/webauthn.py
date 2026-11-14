@@ -36,7 +36,7 @@ from octop.infra.errors import ErrorCode, OctopError
 logger = logging.getLogger(__name__)
 
 CHALLENGE_TTL_SECONDS = 300
-RP_NAME = "Octop"
+RP_NAME = "MEA Cowork"
 _USER_HANDLE_NAMESPACE = b"octop.webauthn.user_handle.v1:"
 
 

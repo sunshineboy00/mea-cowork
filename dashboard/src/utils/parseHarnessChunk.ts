@@ -43,7 +43,7 @@ export interface ToolCallChunk {
   id?: string;
   /** Tool name; absent on continuation chunks for the same call. */
   name?: string;
-  /** Server-localized label (when provided by Octop gateway). */
+  /** Server-localized label (when provided by MEA Cowork gateway). */
   display_name?: string;
   /** Streamed JSON-encoded args fragment. */
   args?: string;

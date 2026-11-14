@@ -49,7 +49,7 @@ def _refuse_postgres_portable(server: Any, agent_id: str) -> None:
     different migration model.
 
     SQLite: one file per agent — pack/adopt moves that file's contents between
-    hosts (Octop / OpenClaw / hermes).
+    hosts (MEA Cowork / OpenClaw / hermes).
 
     PostgreSQL: all agents share fixed tables in the ``octop_memory`` schema,
     isolated by a ``namespace`` column. There is no per-agent file to pack, and

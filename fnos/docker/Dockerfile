@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 # =============================================================================
-# Octop — 可选的源码镜像（飞牛 FPK 不使用本文件）
+# MEA Cowork — 可选的源码镜像（飞牛 FPK 不使用本文件）
 #
 # 飞牛 Docker 版安装包复用 docker-publish 推送的
 # ghcr.io/tencentcloud/octop:{version}，那份镜像由 docker/Dockerfile 构建。
@@ -49,7 +49,7 @@ RUN NODE_ENV=production NODE_OPTIONS="--max-old-space-size=${NODE_MAX_OLD_SPACE_
 FROM python:3.12-slim AS runtime
 
 LABEL maintainer="TencentCloud"
-LABEL org.opencontainers.image.title="Octop"
+LABEL org.opencontainers.image.title="MEA Cowork"
 LABEL org.opencontainers.image.description="Smarter self-hosted AI assistant — multi-user, multi-agent (FnOS build with all addons)."
 LABEL org.opencontainers.image.source="https://github.com/TencentCloud/Octop"
 LABEL org.opencontainers.image.licenses="MIT"

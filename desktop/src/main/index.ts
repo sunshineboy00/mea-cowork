@@ -709,8 +709,8 @@ function showAboutDialog(version: string): void {
   });
   void dialog.showMessageBox({
     type: "info",
-    title: locale.toLowerCase().startsWith("zh") ? "关于 Octop" : "About Octop",
-    message: "Octop",
+    title: locale.toLowerCase().startsWith("zh") ? "关于 MEA Cowork" : "About MEA Cowork",
+    message: "MEA Cowork",
     detail: formatAboutDetail({
       version,
       setup: windowsInstallScope(process.execPath),
@@ -837,7 +837,7 @@ async function installSystemTray(): Promise<void> {
   // The Linux panel wants a small PNG; a full app icon is dropped or drawn huge.
   trayIcon = process.platform === "linux" ? icon.resize({ width: 24, height: 24 }) : icon;
   const created = new Tray(trayIcon);
-  created.setToolTip("Octop");
+  created.setToolTip("MEA Cowork");
   const labels = trayMenuLabels(app.getLocale());
   const menu = Menu.buildFromTemplate([
     { label: labels.show, click: () => revealAppWindow() },

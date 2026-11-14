@@ -7,7 +7,7 @@ the shared ``secrets`` table on PostgreSQL) while the ops expert's skill
 drives ``tccli``
 off ``~/.tccli/<profile>.credential``. Authorizing in one place used to leave
 the other side stale — the user saw "I just authorized, why is it expired
-again?". ``import-tccli`` closes the loop in the tccli → Octop direction
+again?". ``import-tccli`` closes the loop in the tccli → MEA Cowork direction
 (the reverse direction is mirrored automatically whenever the Workbench
 authorizes or renews).
 """
@@ -58,7 +58,7 @@ def _one_line(credential: Any) -> str:
 )
 @click.option("--quiet", is_flag=True, default=False, help="Only print errors.")
 def import_tccli(profile: str, as_user: str | None, as_json: bool, quiet: bool) -> None:
-    """Import ``~/.tccli/<profile>.credential`` into the Octop cloud store.
+    """Import ``~/.tccli/<profile>.credential`` into the MEA Cowork cloud store.
 
     Run right after an interactive tccli/OAuth login so the Workbench console
     (and every other surface) shares the same credential, with no second scan.

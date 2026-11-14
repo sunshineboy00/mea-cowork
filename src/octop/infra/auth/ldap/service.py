@@ -45,7 +45,7 @@ def _is_unique_violation(exc: BaseException) -> bool:
 
 
 class LdapAuthService:
-    """Owns the single LDAP provider row and turns binds into Octop users."""
+    """Owns the single LDAP provider row and turns binds into MEA Cowork users."""
 
     def __init__(self, services: SharedServices, user_manager: UserManager) -> None:
         self._services = services
@@ -159,7 +159,7 @@ class LdapAuthService:
             ) from exc
 
     async def resolve_user(self, identity: LdapIdentity, *, login_name: str = "") -> User:
-        """Return the Octop user for a verified directory identity, provisioning if allowed."""
+        """Return the MEA Cowork user for a verified directory identity, provisioning if allowed."""
         row = self._row()
         if row is None:
             raise OctopError(ErrorCode.LDAP_UNAVAILABLE, "LDAP is not configured")
@@ -175,7 +175,7 @@ class LdapAuthService:
             if len(reserved) > 1:
                 raise OctopError(
                     ErrorCode.LDAP_USER_NOT_PROVISIONED,
-                    "this directory account has no Octop account yet",
+                    "this directory account has no MEA Cowork account yet",
                 )
             if len(reserved) == 1:
                 account = reserved[0]
@@ -188,7 +188,7 @@ class LdapAuthService:
             if not config.auto_provision:
                 raise OctopError(
                     ErrorCode.LDAP_USER_NOT_PROVISIONED,
-                    "this directory account has no Octop account yet",
+                    "this directory account has no MEA Cowork account yet",
                 )
             return self._provision(row, config, identity)
 
@@ -232,7 +232,7 @@ class LdapAuthService:
         )
 
     def _provision(self, row: SsoProviderRow, config: LdapConfig, identity: LdapIdentity) -> User:
-        """Create the Octop account from a role template.
+        """Create the MEA Cowork account from a role template.
 
         The directory group only selects *which* template to start from; the
         template itself owns permissions and policies, exactly like SSO and CLI
@@ -242,7 +242,7 @@ class LdapAuthService:
             # Worth knowing operationally: this account is keyed on its DN, so a
             # later rename in the directory will look like a brand-new user.
             logger.warning(
-                "LDAP entry for %r exposes no %s; keying the Octop account on its DN",
+                "LDAP entry for %r exposes no %s; keying the MEA Cowork account on its DN",
                 identity.username,
                 config.subject_attribute,
             )
@@ -310,7 +310,7 @@ class LdapAuthService:
         return assignment
 
     def _claimable_email(self, email: str | None, owner_id: int | None) -> str | None:
-        """Drop an email already owned by a different Octop account."""
+        """Drop an email already owned by a different MEA Cowork account."""
         normalized = normalize_email(email)
         if normalized is None:
             return None

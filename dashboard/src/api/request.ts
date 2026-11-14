@@ -307,7 +307,7 @@ function buildAuthHeaders(path: string): Record<string, string> {
 
 let _redirectingToLogin = false;
 
-/** 401 codes that mean this Octop session is no longer valid. */
+/** 401 codes that mean this MEA Cowork session is no longer valid. */
 const SESSION_UNAUTHORIZED_CODES = new Set(["AUTH_FAILED", "TOKEN_EXPIRED"]);
 
 /**

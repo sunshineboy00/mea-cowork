@@ -1,4 +1,4 @@
-"""octop migrate — bring an OpenClaw or Hermes Agent setup into an Octop expert."""
+"""octop migrate — bring an OpenClaw or Hermes Agent setup into an MEA Cowork expert."""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-"""End-to-end protocol checks for the external Octop Agent MCP Gateway."""
+"""End-to-end protocol checks for the external MEA Cowork Agent MCP Gateway."""
 
 from __future__ import annotations
 

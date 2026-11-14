@@ -73,4 +73,4 @@ tccli tat DescribeInvocationTasks --region ap-guangzhou --HideOutput false \
 | 单组件深度（已定位方向） | `$SKILL2/scripts/deep_scan.sh cpu\|memory\|disk\|network` | 5–20s | 结构化 JSON |
 | 组合分析 | `$SKILL2/scripts/combined_analysis.sh` | 20–40s | 多组件关联数据 |
 
-不要在 Octop 主机本地跑这些脚本——那诊断的是 Octop 自己，不是目标实例。
+不要在 MEA Cowork 主机本地跑这些脚本——那诊断的是 MEA Cowork 自己，不是目标实例。

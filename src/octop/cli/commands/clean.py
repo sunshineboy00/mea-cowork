@@ -1,4 +1,4 @@
-"""`octop clean` — remove CLI state and (optionally) Octop application data."""
+"""`octop clean` — remove CLI state and (optionally) MEA Cowork application data."""
 
 from __future__ import annotations
 
@@ -34,12 +34,12 @@ def _all_targets() -> list[Path]:
     "wipe_all",
     is_flag=True,
     default=False,
-    help="Delete Octop data under ~/.octop. Keeps the install runtime (venv/, bin/).",
+    help="Delete MEA Cowork data under ~/.octop. Keeps the install runtime (venv/, bin/).",
 )
 @click.option("--yes", is_flag=True, default=False, help="Skip confirmation.")
 @click.option("--dry-run", is_flag=True, default=False, help="Show targets without deleting.")
 def clean(wipe_all: bool, yes: bool, dry_run: bool) -> None:
-    """Remove the CLI state file (default) or Octop data (--all)."""
+    """Remove the CLI state file (default) or MEA Cowork data (--all)."""
     targets = _all_targets() if wipe_all else _cli_targets()
     for t in targets:
         click.echo(("would remove " if dry_run else "removing ") + str(t))
@@ -47,7 +47,7 @@ def clean(wipe_all: bool, yes: bool, dry_run: bool) -> None:
         return
     if wipe_all and not yes:
         click.confirm(
-            "This deletes Octop data (DB, configs, agents, logs). "
+            "This deletes MEA Cowork data (DB, configs, agents, logs). "
             "The install runtime (venv, bin) is kept. Continue?",
             abort=True,
         )

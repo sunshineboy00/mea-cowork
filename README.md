@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/assets/readme-banner.png" alt="Octop Banner" width="600" />
+  <img src="docs/assets/readme-banner.png" alt="MEA Cowork Banner" width="600" />
 </p>
 
 <p align="center">
@@ -8,18 +8,18 @@
 
 <p align="center">
   <a href="https://trendshift.io/repositories/95504?utm_source=repository-badge&utm_medium=badge&utm_campaign=badge-repository-95504" target="_blank" rel="noopener noreferrer">
-    <img src="https://trendshift.io/api/badge/repositories/95504" alt="TencentCloud/Octop | Trendshift" width="250" height="55" />
+    <img src="https://trendshift.io/api/badge/repositories/95504" alt="TencentCloud/MEA Cowork | Trendshift" width="250" height="55" />
   </a>
 </p>
 
 <p align="center">
   <a href="https://www.python.org/downloads/"><img alt="Python 3.12+" src="https://img.shields.io/badge/python-3.12%2B-blue?logo=python&logoColor=white" /></a>
-  <a href="https://github.com/TencentCloud/Octop/blob/main/LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-green" /></a>
-  <a href="https://github.com/TencentCloud/Octop/releases"><img alt="Version" src="https://img.shields.io/badge/version-1.0.3b5-orange" /></a>
+  <a href="https://github.com/TencentCloud/MEA Cowork/blob/main/LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-green" /></a>
+  <a href="https://github.com/TencentCloud/MEA Cowork/releases"><img alt="Version" src="https://img.shields.io/badge/version-1.0.3b5-orange" /></a>
   <a href="https://pypi.org/project/octop/"><img src="https://img.shields.io/pypi/v/octop" alt="PyPI" /></a>
   <a href="https://github.com/astral-sh/ruff"><img alt="Code Style: Ruff" src="https://img.shields.io/badge/code%20style-ruff-000000?logo=ruff&logoColor=white" /></a>
-  <a href="https://github.com/TencentCloud/Octop"><img alt="GitHub stars" src="https://img.shields.io/github/stars/TencentCloud/Octop?style=social" /></a>
-  <a href="https://github.com/TencentCloud/Octop/fork"><img alt="GitHub forks" src="https://img.shields.io/github/forks/TencentCloud/Octop?style=social" /></a>
+  <a href="https://github.com/TencentCloud/MEA Cowork"><img alt="GitHub stars" src="https://img.shields.io/github/stars/TencentCloud/MEA Cowork?style=social" /></a>
+  <a href="https://github.com/TencentCloud/MEA Cowork/fork"><img alt="GitHub forks" src="https://img.shields.io/github/forks/TencentCloud/MEA Cowork?style=social" /></a>
   <a href="https://discord.gg/QnWdhJxq9h"><img alt="Discord" src="https://img.shields.io/badge/Discord-Join%20Us-5865F2?logo=discord&logoColor=white" /></a>
 </p>
 
@@ -39,7 +39,7 @@
 
 ---
 
-**Octop** is an open-source, self-hosted AI assistant. It's not just a tool — it's a digital life form that can operate in parallel. Through its multi-agent architecture, it builds an intelligent environment that is both independent and collaborative for teams, families, and individuals. Best of all, it runs entirely on your machine — the fully self-hosted design means privacy is never a compromise, while single-process startup makes the powerful web console, CLI, and IM integrations readily accessible.
+**MEA Cowork** is an open-source, self-hosted AI assistant. It's not just a tool — it's a digital life form that can operate in parallel. Through its multi-agent architecture, it builds an intelligent environment that is both independent and collaborative for teams, families, and individuals. Best of all, it runs entirely on your machine — the fully self-hosted design means privacy is never a compromise, while single-process startup makes the powerful web console, CLI, and IM integrations readily accessible.
 
 Chat through the Web Dashboard, Feishu, DingTalk, QQ, WeChat, Telegram, Discord, WeCom, or programmatic HTTP/SSE/WebSocket. Extend capabilities with the **expert library**, **Connectors** (OAuth + MCP), and **ACP** integration for IDE workflows.
 
@@ -48,15 +48,15 @@ Chat through the Web Dashboard, Feishu, DingTalk, QQ, WeChat, Telegram, Discord,
 | | Feature | Description |
 |---|---------|-------------|
 | 👥 | **Multi-user expert team** | One admin, shared household; built-in expert library and expert market — switch specialists per scenario |
-| 🤝 | **Cloud collaboration** | Link this Octop to another instance to browse peer experts and chat across instances; history stays on the expert's side |
+| 🤝 | **Cloud collaboration** | Link this MEA Cowork to another instance to browse peer experts and chat across instances; history stays on the expert's side |
 | 🎭 | **MBTI personas** | 16 personality templates plus an interactive quiz — give each agent a distinct character |
 | 🎯 | **AgentTeams** *(Beta)* | A coordinator schedules multiple experts on multi-step work; [details](docs/expert-teams.md) |
 | 🔒 | **Security built-in** | JWT multi-user isolation, tool approval, shell command guardrails, and PII redaction — data stays local |
 | 🔌 | **Connector ecosystem** | Tencent suite (Docs, Meeting, News, …); OAuth and MCP gateway extend resource boundaries — [supported connectors](docs/connectors.md) |
 | 💾 | **Pluggable workspace backends** | Local disk, Docker sandbox, PostgreSQL, or COS/S3 for agent files — separate from the control-plane DB |
-| 🧠 | **Portable memory** | Powered by [Octop Memory](https://github.com/TencentCloud/octop-memory); memory migrates with the workspace |
+| 🧠 | **Portable memory** | Powered by [MEA Cowork Memory](https://github.com/TencentCloud/octop-memory); memory migrates with the workspace |
 | 📚 | **Knowledge base** | RAG over your documents; share corpora within a deployment and ground answers in your private data |
-| 🧩 | **Plugins** | Extend Octop with third-party plugins; bundled plugins are seeded and toggled on demand |
+| 🧩 | **Plugins** | Extend MEA Cowork with third-party plugins; bundled plugins are seeded and toggled on demand |
 | ↔️ | **ACP bidirectional** | `octop acp` for IDE/terminal AI; delegate to OpenCode / Claude Code with permission gates |
 | 💻 | **Terminal AI+** | Interactive shell in the browser — AI-assisted command execution and troubleshooting |
 | 🌐 | **Browser AI+** | Headless Chromium sessions for web automation, screenshots, and remote browsing |
@@ -66,12 +66,12 @@ Chat through the Web Dashboard, Feishu, DingTalk, QQ, WeChat, Telegram, Discord,
 
 ## 📌 Overview
 
-Octop is a self-hosted AI assistant platform for households and small teams. It runs a single process that serves a web dashboard, a CLI, IM channels (Feishu, DingTalk, QQ, WeChat, Telegram, Discord, WeCom, and more), and cron automation — all sharing one control-plane database under `~/.octop/` (SQLite by default; PostgreSQL optional).
+MEA Cowork is a self-hosted AI assistant platform for households and small teams. It runs a single process that serves a web dashboard, a CLI, IM channels (Feishu, DingTalk, QQ, WeChat, Telegram, Discord, WeCom, and more), and cron automation — all sharing one control-plane database under `~/.octop/` (SQLite by default; PostgreSQL optional).
 
-> Octop's design goal: keep every conversation, workspace, and credential on your own machine, while giving each user a personal team of specialized agents they can switch between per task.
+> MEA Cowork's design goal: keep every conversation, workspace, and credential on your own machine, while giving each user a personal team of specialized agents they can switch between per task.
 
 <details>
-<summary>🐾 What can you do with Octop</summary>
+<summary>🐾 What can you do with MEA Cowork</summary>
 
 - **Personal assistant** — let a dedicated agent write weekly reports, organize notes, and manage your schedule; memory persists with the workspace.
 - **Family sharing** — one admin account, the whole household; assign different agents and experts per member; share experts and knowledge bases when useful.
@@ -88,22 +88,22 @@ Octop is a self-hosted AI assistant platform for households and small teams. It 
 |-------|-----------|
 | **Language** | Python 3.12+ |
 | **Web framework** | FastAPI + uvicorn |
-| **Agent runtime** | [Octop Harness](https://github.com/TencentCloud/octop-harness) |
-| **Gateway** | [Octop Gateway](https://github.com/TencentCloud/octop-gateway) |
+| **Agent runtime** | [MEA Cowork Harness](https://github.com/TencentCloud/octop-harness) |
+| **Gateway** | [MEA Cowork Gateway](https://github.com/TencentCloud/octop-gateway) |
 | **Control plane DB** | SQLite (WAL, default) or PostgreSQL (optional) |
 | **Frontend** | React 18 + TypeScript + Vite + Ant Design |
 | **Scheduling** | APScheduler |
 | **ACP** | agent-client-protocol |
 | **Build / quality** | hatchling · ruff · mypy · pytest |
 
-Octop is built on the Octop Harness stack — a set of focused runtimes that Octop composes into one process:
+MEA Cowork is built on the MEA Cowork Harness stack — a set of focused runtimes that MEA Cowork composes into one process:
 
-- **[Octop Harness](https://github.com/TencentCloud/octop-harness)** — Agent runtime: model routing, tools, skills, and conversation checkpointing.
-- **[Octop Gateway](https://github.com/TencentCloud/octop-gateway)** — multi-platform IM channel bridge that normalizes incoming messages into a single processing pipeline.
-- **[Octop Memory](https://github.com/TencentCloud/octop-memory)** — hierarchical recall with full-text search, so an agent's memory travels with its workspace.
-- **[Octop Browser](https://github.com/TencentCloud/octop-browser)** — CDP-based browser automation with persistent profiles for web tasks.
+- **[MEA Cowork Harness](https://github.com/TencentCloud/octop-harness)** — Agent runtime: model routing, tools, skills, and conversation checkpointing.
+- **[MEA Cowork Gateway](https://github.com/TencentCloud/octop-gateway)** — multi-platform IM channel bridge that normalizes incoming messages into a single processing pipeline.
+- **[MEA Cowork Memory](https://github.com/TencentCloud/octop-memory)** — hierarchical recall with full-text search, so an agent's memory travels with its workspace.
+- **[MEA Cowork Browser](https://github.com/TencentCloud/octop-browser)** — CDP-based browser automation with persistent profiles for web tasks.
 
-Instead of an external queue or message broker, Octop routes every surface — Web UI, IM, and cron — through one in-process `HarnessProcessor`. The result is a single, restart-safe process whose entire state is rebuilt from the control-plane database on boot (local SQLite by default; PostgreSQL optional).
+Instead of an external queue or message broker, MEA Cowork routes every surface — Web UI, IM, and cron — through one in-process `HarnessProcessor`. The result is a single, restart-safe process whose entire state is rebuilt from the control-plane database on boot (local SQLite by default; PostgreSQL optional).
 
 ## 🤔 Features
 
@@ -137,14 +137,14 @@ Instead of an external queue or message broker, Octop routes every surface — W
 
 ### ACP (Agent Client Protocol)
 
-Octop supports ACP in two directions:
+MEA Cowork supports ACP in two directions:
 
-1. **Inbound** — external tools use **your** Octop agent
+1. **Inbound** — external tools use **your** MEA Cowork agent
    ```bash
    octop acp --agent main   # stdio ACP server for Zed, OpenCode, …
    ```
 
-2. **Outbound** — Octop delegates to external coding agents
+2. **Outbound** — MEA Cowork delegates to external coding agents
    - Dashboard → **ACP** (`/acp`): configure runners (global per user)
    - Enable **acp_runner** per agent, then delegate in chat
 
@@ -170,9 +170,9 @@ Here are our mid-to-long term plans:
 - [ ] **Self-evolution** — automatically distill everyday conversations into reusable skills, so the assistant grows with you.
 - [ ] **Managed Agents** — platform-hosted agent lifecycle (provision, scale, and operate agents without managing the full self-hosted stack yourself).
 - [ ] **Project** — project-scoped workspaces that group agents, files, and conversations around a shared goal.
-- [ ] **Cloud–edge continuum** — run Octop locally while offloading selected tasks to the cloud, so light work stays on-device and heavier jobs use remote capacity when you need it.
-- [ ] **Plugin marketplace** — a curated market to discover, install, and update third-party plugins without leaving Octop.
-- [ ] **Conversational control plane** — deepen Octop’s own skills so chat can cover the full dashboard surface: create experts, wire channels, manage knowledge bases, and scaffold plugins end-to-end.
+- [ ] **Cloud–edge continuum** — run MEA Cowork locally while offloading selected tasks to the cloud, so light work stays on-device and heavier jobs use remote capacity when you need it.
+- [ ] **Plugin marketplace** — a curated market to discover, install, and update third-party plugins without leaving MEA Cowork.
+- [ ] **Conversational control plane** — deepen MEA Cowork’s own skills so chat can cover the full dashboard surface: create experts, wire channels, manage knowledge bases, and scaffold plugins end-to-end.
 
 This roadmap may shift as the community grows; treat it as indicative only.
 
@@ -222,14 +222,14 @@ curl -fsSL https://download.octop.cloud/octop/scripts/install.sh | bash -s -- --
 
 See [scripts/README.md](scripts/README.md) for all install options (`--version`, `--from-source`, `--mirror`, Windows flags).
 
-**Desktop app** (GUI, no terminal) — grab the artifact for your platform from [GitHub Releases](https://github.com/TencentCloud/Octop/releases/latest):
+**Desktop app** (GUI, no terminal) — grab the artifact for your platform from [GitHub Releases](https://github.com/TencentCloud/MEA Cowork/releases/latest):
 
 | Platform | Artifact |
 |----------|----------|
-| Windows | `Octop-desktop-windows-amd64-<version>.exe` (64-bit) / `Octop-desktop-windows-arm64-<version>.exe` (ARM64) — NSIS installer |
-| macOS | `Octop-desktop-darwin-arm64-<version>.dmg` (Apple Silicon) / `Octop-desktop-darwin-amd64-<version>.dmg` (Intel) |
-| Linux | `Octop-desktop-linux-amd64-<version>.tar.gz` / `Octop-desktop-linux-arm64-<version>.tar.gz` |
-| FnOS NAS | `Octop-fnos-docker-lite-<version>.fpk` (smaller image) / `Octop-fnos-docker-<version>.fpk` (full: desktop, OCR, local models) / `Octop-fnos-native-amd64-<version>.fpk` (x86_64, no Docker) / `Octop-fnos-native-arm64-<version>.fpk` (ARM64 fallback if no Docker) — install via App Center |
+| Windows | `64-<version>.exe` (64-bit) / `64-<version>.exe` (ARM64) — NSIS installer |
+| macOS | `64-<version>.dmg` (Apple Silicon) / `64-<version>.dmg` (Intel) |
+| Linux | `64-<version>.tar.gz` / `64-<version>.tar.gz` |
+| FnOS NAS | `-<version>.fpk` (smaller image) / `-<version>.fpk` (full: desktop, OCR, local models) / `64-<version>.fpk` (x86_64, no Docker) / `64-<version>.fpk` (ARM64 fallback if no Docker) — install via App Center |
 
 Desktop installers bundle the `browser` extra only. Desktop control, OCR, and local embedding stay on the Docker image tag `:<version>-full`.
 
@@ -419,7 +419,7 @@ Full catalog, auth kinds, and MCP modes: **[docs/connectors.md](docs/connectors.
 | Command | Description |
 |---------|-------------|
 | `octop init` | Bootstrap `~/.octop/` (DB, admin, JWT secret) |
-| `octop run` | Start Octop in the foreground |
+| `octop run` | Start MEA Cowork in the foreground |
 | `octop service start` | Install and start as a system service |
 | `octop service stop` | Stop the system service |
 | `octop agent` | Create, list, start/stop agents |
@@ -450,7 +450,7 @@ Full reference: **[docs/cli.md](docs/cli.md)**.
 After `octop run`, open **http://127.0.0.1:8088**.
 
 <p align="center">
-  <img src="docs/assets/readme-chat.png" alt="Octop Web Dashboard" width="800" />
+  <img src="docs/assets/readme-chat.png" alt="MEA Cowork Web Dashboard" width="800" />
 </p>
 
 - **Chat** — real-time conversation with experts and teams
@@ -570,11 +570,11 @@ See [CHANGELOG.md](CHANGELOG.md) for release history.
 
 | Project | Description |
 |---------|-------------|
-| [Octop Harness](https://github.com/TencentCloud/octop-harness) | Agent runtime — model routing, tools, skills, checkpointing |
-| [Octop Gateway](https://github.com/TencentCloud/octop-gateway) | Multi-platform IM channel bridge |
-| [Octop Memory](https://github.com/TencentCloud/octop-memory) | Hierarchical recall and FTS search |
-| [Octop Browser](https://github.com/TencentCloud/octop-browser) | CDP browser automation with persistent profiles |
-| [Octop Pet](https://github.com/jubaoliang/OctopPet) | A desktop pet for Octop |
+| [MEA Cowork Harness](https://github.com/TencentCloud/octop-harness) | Agent runtime — model routing, tools, skills, checkpointing |
+| [MEA Cowork Gateway](https://github.com/TencentCloud/octop-gateway) | Multi-platform IM channel bridge |
+| [MEA Cowork Memory](https://github.com/TencentCloud/octop-memory) | Hierarchical recall and FTS search |
+| [MEA Cowork Browser](https://github.com/TencentCloud/octop-browser) | CDP browser automation with persistent profiles |
+| [MEA Cowork Pet](https://github.com/jubaoliang/OctopPet) | A desktop pet for MEA Cowork |
 
 ## 💬 Community
 

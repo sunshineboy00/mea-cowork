@@ -8,7 +8,7 @@ lazily from `src/octop/cli/registry.py`.
 $ octop --help
 Usage: octop [OPTIONS] COMMAND [ARGS]...
 
-  Octop command-line interface.
+  MEA Cowork command-line interface.
 
 Options:
   -v, --version           Show the installed octop version.
@@ -19,11 +19,11 @@ Options:
   -h, --help              Show this message and exit.
 
 Commands:
-  acp        Run Octop agent as ACP server (stdio).
+  acp        Run MEA Cowork agent as ACP server (stdio).
   admin      Admin commands.
   agent      Agent lifecycle commands.
-  backup     Export and restore Octop backups.
-  bridge     Manage remote Octop bridge peers.
+  backup     Export and restore MEA Cowork backups.
+  bridge     Manage remote MEA Cowork bridge peers.
   chat       [deprecated] Alias for `octop chats`.
   chats      Chat REPL and session management.
   channel    Channel management commands.
@@ -31,7 +31,7 @@ Commands:
   completion Shell completion utilities.
   config     CLI state (base URL, defaults).
   cron       Cron job management commands.
-  init       Bootstrap an Octop server install.
+  init       Bootstrap an MEA Cowork server install.
   migrate    Migrate an OpenClaw or Hermes Agent setup into an expert.
   models     Model catalog and active-model settings.
   plugin     Install and manage plugins.
@@ -39,7 +39,7 @@ Commands:
   run        Run octop-server in the foreground.
   service    System service lifecycle (start/stop/restart/status).
   skills     Per-agent skill enable/disable.
-  update     Check for and install a newer Octop release.
+  update     Check for and install a newer MEA Cowork release.
   user       User management commands.
   version    Show the installed octop version.
 ```
@@ -58,7 +58,7 @@ Commands:
 
 ## Transport layers
 
-Octop commands pick one of these transports:
+MEA Cowork commands pick one of these transports:
 
 | Layer | When | Login? | Examples |
 |-------|------|--------|----------|
@@ -78,13 +78,13 @@ Idempotent on the DB; pass `--force` to delete application state under `~/.octop
 ```
 Usage: octop init [OPTIONS]
 
-  Bootstrap an Octop server (~/.octop dir, DB migrations, JWT secret, first admin).
+  Bootstrap an MEA Cowork server (~/.octop dir, DB migrations, JWT secret, first admin).
 
 Options:
   --admin-username TEXT       [env: OCTOP_ADMIN_USERNAME]
   --admin-password TEXT       [env: OCTOP_ADMIN_PASSWORD]
   --admin-display-name TEXT   [env: OCTOP_ADMIN_DISPLAY_NAME]
-  --force                     Delete Octop data under ~/.octop. Keeps venv/ and bin/.
+  --force                     Delete MEA Cowork data under ~/.octop. Keeps venv/ and bin/.
   --yes                       Skip all interactive prompts.
   -h, --help                  Show this message and exit.
 ```
@@ -97,7 +97,7 @@ Start the FastAPI app in the foreground (delegates to
 ```
 Usage: octop run [OPTIONS]
 
-  Start the Octop server (foreground; uvicorn).
+  Start the MEA Cowork server (foreground; uvicorn).
 
 Options:
   --host TEXT                 Override OCTOP_BIND_HOST.
@@ -112,7 +112,7 @@ Options:
 
 ## `octop service`
 
-Install and manage the Octop system service. The backend is detected
+Install and manage the MEA Cowork system service. The backend is detected
 automatically (systemd on Linux, launchd on macOS); the scope
 (`user` vs `system`) can be forced via `--scope` or
 `OCTOP_SERVICE_SCOPE`.
@@ -120,7 +120,7 @@ automatically (systemd on Linux, launchd on macOS); the scope
 ```
 Usage: octop service [OPTIONS] COMMAND [ARGS]...
 
-  Manage the Octop system service (systemd on Linux, launchd on macOS).
+  Manage the MEA Cowork system service (systemd on Linux, launchd on macOS).
 
 Commands:
   start     Install (if missing) and start the service.
@@ -213,7 +213,7 @@ forwards to `chats`.
 
 ## `octop bridge`
 
-User-scoped Octop-to-Octop peer links (same surface as Dashboard **远程桥接**).
+User-scoped  peer links (same surface as Dashboard **远程桥接**).
 `--user` / pinned `default_user` selects the local owner. `--peer-user` is
 the **remote** login. `probe` talks HTTP only; `create --connect` /
 `connect` / `agents` verify the Bridge WebSocket then close it — start
@@ -222,7 +222,7 @@ the **remote** login. `probe` talks HTTP only; `create --connect` /
 ```
 Usage: octop bridge [OPTIONS] COMMAND [ARGS]...
 
-  Manage remote Octop bridge peers (add / edit / probe / connect).
+  Manage remote MEA Cowork bridge peers (add / edit / probe / connect).
 
 Commands:
   list        List saved bridge connections.
@@ -384,7 +384,7 @@ Restart `octop run` (if already running) for the change to apply.
 
 ## `octop backup`
 
-Export and restore Octop backups. Works fully offline.
+Export and restore MEA Cowork backups. Works fully offline.
 
 ```
 Usage: octop backup [OPTIONS] COMMAND [ARGS]...
@@ -420,13 +420,13 @@ retention only deletes those files and never touches manual
 
 ## `octop update`
 
-Check for and install a newer Octop release from the configured
+Check for and install a newer MEA Cowork release from the configured
 channel (PyPI by default).
 
 ```
 Usage: octop update [OPTIONS]
 
-  Check for and install a newer Octop release.
+  Check for and install a newer MEA Cowork release.
 
 Options:
   --check / --no-check     Only check; do not install.
@@ -439,7 +439,7 @@ Options:
 Install and manage third-party plugins (drop into `~/.octop/plugins/`).
 The same plugin manager powers the dashboard's "Plugins" page.
 
-Octop also **seeds bundled plugins** into `~/.octop/plugins/` during
+MEA Cowork also **seeds bundled plugins** into `~/.octop/plugins/` during
 `octop init` and every `octop run` start. They are listed in Admin →
 Plugins but stay **globally disabled** until you turn them on. An id
 already recorded in `config.json` → `bundled_plugins_seeded` is not
@@ -459,7 +459,7 @@ Commands:
 
 ## `octop migrate`
 
-Bring an existing OpenClaw or Hermes Agent setup into one Octop expert. The
+Bring an existing OpenClaw or Hermes Agent setup into one MEA Cowork expert. The
 source is read where it lives (`~/.openclaw`, `~/.hermes`, or `--from`) and is
 never modified.
 
@@ -479,7 +479,7 @@ Options:
   -h, --help           Show this message and exit.
 ```
 
-| Section | OpenClaw | Hermes Agent | Lands in Octop as |
+| Section | OpenClaw | Hermes Agent | Lands in MEA Cowork as |
 |---------|----------|--------------|-------------------|
 | `models` | `models.providers`, `agents.defaults.model`, keys from `.env` / `env` / legacy `auth-profiles.json` | `model`, `providers` / `custom_providers`, keys from `.env` | Model providers and, when none is set yet, the default model |
 | `files` | Workspace `AGENTS.md`, `SOUL.md`, `IDENTITY.md`, `USER.md`, `MEMORY.md`, `TOOLS.md`, `HEARTBEAT.md`, `memory/*.md` | `SOUL.md`, `memories/MEMORY.md`, `memories/USER.md` | Files in the expert's workspace |
@@ -490,11 +490,11 @@ Options:
 Nothing that already exists is replaced: a second run reports everything as
 skipped. `--overwrite` replaces workspace files, skills and the default model;
 providers, MCP servers and channels are never overwritten. Channels arrive
-disabled so the old assistant and Octop do not both answer on the same bot —
+disabled so the old assistant and MEA Cowork do not both answer on the same bot —
 stop the old one, then enable the channel.
 
 Scheduled jobs, SSE-only MCP servers, OAuth-only model logins and platforms
-Octop has no channel for are listed after the table and left behind. Start
+MEA Cowork has no channel for are listed after the table and left behind. Start
 with `--dry-run`; root `--json` prints the same report as JSON. The command
 exits with status 1 when any item failed.
 
@@ -509,14 +509,14 @@ providers and channels.
 
 ## `octop acp`
 
-Expose an Octop agent as a stdio JSON-RPC ACP server. Boots a
+Expose an MEA Cowork agent as a stdio JSON-RPC ACP server. Boots a
 standalone `OctopServer` (reads `~/.octop`); does **not** require
 `octop run` to be running.
 
 ```
 Usage: octop acp [OPTIONS]
 
-  Run Octop agent as ACP server (stdio).
+  Run MEA Cowork agent as ACP server (stdio).
 
 Options:
   --agent TEXT   Agent to expose (default: OCTOP_AGENT or first agent).
@@ -529,13 +529,13 @@ runner object schema.
 
 ## `octop clean`
 
-Reset CLI state, or delete Octop data under `~/.octop`. `--all` keeps the
+Reset CLI state, or delete MEA Cowork data under `~/.octop`. `--all` keeps the
 install runtime (`venv/`, `bin/`). Destructive — read the help carefully.
 
 ```
 Usage: octop clean [OPTIONS]
 
-  Remove CLI state, or delete Octop data under ~/.octop (keeps venv/ and bin/).
+  Remove CLI state, or delete MEA Cowork data under ~/.octop (keeps venv/ and bin/).
 
 Options:
   --state / --all       What to remove.

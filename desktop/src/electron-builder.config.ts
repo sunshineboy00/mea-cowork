@@ -16,12 +16,12 @@ const electronVersion = productVersion.replace(
     `${base}-${{ a: "alpha", b: "beta", rc: "rc" }[stage as "a" | "b" | "rc"]}.${number}`,
 );
 if (!/^\d+\.\d+\.\d+(?:-(?:alpha|beta|rc)\.\d+)?$/.test(electronVersion)) {
-  throw new Error(`Unsupported Octop release version: ${productVersion}`);
+  throw new Error(`Unsupported MEA Cowork release version: ${productVersion}`);
 }
 const artifactName = process.env.OCTOP_PLATFORM
-  ? `Octop-desktop-${process.env.OCTOP_PLATFORM}-${productVersion}.\${ext}`
-  : `Octop-desktop-\${os}-\${arch}-\${version}.\${ext}`;
-const productName = "Octop";
+  ? `-${process.env.OCTOP_PLATFORM}-${productVersion}.\${ext}`
+  : `-\${os}-\${arch}-\${version}.\${ext}`;
+const productName = "MEA Cowork";
 
 export default {
   extraMetadata: { version: electronVersion },
@@ -89,7 +89,7 @@ export default {
     // The finish page creates the desktop shortcut after the user confirms.
     // Silent installs still create it unless --no-desktop-shortcut is passed.
     createDesktopShortcut: false,
-    // Expands resources/portable/Octop-portable-*.zip into resources/sidecar
+    // Expands resources/portable/-*.zip into resources/sidecar
     // with tar.exe. The 40k-file tree is not packed as individual NSIS files.
     include: "build/installer.nsh",
   },
@@ -98,7 +98,7 @@ export default {
     executableName: "octop",
     icon: "resources/icon.png",
     category: "Utility",
-    maintainer: "Octop",
+    maintainer: "MEA Cowork",
   },
   deb: {
     // package.json name is octop-desktop. fpm package names live on the target,

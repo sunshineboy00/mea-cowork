@@ -418,7 +418,7 @@ def restore_system_backup(
 
     *source* may be a filesystem path (preferred) or in-memory bytes (tests / legacy).
 
-    ``preserve_users`` controls whether the *current* Octop instance's login
+    ``preserve_users`` controls whether the *current* MEA Cowork instance's login
     credentials (``users`` rows + ``secrets.jwt``) are written back after the
     database is replaced:
 
@@ -456,7 +456,7 @@ def restore_system_backup(
         if archive_history.is_file() and not allow_legacy_history:
             raise OctopError(
                 ErrorCode.SLASH_BAD_ARGS,
-                "Stop Octop and use the backup restore CLI for a history v2 archive",
+                "Stop MEA Cowork and use the backup restore CLI for a history v2 archive",
             )
         is_migration = _is_migration_backup(manifest)
 

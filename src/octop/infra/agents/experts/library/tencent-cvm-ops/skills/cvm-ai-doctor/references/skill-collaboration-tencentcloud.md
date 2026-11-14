@@ -29,7 +29,7 @@
 
 **优先**使用 `cvm-ai-doctor` 技能 `scripts/` 目录中的对应脚本，在本地 base64 编码后通过 TAT 发送到远端 CVM 执行。这样可以避免 LLM 每次重新组装命令，减少 token 消耗，也不容易遗漏或改写命令细节。
 
-**Step A — 在 Octop 所在机器上编码，再经 tat-exec 下发：**
+**Step A — 在 MEA Cowork 所在机器上编码，再经 tat-exec 下发：**
 
 ```bash
 # Linux / macOS（-w 0 强制单行输出，无需 tr 管道）

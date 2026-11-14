@@ -1,4 +1,4 @@
-"""Runtime NOFILE guard covers direct and container starts (Octop#2060)."""
+"""Runtime NOFILE guard covers direct and container starts (MEA Cowork#2060)."""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-"""Install and run Laya in an isolated environment under Octop's home.
+"""Install and run Laya in an isolated environment under MEA Cowork's home.
 
 The service is a normal ``laya-serve`` process, not a container. Progress is
 kept on the runtime so a closed page can reconnect to the same install.
@@ -75,8 +75,8 @@ def compatible_python(
 ) -> Path | None:
     """Pick a Python that still has a CPU torch wheel.
 
-    Octop itself may run on a newer interpreter. Laya is installed into its
-    own environment, so the interpreter does not have to be Octop's.
+    MEA Cowork itself may run on a newer interpreter. Laya is installed into its
+    own environment, so the interpreter does not have to be MEA Cowork's.
     """
     for version in _COMPATIBLE_PYTHONS:
         found = which(f"python{version}")
@@ -195,7 +195,7 @@ async def _stream_command(
 
 
 class LayaRuntime:
-    """One managed Laya install for this Octop home."""
+    """One managed Laya install for this MEA Cowork home."""
 
     def __init__(
         self,

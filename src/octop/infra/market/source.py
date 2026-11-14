@@ -1,4 +1,4 @@
-"""Load a plugin or expert catalog from the Octop portal."""
+"""Load a plugin or expert catalog from the MEA Cowork portal."""
 
 from __future__ import annotations
 

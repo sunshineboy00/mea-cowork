@@ -1,6 +1,6 @@
 /**
  * Sidecar readiness check (§3.3). Readiness is decided ONLY by a successful
- * ``/api/health`` response matching the Octop contract — never by log text.
+ * ``/api/health`` response matching the MEA Cowork contract — never by log text.
  */
 
 export interface HealthResponse {
@@ -18,7 +18,7 @@ export interface HealthProbe {
   (): Promise<{ ok: boolean; body?: unknown }>;
 }
 
-/** Validate the shape of an Octop ``/api/health`` JSON body. */
+/** Validate the shape of an MEA Cowork ``/api/health`` JSON body. */
 export function isHealthyBody(body: unknown): boolean {
   if (body === null || typeof body !== "object") return false;
   const record = body as Record<string, unknown>;

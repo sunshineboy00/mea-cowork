@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Octop virtual desktop installer for headless Linux servers.
+# MEA Cowork virtual desktop installer for headless Linux servers.
 # Adapted from agent-bridge scripts/desktop/v1.0 (TigerVNC + openbox stack).
 #
 # Usage:
@@ -18,7 +18,7 @@ if [ -z "${BASH_VERSION:-}" ]; then exec /bin/bash "$0" "$@"; fi
 set -euo pipefail
 
 SCRIPT_VERSION="v1.0"
-# Python interpreter the desktop deps are installed into (the Octop venv), used to
+# Python interpreter the desktop deps are installed into (the MEA Cowork venv), used to
 # pick matching pythonX.Y-dev headers. Falls back to system `python3`.
 TARGET_PYTHON="python3"
 INSTALL_ROOT="/opt/octop-desktop"
@@ -341,7 +341,7 @@ _icon_or_theme() {
 }
 
 install_start_menu_logo() {
-    # Copy the Octop PWA logo shipped next to this install.sh into the system
+    # Copy the MEA Cowork PWA logo shipped next to this install.sh into the system
     # install root. Uninstall removes /opt/octop-desktop; reinstall restores it.
     mkdir -p "${INSTALL_ROOT}/icons"
     local bundled_logo script_dir
@@ -380,7 +380,7 @@ write_default_panel_layout() {
 
     cat > "$INSTALL_ROOT/ensure-panel.sh" << 'ENSURE_PANEL_EOF'
 #!/bin/bash
-# Rewrite the Octop default panel (appfinder launcher + tasklist + clock).
+# Rewrite the MEA Cowork default panel (appfinder launcher + tasklist + clock).
 #
 # XFCE keeps panel state in xfconfd's memory. Overwriting xfce4-panel.xml while
 # xfconfd is alive is ignored; killing the panel gracefully can also flush a
@@ -514,7 +514,7 @@ ENSURE_PANEL_EOF
 }
 
 download_wallpaper() {
-    # Install the Octop wallpaper shipped next to this script (packaged in the
+    # Install the MEA Cowork wallpaper shipped next to this script (packaged in the
     # wheel under infra/control/desktop/scripts/linux/v1.0/wallpaper.png).
     mkdir -p /usr/share/backgrounds "${INSTALL_ROOT}"
     local ok=false
@@ -984,7 +984,7 @@ write_systemd_units() {
 
     cat > "/etc/systemd/system/${SVC_XVNC}.service" << UNIT_EOF
 [Unit]
-Description=Octop virtual desktop - Xvnc
+Description=MEA Cowork virtual desktop - Xvnc
 After=network.target
 
 [Service]
@@ -1000,7 +1000,7 @@ UNIT_EOF
 
     cat > "/etc/systemd/system/${SVC_SESSION}.service" << UNIT_EOF
 [Unit]
-Description=Octop virtual desktop - D-Bus session
+Description=MEA Cowork virtual desktop - D-Bus session
 After=${SVC_XVNC}.service
 Wants=${SVC_XVNC}.service
 
@@ -1016,7 +1016,7 @@ UNIT_EOF
 
     cat > "/etc/systemd/system/${SVC_OPENBOX}.service" << UNIT_EOF
 [Unit]
-Description=Octop virtual desktop - Openbox
+Description=MEA Cowork virtual desktop - Openbox
 After=${SVC_XVNC}.service ${SVC_SESSION}.service
 Wants=${SVC_XVNC}.service
 

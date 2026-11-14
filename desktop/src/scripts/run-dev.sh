@@ -76,7 +76,7 @@ if ((BUILD)); then
   ( cd "$SHELL_DIR" && pnpm run build )
 else
   # --no-build: fail with the fix instead of launching a stale/absent bundle
-  # and letting the splash sit on "正在启动 Octop…" forever.
+  # and letting the splash sit on "正在启动 MEA Cowork…" forever.
   if [[ ! -f "$SHELL_DIR/out/main/index.js" ]]; then
     echo "[dev] out/main/index.js missing — run 'pnpm build' first (or drop --no-build)" >&2
     exit 1

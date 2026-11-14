@@ -1,4 +1,4 @@
-"""Domain service for external Agent-to-Octop expert calls."""
+"""Domain service for external Agent-to-MEA Cowork expert calls."""
 
 from __future__ import annotations
 
@@ -30,7 +30,7 @@ _DECISION_TYPES = frozenset({"approve", "edit", "reject", "respond"})
 
 
 class AgentMcpGatewayService:
-    """Expose accessible Octop experts through a small, isolated call surface."""
+    """Expose accessible MEA Cowork experts through a small, isolated call surface."""
 
     def __init__(self, *, agent_manager: AgentManager, gateway: Gateway) -> None:
         self._agent_manager = agent_manager

@@ -1,6 +1,6 @@
 # 插件压缩包
 
-插件就是一个目录，打成 ZIP 安装。Octop 解压到 `~/.octop/plugins/<id>/`，再加载 `plugin.yaml` 指向的入口。入口模块必须导出 `setup(ctx)`。
+插件就是一个目录，打成 ZIP 安装。MEA Cowork 解压到 `~/.octop/plugins/<id>/`，再加载 `plugin.yaml` 指向的入口。入口模块必须导出 `setup(ctx)`。
 
 ## 压缩包里怎么放
 

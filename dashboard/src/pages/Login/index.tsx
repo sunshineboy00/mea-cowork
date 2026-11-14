@@ -535,7 +535,7 @@ export default function LoginPage() {
     maxWidth: 360,
     padding: "48px 32px 40px",
     background: "var(--fn-bg-elevated)",
-    borderRadius: 16,
+    borderRadius: 6,
     boxShadow: "0 8px 32px rgba(0,0,0,0.08)",
     border: "1px solid var(--fn-border-primary)",
     display: "flex",
@@ -552,7 +552,7 @@ export default function LoginPage() {
           ? publicUrl("logo_horizontal_white.png")
           : publicUrl("logo_horizontal_dark.png")
       }
-      alt="Octop"
+      alt="MEA Cowork"
       style={{
         height: 48,
         width: "auto",
@@ -646,7 +646,7 @@ export default function LoginPage() {
                 onPressEnter={() => void handleMfaVerify()}
                 autoFocus
                 autoComplete="one-time-code"
-                style={{ borderRadius: 10 }}
+                style={{ borderRadius: 3 }}
               />
               <Button
                 type="primary"
@@ -655,7 +655,7 @@ export default function LoginPage() {
                 loading={loading}
                 onClick={() => void handleMfaVerify()}
                 disabled={!mfaCode.trim()}
-                style={{ borderRadius: 10, height: 44, fontWeight: 500 }}
+                style={{ borderRadius: 3, height: 44, fontWeight: 500 }}
               >
                 {t("login.mfaVerify")}
               </Button>
@@ -670,7 +670,7 @@ export default function LoginPage() {
               icon={<Fingerprint size={18} />}
               loading={loading}
               onClick={() => void handleMfaPasskey()}
-              style={{ borderRadius: 10, height: 44, fontWeight: 500 }}
+              style={{ borderRadius: 3, height: 44, fontWeight: 500 }}
             >
               {t("login.mfaUsePasskey")}
             </Button>
@@ -765,7 +765,7 @@ export default function LoginPage() {
           autoComplete={passwordlessLogin ? "username webauthn" : "username"}
           name="username"
           autoFocus
-          style={{ borderRadius: 10 }}
+          style={{ borderRadius: 3 }}
         />
 
         <Input.Password
@@ -779,7 +779,7 @@ export default function LoginPage() {
           onPressEnter={handleLogin}
           autoComplete="current-password"
           name="password"
-          style={{ borderRadius: 10 }}
+          style={{ borderRadius: 3 }}
         />
 
         {ldap?.enabled && (
@@ -861,7 +861,7 @@ export default function LoginPage() {
           loading={loading}
           onClick={handleLogin}
           disabled={!username || !password || !captchaReady}
-          style={{ borderRadius: 10, height: 44, fontWeight: 500 }}
+          style={{ borderRadius: 3, height: 44, fontWeight: 500 }}
         >
           {t("login.submit")}
         </Button>
@@ -886,7 +886,7 @@ export default function LoginPage() {
                 icon={<Fingerprint size={18} />}
                 loading={loading}
                 onClick={() => void handlePasskeyLogin()}
-                style={{ borderRadius: 10, height: 44, fontWeight: 500 }}
+                style={{ borderRadius: 3, height: 44, fontWeight: 500 }}
               >
                 {t("login.passkeySignIn")}
               </Button>
@@ -946,7 +946,7 @@ export default function LoginPage() {
             data-testid="login-create-local"
             loading={localLoading}
             onClick={() => void handleLocalAccount()}
-            style={{ borderRadius: 10, height: 44, fontWeight: 500 }}
+            style={{ borderRadius: 3, height: 44, fontWeight: 500 }}
           >
             {t(
               localAccountExists
@@ -966,7 +966,7 @@ export default function LoginPage() {
                 icon={providerIcon(provider)}
                 loading={ssoLoadingKind === provider.kind}
                 onClick={() => void onSso(provider.kind)}
-                style={{ borderRadius: 10, height: 44, fontWeight: 500 }}
+                style={{ borderRadius: 3, height: 44, fontWeight: 500 }}
               >
                 {t("login.oidcWith", { name: providerLabel(provider, t) })}
               </Button>

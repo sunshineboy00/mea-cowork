@@ -63,7 +63,7 @@ def test_load_provider_presets_integration() -> None:
     hai = next(p for p in presets if p["id"] == "tencent-hai")
     assert hai["base_url"] == "https://api.model.haihub.cn/v1"
     assert hai.get("provider_variant") == "hai"
-    # Harness owns the catalog ids and token limits. Octop only overlays reasoning.
+    # Harness owns the catalog ids and token limits. MEA Cowork only overlays reasoning.
     hai_models = {m["id"]: m for m in hai["models"]}
     assert hai_models["DeepSeek-V4-Pro"]["reasoning_config"]["adapter"] == "thinking"
     assert hai_models["deepseek-flash"]["reasoning_config"]["adapter"] == "thinking"

@@ -1,6 +1,6 @@
-# Octop 绿色便携包（多平台）
+# MEA Cowork 绿色便携包（多平台）
 
-解压即用：内置便携 CPython + Octop 及依赖，通过 `start.sh` / `start.bat` 启动。  
+解压即用：内置便携 CPython + MEA Cowork 及依赖，通过 `start.sh` / `start.bat` 启动。  
 **不依赖**系统 Python，也**不包含**桌面壳——用浏览器打开 Dashboard。
 （Electron 外壳在 `desktop/src/`，打包时把这个 zip 作为 `extraResources` 随包携带。）
 首启走上游正常 setup wizard（本目录**不含** OOB / UI 裁剪）。
@@ -31,12 +31,12 @@ macOS 的 `onnxruntime==1.23.2`，Intel 的 `opencv-python==4.11.0.86`）
 
 ## 产物布局
 
-公开文件名是 `Octop-portable-<plat>-<version>.zip`，只带 `browser`。桌面、OCR 和本地向量在 Docker `:<version>-full`，不进这个 zip。zip 内目录仍是：
+公开文件名是 `-<plat>-<version>.zip`，只带 `browser`。桌面、OCR 和本地向量在 Docker `:<version>-full`，不进这个 zip。zip 内目录仍是：
 
 ```
-Octop-<plat>/
+MEA Cowork-<plat>/
   runtime/       # python-build-standalone
-  packages/      # Octop + 依赖（site-packages，可搬迁）
+  packages/      # MEA Cowork + 依赖（site-packages，可搬迁）
   launch.py      # 启动引导（site.addsitedir / Windows pywin32）
   start.sh       # macOS / Linux
   start.bat      # Windows
@@ -117,5 +117,5 @@ Actions 使用 GitHub 上游 PBS（`PBS_BASE_URL`），本机构建默认 npmmir
 
 ## Electron 壳
 
-壳只消费 `Octop-portable-<plat>-<version>.zip`（zip 内仍是 `Octop-<plat>/`），不要把绿包编进 asar。步骤见
+壳只消费 `-<plat>-<version>.zip`（zip 内仍是 `MEA Cowork-<plat>/`），不要把绿包编进 asar。步骤见
 [`AGENT_ELECTRON_INTEGRATION.md`](../docs/AGENT_ELECTRON_INTEGRATION.md)。

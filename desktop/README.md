@@ -1,4 +1,4 @@
-# Octop desktop (green portable + Electron shell)
+# MEA Cowork desktop (green portable + Electron shell)
 
 All desktop-client code lives here. This is **not** `src/octop/infra/control/desktop`
 (remote desktop streaming).
@@ -10,7 +10,7 @@ All desktop-client code lives here. This is **not** `src/octop/infra/control/des
 | [`docs/DESKTOP_ARCHITECTURE.zh.md`](docs/DESKTOP_ARCHITECTURE.zh.md) | Target architecture for the Electron shell |
 | [`docs/LOCAL_ACCOUNT_CLAIM.zh.md`](docs/LOCAL_ACCOUNT_CLAIM.zh.md) | Claim an existing local account when `OCTOP_HOME` already has users (not implemented) |
 
-The Electron shell owns the whole desktop lifecycle: spawn Octop on a random
+The Electron shell owns the whole desktop lifecycle: spawn MEA Cowork on a random
 loopback port, own tray/window chrome, refuse self-updates. The green runtime
 is expanded before the user launches: NSIS `tar.exe` on Windows, and the tree
 `package.sh` assembled copied into the app on macOS and Linux. CI builds the
@@ -226,14 +226,14 @@ checksum, so only the pinned-download-host rule is enforced.
 
 ## Data directory
 
-Same as the Octop CLI/server default:
+Same as the MEA Cowork CLI/server default:
 
 - `OCTOP_HOME` → `~/.octop` (or the existing `OCTOP_HOME` env)
 - Green runtime → Windows `<install>\resources\sidecar`, macOS and Linux `Contents/Resources/portable` (Linux deb/rpm use the same `resources/portable` path under the install prefix)
 - Shell prefs → `~/.octop/desktop-settings.json`
 
 The shell points `OCTOP_GREEN_PACKAGES` at the extracted `packages/` directory, so
-`octop update` upgrades it through Octop's existing `--target` logic. Newer
+`octop update` upgrades it through MEA Cowork's existing `--target` logic. Newer
 extracted runtimes are never downgraded; PostgreSQL stays externally managed and
 is not copied by the shell.
 
@@ -251,14 +251,14 @@ platform/arch (`darwin-arm64`, `darwin-amd64`, `linux-arm64`, `linux-amd64`,
 and includes the `browser` extra only. Desktop, OCR, and local embedding stay
 on the Docker `:<version>-full` image. Pull requests, tags, and manual
 dispatch all build this one package. The workflow attaches
-`Octop-portable-<plat>-<version>.zip` to the GitHub Release, then mirrors it
+`-<plat>-<version>.zip` to the GitHub Release, then mirrors it
 to COS. Each job bootstraps portable CPython, packages the zip, smoke-tests
 every frozen requirement, and bundles that exact zip plus the Dashboard into
 a native Electron installer. For macOS this produces DMG and ZIP, for Windows
 NSIS EXE, and for Linux deb and rpm. A deb install also places a desktop
 launcher for the account that ran `apt` (see
 `desktop/docs/DESKTOP_ARCHITECTURE.zh.md` §7.2). Installer files are named
-`Octop-desktop-<plat>-<version>.<ext>`. The portable manifest records the
+`-<plat>-<version>.<ext>`. The portable manifest records the
 original Python version and the bundled zip's SHA-256. Installers are
 unsigned and not notarized.
 

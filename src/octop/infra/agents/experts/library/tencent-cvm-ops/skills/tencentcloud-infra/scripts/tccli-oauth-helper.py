@@ -243,7 +243,7 @@ def ensure_credential(profile, force=False, safe_seconds=_REFRESH_SAFE_SECONDS):
 
 
 def sync_to_octop(profile):
-    """登录成功后把凭据回灌给 Octop 工作台，让两侧共用同一套授权。
+    """登录成功后把凭据回灌给 MEA Cowork 工作台，让两侧共用同一套授权。
 
     工作台（云服务器页）用加密库、对话里用 tccli 文件；只在一边授权会让另一边
     一直显示"凭据失效"。回灌是一次 best-effort，失败不影响本次登录。
@@ -393,7 +393,7 @@ def do_login_with_code(args):
         # 保存凭证
         save_credential(token, cred, profile)
         clear_state()
-        # 回灌给 Octop 工作台：以后两边共用同一套授权，不用再各扫一次
+        # 回灌给 MEA Cowork 工作台：以后两边共用同一套授权，不用再各扫一次
         synced = sync_to_octop(profile)
 
         cred_path = cred_path_of_profile(profile)

@@ -1,4 +1,4 @@
-"""Protocol dispatch tests for the Octop Agent MCP Gateway."""
+"""Protocol dispatch tests for the MEA Cowork Agent MCP Gateway."""
 
 from __future__ import annotations
 

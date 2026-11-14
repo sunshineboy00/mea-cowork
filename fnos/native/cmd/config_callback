@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Octop 本地版 — 重新配置回调（应用「设置」窗口提交后执行）
+# MEA Cowork 本地版 — 重新配置回调（应用「设置」窗口提交后执行）
 #
 # 只处理管理员改密：两栏都空则保持不变；填了则更新 PKGVAR/.env、
 # octop-login.txt 应急备份，并对已初始化实例调用 octop user passwd。

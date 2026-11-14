@@ -1,6 +1,6 @@
 ---
 name: cvm-ai-doctor
-description: 腾讯云 CVM 的 OS 层诊断。快速分诊和单组件深度采集都经 TAT 下发到目标实例，不在 Octop 宿主机上执行。桌面环境、打印机、声卡、蓝牙、Conda、SMART 不在本技能范围。
+description: 腾讯云 CVM 的 OS 层诊断。快速分诊和单组件深度采集都经 TAT 下发到目标实例，不在 MEA Cowork 宿主机上执行。桌面环境、打印机、声卡、蓝牙、Conda、SMART 不在本技能范围。
 metadata:
   octop:
     emoji: "🩺"
@@ -14,7 +14,7 @@ metadata:
 
 # CVM 诊断
 
-本技能只诊断**用户指定的腾讯云 CVM**。采集经 `tencentcloud-infra` 的 `tat-exec.sh --file` 下发。在 Octop 本机执行这些脚本，诊断的是 Octop 自己。
+本技能只诊断**用户指定的腾讯云 CVM**。采集经 `tencentcloud-infra` 的 `tat-exec.sh --file` 下发。在 MEA Cowork 本机执行这些脚本，诊断的是 MEA Cowork 自己。
 
 云监控能解释症状时停在云监控。需要进程、挂载点或日志时再下发脚本。
 

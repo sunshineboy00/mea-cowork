@@ -1,16 +1,16 @@
 # 内网自建插件市场与专家市场
 
-访问不了 `octop.cloud` 和 `download.octop.cloud` 时，可以在局域网里按本文的 HTTP 接口自建市场。Octop 只认这两份目录和目录里给出的安装包地址，不需要部署完整的 octop.cloud。
+访问不了 `octop.cloud` 和 `download.octop.cloud` 时，可以在局域网里按本文的 HTTP 接口自建市场。MEA Cowork 只认这两份目录和目录里给出的安装包地址，不需要部署完整的 octop.cloud。
 
 技能市场（控制台「技能」里的 SkillHub）是另一套上游，默认 `https://api.skillhub.cn`，用 `SKILL_MARKET_ORIGIN` 指定。协议见 [技能市场](skill-market.md)。
 
-## Octop 怎么访问市场
+## MEA Cowork 怎么访问市场
 
 ```
 控制台打开插件市场 / 专家市场
         │
         ▼
-Octop 进程  GET {OCTOP_PORTAL_ORIGIN}/api/market/plugins
+MEA Cowork 进程  GET {OCTOP_PORTAL_ORIGIN}/api/market/plugins
             GET {OCTOP_PORTAL_ORIGIN}/api/market/experts
         │
         │  成功后把 data.items 整表缓存 30 秒
@@ -18,19 +18,19 @@ Octop 进程  GET {OCTOP_PORTAL_ORIGIN}/api/market/plugins
 用户点击安装
         │
         ▼
-Octop 进程  GET 该条目的 download_url
+MEA Cowork 进程  GET 该条目的 download_url
             （协议、主机、端口必须与 OCTOP_MARKET_REMOTE_ORIGIN 一致；路径不限）
 ```
 
-两条目录都是一次取全量。Octop 不传查询参数，专家的搜索和场景筛选都在本地做。所以 `content`、`quick_prompts` 也要放在列表条目里：详情页读的是同一份缓存，不会再去请求 `/{id}`。
+两条目录都是一次取全量。MEA Cowork 不传查询参数，专家的搜索和场景筛选都在本地做。所以 `content`、`quick_prompts` 也要放在列表条目里：详情页读的是同一份缓存，不会再去请求 `/{id}`。
 
-请求不带登录态。把市场放在内网，靠网络边界限制谁能访问；别指望 Octop 会带 Token。
+请求不带登录态。把市场放在内网，靠网络边界限制谁能访问；别指望 MEA Cowork 会带 Token。
 
-单次目录响应不超过 **1 MiB**，超时 **8 秒**。请求头带 `Accept: application/json` 和 `User-Agent: Octop`。`success` 必须是 JSON 布尔值 `true`。`data.items` 必须是数组，里面不是对象的元素会被丢掉。HTTP 错误、超时、门户地址为空、或者 `success` 不是 `true`，都算目录不可用：插件市场和专家市场都显示「暂时不可用」。
+单次目录响应不超过 **1 MiB**，超时 **8 秒**。请求头带 `Accept: application/json` 和 `User-Agent: MEA Cowork`。`success` 必须是 JSON 布尔值 `true`。`data.items` 必须是数组，里面不是对象的元素会被丢掉。HTTP 错误、超时、门户地址为空、或者 `success` 不是 `true`，都算目录不可用：插件市场和专家市场都显示「暂时不可用」。
 
-成功结果在进程里缓存 30 秒。改完 JSON 等一会儿，或者重启 Octop，再刷新页面。
+成功结果在进程里缓存 30 秒。改完 JSON 等一会儿，或者重启 MEA Cowork，再刷新页面。
 
-## 让 Octop 指向自建市场
+## 让 MEA Cowork 指向自建市场
 
 在 **跑 `octop run` 的那台机器** 上设置环境变量，然后重启进程。可以写进 `~/.octop/env`（服务启动时会载入），也可以写进 systemd 的 `Environment=`。
 
@@ -51,17 +51,17 @@ OCTOP_MARKET_REMOTE_ORIGIN=http://market.internal:9000
 /octop/market/experts/{slug}/{version}/{slug}-{version}.zip
 ```
 
-图标别指向公网。插件卡片的 `icon` 由**浏览器**直接加载；专家的 `icon_url` 若是 `http(s)` 图片，由 **Octop 进程**在创建专家时下载（失败就不用这张图，创建照常继续）。内网能访问的地址，或者下面的 `icon_name`，都行。
+图标别指向公网。插件卡片的 `icon` 由**浏览器**直接加载；专家的 `icon_url` 若是 `http(s)` 图片，由 **MEA Cowork 进程**在创建专家时下载（失败就不用这张图，创建照常继续）。内网能访问的地址，或者下面的 `icon_name`，都行。
 
 ## 接口
 
 ```yaml
 openapi: 3.0.3
 info:
-  title: Octop private plugin and expert market
+  title: MEA Cowork private plugin and expert market
   version: "1"
   description: >
-    Catalog read by the Octop server. Octop calls only the two list
+    Catalog read by the MEA Cowork server. MEA Cowork calls only the two list
     operations. Archive bytes are fetched from download_url.
 servers:
   - url: http://market.internal:9000
@@ -136,7 +136,7 @@ components:
           type: array
           items: { type: string }
         download_url: { type: string, format: uri }
-        updated_at: { type: string, description: "ISO-8601. Octop sorts newer stamps first." }
+        updated_at: { type: string, description: "ISO-8601. MEA Cowork sorts newer stamps first." }
     Expert:
       type: object
       required: [slug, download_url]
@@ -178,7 +178,7 @@ components:
 
 插件安装时，目录里的 `version` 必须和压缩包内 `plugin.yaml` 的 `version` 逐字一致，`id` 也要一致。专家安装时，压缩包里 `manifest.json` 的 `id` 必须等于目录里的 `slug`。
 
-`updated_at` 用同一形式的 ISO-8601（比如 `2026-10-26T00:00:00Z`）。Octop 按这个字符串倒序排。
+`updated_at` 用同一形式的 ISO-8601（比如 `2026-10-26T00:00:00Z`）。MEA Cowork 按这个字符串倒序排。
 
 已知的插件分组会显示成中文标签，其他字符串会归到「其他」：`lifestyle`、`news`、`finance`、`media`、`fun`、`games`、`tools`、`ops`。
 
@@ -239,14 +239,14 @@ server {
 }
 ```
 
-然后在 Octop 上设好前面两个环境变量并重启。打开控制台的插件市场和专家市场，应该能看到自建条目；安装时 Octop 只会向 `market.internal` 要压缩包。
+然后在 MEA Cowork 上设好前面两个环境变量并重启。打开控制台的插件市场和专家市场，应该能看到自建条目；安装时 MEA Cowork 只会向 `market.internal` 要压缩包。
 
 ## 对照检查
 
 | 现象 | 原因 |
 |---|---|
-| 插件市场或专家市场显示暂时不可用 | 目录请求失败、超时，或 `OCTOP_PORTAL_ORIGIN` 为空。在 Octop 机器上 `curl` 两个列表地址，确认 8 秒内返回 `"success": true`。 |
+| 插件市场或专家市场显示暂时不可用 | 目录请求失败、超时，或 `OCTOP_PORTAL_ORIGIN` 为空。在 MEA Cowork 机器上 `curl` 两个列表地址，确认 8 秒内返回 `"success": true`。 |
 | 卡片在，安装报没有安装包 | `download_url` 的协议、主机、端口和 `OCTOP_MARKET_REMOTE_ORIGIN` 不一致。 |
 | 安装后版本对不上 | 目录 `version` 与 `plugin.yaml` 的 `version` 不一致；或专家 `slug` 与 `manifest.json` 的 `id` 不一致。 |
-| 改了 JSON 页面不变 | 进程内缓存约 30 秒。等待或重启 Octop。 |
-| 图标空白 | 图标地址仍指向公网。改成 emoji、`icon_name`，或浏览器和 Octop 都能打开的内网地址。 |
+| 改了 JSON 页面不变 | 进程内缓存约 30 秒。等待或重启 MEA Cowork。 |
+| 图标空白 | 图标地址仍指向公网。改成 emoji、`icon_name`，或浏览器和 MEA Cowork 都能打开的内网地址。 |

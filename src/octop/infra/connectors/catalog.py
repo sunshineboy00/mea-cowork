@@ -83,7 +83,7 @@ class ConnectorCatalogEntry:
     allowed_tools: tuple[str, ...] | None = None
     # Catalog-driven remote MCP OAuth (Notion / Ardot / Linear…):
     # when auth_kind=oauth2 + mcp_mode=remote/internal and issuer + mcp_url are set,
-    # Octop uses DCR + PKCE against oauth_issuer and talks to mcp_url.
+    # MEA Cowork uses DCR + PKCE against oauth_issuer and talks to mcp_url.
     oauth_issuer: str | None = None
     mcp_url: str | None = None
     oauth_resource: str | None = None

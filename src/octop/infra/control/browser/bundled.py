@@ -1,7 +1,7 @@
 """Opt-in for a browser that was baked into the image.
 
 The binary can be present without Browser AI being turned on. Confirmation
-writes a marker under the Octop home (the data volume in Docker). Hosts
+writes a marker under the MEA Cowork home (the data volume in Docker). Hosts
 without the image marker keep the previous behavior.
 """
 

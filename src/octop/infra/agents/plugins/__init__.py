@@ -1,4 +1,4 @@
-"""Octop host-side plugin management."""
+"""MEA Cowork host-side plugin management."""
 
 from octop.infra.agents.plugins.manager import PluginManager
 from octop.infra.agents.plugins.plugin_tool_defaults import (

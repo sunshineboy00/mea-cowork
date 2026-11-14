@@ -41,7 +41,7 @@ def resolve_octop_backend(
     workspace_dir: str | Path | None = None,
     system_files_path: str = "",
 ) -> Any:
-    """Harness ``resolve_backend``, after Octop spec materialization."""
+    """Harness ``resolve_backend``, after MEA Cowork spec materialization."""
     install_opensandbox_fs()
     from octop_harness.backends import resolve_backend
 

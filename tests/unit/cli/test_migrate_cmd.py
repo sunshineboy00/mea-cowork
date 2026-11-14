@@ -113,7 +113,7 @@ def test_openclaw_migration_writes_and_reports(
     assert result.exit_code == 0, result.output
     assert "6 migrated, 0 skipped, 0 failed." in result.output
     assert "MCP server legacy uses the SSE transport" in result.output
-    assert "Channel slack is not available in Octop." in result.output
+    assert "Channel slack is not available in MEA Cowork." in result.output
     assert "restart it to load" in result.output
     assert "sk-proxy" not in result.output
     assert services.settings_repo.get_active_model() == ("proxy", "m1")

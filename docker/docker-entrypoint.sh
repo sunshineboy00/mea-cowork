@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # =============================================================================
-# Octop 容器入口脚本
+# MEA Cowork 容器入口脚本
 #
 # 环境变量:
 #   HOME                      — 必须为 /data，使 ~/.octop 映射到数据卷
@@ -104,7 +104,7 @@ octop_write_setup_hint() {
     local pw
     pw="$(tr -d '\n\r' < "$WIZARD_FILE")"
     cat > "$CREDENTIAL_FILE" << EOF
-Octop Setup Required
+MEA Cowork Setup Required
 ====================
 URL:      http://<host>:${PORT}
 
@@ -122,7 +122,7 @@ EOF
 octop_write_admin_credential() {
     local password="$1"
     cat > "$CREDENTIAL_FILE" << EOF
-Octop Login Credential
+MEA Cowork Login Credential
 ======================
 URL:      http://<host>:${PORT}
 Username: ${ADMIN_USERNAME}
@@ -156,7 +156,7 @@ octop_run_init() {
 }
 
 # Docker 默认 /dev/shm 为 64MB。桌面已打进镜像时，太小的话用户一点启用，Xvnc 就会失败。
-# 只提示，不阻止 Octop 本身启动。conf_dir 默认 /etc/octop-desktop，测试可传入临时目录。
+# 只提示，不阻止 MEA Cowork 本身启动。conf_dir 默认 /etc/octop-desktop，测试可传入临时目录。
 octop_warn_small_shm() {
     local conf_dir="${1:-/etc/octop-desktop}"
     local bytes
@@ -187,7 +187,7 @@ octop_prepare_arm_runtime() {
     code=$?
     set -e
     if [ "$code" -eq 132 ] || grep -qi 'illegal instruction' "$log"; then
-        echo "[entrypoint] cv2/onnxruntime 在这台 CPU 上出现非法指令（退出码 ${code}）。知识库 OCR 和本地向量不可用。ARM 虚拟机上常见（issues #2190、#2301）。Octop 仍会启动。" >&2
+        echo "[entrypoint] cv2/onnxruntime 在这台 CPU 上出现非法指令（退出码 ${code}）。知识库 OCR 和本地向量不可用。ARM 虚拟机上常见（issues #2190、#2301）。MEA Cowork 仍会启动。" >&2
     fi
     rm -f "$log"
 }
@@ -200,7 +200,7 @@ octop_entrypoint_main() {
     octop_warn_small_shm
 
     if [ ! -f "$DB_FILE" ] && [ ! -f "$INIT_MARKER" ]; then
-        echo "[entrypoint] 首次启动，正在初始化 Octop..."
+        echo "[entrypoint] 首次启动，正在初始化 MEA Cowork..."
         mkdir -p "$OCTOP_HOME"
 
         if [ -n "$default_password" ] && octop_validate_password "$default_password" 2>/dev/null; then
@@ -241,7 +241,7 @@ octop_entrypoint_main() {
     fi
 
     if [ $# -eq 0 ]; then
-        echo "[entrypoint] 正在启动 Octop，端口 $PORT..."
+        echo "[entrypoint] 正在启动 MEA Cowork，端口 $PORT..."
         exec octop run --host 0.0.0.0 --port "$PORT"
     fi
 

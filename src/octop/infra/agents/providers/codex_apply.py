@@ -1,4 +1,4 @@
-"""Apply Codex OAuth credentials to the Octop provider store."""
+"""Apply Codex OAuth credentials to the MEA Cowork provider store."""
 
 from __future__ import annotations
 

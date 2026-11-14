@@ -1,5 +1,5 @@
 /* ===================================================================
-   Octop Design System v3 – CSS Custom Properties
+   MEA Cowork Design System v3 – CSS Custom Properties
    Default brand: Emerald #00B96B (brand) / #007E49 (solid, WCAG AA)
    / #2ED58E (dark-mode text)
    Palettes via html[data-palette="rose|tech|indigo|teal|violet|emerald|amber|slate"]
@@ -153,7 +153,7 @@ html[data-theme="light"] {
   /* ---- Cards ---- */
   --fn-card-border-normal: #e5e7eb;
   --fn-card-shadow-normal: 0 1px 3px rgba(0, 0, 0, 0.04);
-  --fn-card-radius: 12px;
+  --fn-card-radius: 3px;
 
   /* ---- Sidebar ---- */
   --fn-sidebar-width: 240px;

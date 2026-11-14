@@ -10,8 +10,8 @@ from typing import Any
 
 from octop.infra.migration.plan import McpImport, MigrationPlan, ProviderImport, SkillImport
 
-# Hosted providers both tools know by id: (Octop kind, base URL, API key variables).
-# Base URLs match Octop's own provider presets.
+# Hosted providers both tools know by id: (MEA Cowork kind, base URL, API key variables).
+# Base URLs match MEA Cowork's own provider presets.
 KNOWN_PROVIDERS: dict[str, tuple[str, str, tuple[str, ...]]] = {
     "anthropic": ("anthropic", "https://api.anthropic.com/v1", ("ANTHROPIC_API_KEY",)),
     "openai": ("openai", "https://api.openai.com/v1", ("OPENAI_API_KEY",)),
@@ -97,7 +97,7 @@ def add_mcp_server(
     resolve: Any,
     default_remote_transport: str,
 ) -> None:
-    """Translate one MCP server entry into Octop's custom MCP shape.
+    """Translate one MCP server entry into MEA Cowork's custom MCP shape.
 
     ``resolve`` substitutes the source tool's ``${VAR}`` references and leaves
     unknown ones as written.

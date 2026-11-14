@@ -205,7 +205,7 @@ def _safe_python_search(
     max_count: int | None = None,
     timeout: int = DEFAULT_GREP_TIMEOUT,
 ) -> tuple[dict[str, list[tuple[int, str]]], bool, str | None]:
-    """Octop replacement for ``FilesystemBackend._python_search``."""
+    """MEA Cowork replacement for ``FilesystemBackend._python_search``."""
     deadline = time.monotonic() + timeout
     glob_matcher = compile_grep_include_glob(include_glob) if include_glob else None
     total = 0

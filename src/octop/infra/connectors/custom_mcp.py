@@ -455,7 +455,7 @@ def _comparable_oauth_client(client: Any) -> dict[str, Any]:
 
 
 def harness_spec_for_server(spec: dict[str, Any]) -> dict[str, Any]:
-    """Strip Octop meta keys; keep langchain-mcp-adapters connection fields."""
+    """Strip MEA Cowork meta keys; keep langchain-mcp-adapters connection fields."""
     out = {k: v for k, v in spec.items() if k not in _HARNESS_STRIP_KEYS}
     # Ensure stdio always has args list for adapters.
     if out.get("transport") == "stdio" and "args" not in out:

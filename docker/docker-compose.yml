@@ -1,5 +1,5 @@
 # =============================================================================
-# Octop — Docker Compose
+# MEA Cowork — Docker Compose
 #
 # 用法（在仓库根目录执行）:
 #   docker compose -f docker/docker-compose.yml up -d

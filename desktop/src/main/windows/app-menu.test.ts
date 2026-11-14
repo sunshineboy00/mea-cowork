@@ -21,14 +21,14 @@ test("菜单名跟随语言", () => {
     edit: "编辑",
     view: "视图",
     help: "帮助",
-    about: "关于 Octop",
+    about: "关于 MEA Cowork",
   });
   assert.deepEqual(windowsAppMenuLabels("en-US"), {
     file: "File",
     edit: "Edit",
     view: "View",
     help: "Help",
-    about: "About Octop",
+    about: "About MEA Cowork",
   });
 });
 
@@ -62,7 +62,7 @@ test("四个顶层菜单带上常规命令", () => {
   ]);
   const help = menu[3]?.submenu;
   assert.ok(Array.isArray(help));
-  assert.equal(help[0]?.label, "关于 Octop");
+  assert.equal(help[0]?.label, "关于 MEA Cowork");
   help[0]?.click?.(
     {} as never,
     undefined,

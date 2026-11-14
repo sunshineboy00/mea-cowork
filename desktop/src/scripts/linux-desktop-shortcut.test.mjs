@@ -80,7 +80,7 @@ async function fixture() {
   const gioLog = join(root, "gio.log");
   const entry = join(root, "octop.desktop");
   writeFileSync(gioLog, "");
-  writeFileSync(entry, "[Desktop Entry]\nName=Octop\nExec=/usr/bin/octop %U\n");
+  writeFileSync(entry, "[Desktop Entry]\nName=MEA Cowork\nExec=/usr/bin/octop %U\n");
   writeExe(
     bin,
     "getent",
@@ -243,7 +243,7 @@ test("a removed icon stays gone, and an icon that remains is refreshed", { skip:
     run(fx, place, { SUDO_USER: "alice" });
     assert.equal(statSync(link, { throwIfNoEntry: false }), undefined);
 
-    writeFileSync(fx.entry, "[Desktop Entry]\nName=Octop\nExec=/usr/bin/octop-new %U\n");
+    writeFileSync(fx.entry, "[Desktop Entry]\nName=MEA Cowork\nExec=/usr/bin/octop-new %U\n");
     writeFileSync(link, "stale\n");
     run(fx, place, { SUDO_USER: "alice" });
     assert.equal(readFileSync(link, "utf8"), readFileSync(fx.entry, "utf8"));

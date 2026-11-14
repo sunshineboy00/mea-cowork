@@ -1,4 +1,4 @@
-"""Remote plugin and expert catalogs from the Octop portal."""
+"""Remote plugin and expert catalogs from the MEA Cowork portal."""
 
 from octop.infra.market.errors import PortalMarketError
 from octop.infra.market.experts import get_market_expert, list_market_experts

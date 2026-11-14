@@ -62,7 +62,7 @@ def test_http_403_is_a_rejected_token_not_a_missing_route() -> None:
     text = _annotate_bridge_dial_error(exc)
     assert "HTTP 403" in text
     assert "rejected token" in text
-    assert "needs Octop with /api/bridge/ws" not in text
+    assert "needs MEA Cowork with /api/bridge/ws" not in text
 
 
 class _Close:

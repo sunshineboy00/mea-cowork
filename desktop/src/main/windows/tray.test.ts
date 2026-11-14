@@ -40,7 +40,7 @@ test("Linux tray uses the png, in dev and in the package", () => {
 
 test("packaged Windows falls back to the icon embedded in the executable", () => {
   const resourcesDir = join("install", "resources");
-  const execPath = join("install", "Octop.exe");
+  const execPath = join("install", "MEA Cowork.exe");
   assert.deepEqual(
     trayIconCandidates({ platform: "win32", isPackaged: true, resourcesDir, execPath }),
     [join(resourcesDir, "icon.ico"), execPath],
@@ -49,7 +49,7 @@ test("packaged Windows falls back to the icon embedded in the executable", () =>
 
 test("the tray image is the ico, never the executable", () => {
   const resourcesDir = join("install", "resources");
-  const execPath = join("install", "Octop.exe");
+  const execPath = join("install", "MEA Cowork.exe");
   const candidates = trayIconCandidates({
     platform: "win32",
     isPackaged: true,

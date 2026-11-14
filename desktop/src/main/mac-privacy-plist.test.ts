@@ -35,5 +35,5 @@ test("打包资源目录写入中英文 InfoPlist.strings", () => {
   assert.equal(english.subarray(0, 2).toString("hex"), "fffe");
   assert.equal(chinese.subarray(0, 2).toString("hex"), "fffe");
   assert.match(english.toString("utf16le"), /NSMicrophoneUsageDescription/);
-  assert.match(chinese.toString("utf16le"), /Octop 录制屏幕/);
+  assert.match(chinese.toString("utf16le"), /MEA Cowork 录制屏幕/);
 });

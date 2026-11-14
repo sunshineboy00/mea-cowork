@@ -1,8 +1,8 @@
-# Octop 新一代跨平台桌面客户端架构方案 (Electron + Local Python Runtime)
+# MEA Cowork 新一代跨平台桌面客户端架构方案 (Electron + Local Python Runtime)
 
-本文档制定了 Octop 新一代跨平台桌面客户端（支持 Windows、macOS、Linux）的系统架构、进程模型、Python 独立运行时集成、生命周期守护与安全代理方案。
+本文档制定了 MEA Cowork 新一代跨平台桌面客户端（支持 Windows、macOS、Linux）的系统架构、进程模型、Python 独立运行时集成、生命周期守护与安全代理方案。
 
-Octop Desktop 每次随壳启动自己的 Python 进程，监听回环地址上由操作系统分配的随机端口。版本更新只走壳，桌面托管的 Web 应用不能单独升级后端或前端。
+MEA Cowork Desktop 每次随壳启动自己的 Python 进程，监听回环地址上由操作系统分配的随机端口。版本更新只走壳，桌面托管的 Web 应用不能单独升级后端或前端。
 
 ---
 
@@ -34,7 +34,7 @@ Octop Desktop 每次随壳启动自己的 Python 进程，监听回环地址上�
                             │ Spawn / Ready / Health Check    │ WebContents / Preload
                             ▼                                 ▼
 ┌───────────────────────────────────────────┐     ┌──────────────────────────────────────┐
-│        Python Sidecar (Octop Server)      │     │      Renderer Process (Dashboard)    │
+│        Python Sidecar (MEA Cowork Server)      │     │      Renderer Process (Dashboard)    │
 │                                           │     │                                      │
 │  - Runtime: install dir, all platforms    │     │  - Origin: octop://app/              │
 │  - Win: resources/sidecar; else portable  │     │  - React 18 + TypeScript + Vite      │
@@ -55,7 +55,7 @@ Octop Desktop 每次随壳启动自己的 Python 进程，监听回环地址上�
 
 ### 2.1 产物打包与放置
 
-- 由 CI / Makefile 打包生成一套绿色便携包，extras 与已发布的精简镜像一致：`Octop-portable-<plat>-<version>.zip` 只带 `browser`。桌面、OCR 和本地向量留在 Docker `:<version>-full`，不进桌面安装包。Pull request、打 tag 和手动 dispatch 都打这一套。
+- 由 CI / Makefile 打包生成一套绿色便携包，extras 与已发布的精简镜像一致：`-<plat>-<version>.zip` 只带 `browser`。桌面、OCR 和本地向量留在 Docker `:<version>-full`，不进桌面安装包。Pull request、打 tag 和手动 dispatch 都打这一套。
 - **macOS / Linux**：`package.sh` 组装出的目录原样复制到 `resources/portable/`（`launch.py` 在这一层），安装包里不再放 zip。复制发生在 electron-builder 打包之前。安装包不签名、不公证。Linux 的 deb、rpm 都带上这棵树。DMG 没有安装脚本，deb/rpm 安装的也是同一棵已展开的树，所以不能留到安装时再解压。
 - **Windows**：zip 与 `portable-version.json` 放在 `resources/portable/`。NSIS `customInstall` 用 `tar.exe` 解到 `$INSTDIR\resources\sidecar\`，卸载时删掉这个目录。不把四万多个文件逐个打进 NSIS。
 - 打 zip 之前删掉 `googleapiclient/discovery_cache/documents`、`PyObjCTest`、`*.dSYM`，以及第三方包里的 `tests` / `test` / `testing`。`octop` 自己的目录和 `numpy/testing` 保留。缺静态 discovery 文档时改为联网拉取。绿色 zip 和安装包是同一棵树，所以两处一起生效。
@@ -202,7 +202,7 @@ $SHELL -ilc "env -0"
 ### 3.3 就绪检测（Ready Signal）
 
 - 主进程只轮询自己刚启动的进程：`http://127.0.0.1:<assigned-port>/api/health`。
-- 收到符合 Octop 健康响应结构的成功响应后，判定本次后台就绪。
+- 收到符合 MEA Cowork 健康响应结构的成功响应后，判定本次后台就绪。
 - 就绪判断不依赖 stdout 文本。
 - 健康检查最多等 3 分钟。打包运行时冷导入要超过 30 秒才回答 `/api/health`。子进程提前退出时立刻失败，不等满这段时间。超时后展示可操作的诊断信息。
 
@@ -438,13 +438,13 @@ Preload 仅暴露最小类型化桥梁 `window.octopDesktop`：
 
 ### 7.1 Windows 安装位置与盘符
 
-Windows 安装包使用带目录页的 NSIS 向导，对应 electron-builder 的 `oneClick: false` 与 `allowToChangeInstallationDirectory: true`。向导提供标准目录页，用户可以修改完整安装路径，包括盘符，例如从默认的 `C:\Program Files\Octop` 改到 `D:\Apps\Octop`。浏览对话框列出当前可用的盘符。
+Windows 安装包使用带目录页的 NSIS 向导，对应 electron-builder 的 `oneClick: false` 与 `allowToChangeInstallationDirectory: true`。向导提供标准目录页，用户可以修改完整安装路径，包括盘符，例如从默认的 `C:\Program Files\MEA Cowork` 改到 `D:\Apps\MEA Cowork`。浏览对话框列出当前可用的盘符。
 
-- 默认目录仍是本机安装范围下的常规位置：每机器安装为 `$PROGRAMFILES64\Octop`，每用户安装为 `$LOCALAPPDATA\Programs\Octop`。
+- 默认目录仍是本机安装范围下的常规位置：每机器安装为 `$PROGRAMFILES64\MEA Cowork`，每用户安装为 `$LOCALAPPDATA\Programs\MEA Cowork`。
 - 用户确认的路径写入安装器的 `$INSTDIR`。开始菜单快捷方式和卸载登记都指向这个目录。
 - 安装完成页给出「创建桌面快捷方式」。首次安装默认勾选，升级默认不勾选。只有勾选才会创建；取消勾选不会删掉已经存在的快捷方式。静默安装仍会创建，除非传入 `--no-desktop-shortcut`。
 - 目标目录所在的盘必须已经就绪，并且安装进程对它有写权限。需要提权时由安装器申请，不因为用户选了非系统盘而失败。
-- 安装和卸载开始前，如果这个安装目录里的 `Octop.exe` 仍在运行，安装器停止并提示「正在运行，请先在系统托盘中退出应用后重试」。不结束进程。升级时先等最多 10 秒，给壳自己退出的时间。其它目录里的同名程序不算。
+- 安装和卸载开始前，如果这个安装目录里的 `MEA Cowork.exe` 仍在运行，安装器停止并提示「正在运行，请先在系统托盘中退出应用后重试」。不结束进程。升级时先等最多 10 秒，给壳自己退出的时间。其它目录里的同名程序不算。
 - 后续壳更新沿用这次写入的安装目录，不把程序装回默认盘。
 - 展开 `resources\sidecar` 之后，安装器把 `packages` 预编译进 `OCTOP_HOME\pyc`（未设置时为 `%USERPROFILE%\.octop\pyc`），与外壳启动时的 `PYTHONPYCACHEPREFIX` 相同。编译失败不中止安装。
 - 卸载删除选定目录中的程序文件、开始菜单快捷方式、桌面快捷方式和安装时展开的 `resources\sidecar`，并删除 `OCTOP_HOME\pyc`（未设置时为 `%USERPROFILE%\.octop\pyc`）。同目录下的数据库、工作区、密钥和 `config.json` 保留。更早版本解压在该目录下的 `portable/` 也不删除。下次安装会再编译字节码。
@@ -467,7 +467,7 @@ Windows 安装包使用带目录页的 NSIS 向导，对应 electron-builder 的
 Electron 桌面端包位于 `desktop/src/`：
 
 ```text
-Octop/
+MEA Cowork/
   desktop/
     src/                        # Electron 包根目录（pnpm 包，Node 24）
       package.json
@@ -577,7 +577,7 @@ query（页面是 `sandbox: true`、无 preload、无 IPC，这是两者唯一�
 
 1. **构建 Dashboard**：执行仓库已有前端构建流程，生成最新静态产物。
 2. **构建或下载对应平台的 Python 绿色包**：
-   - `Octop-portable-<platform>-<version>.zip`
+   - `-<platform>-<version>.zip`
    - macOS / Linux：把 `package.sh` 组装好的目录复制到 `desktop/src/resources/portable/`，不把 zip 打进安装包。
    - Windows：zip 放在 `desktop/src/resources/portable/`，安装时再展开。
 3. **Electron 打包**：
@@ -635,7 +635,7 @@ query（页面是 `sandbox: true`、无 preload、无 IPC，这是两者唯一�
 
 ## 11. 关键决策摘要
 
-1. Electron 只拥有桌面能力，Octop Python 服务继续拥有业务逻辑。
+1. Electron 只拥有桌面能力，MEA Cowork Python 服务继续拥有业务逻辑。
 2. Python 运行时位于 asar 外，并复用现有绿色便携包契约。三个平台都在安装时展开到安装目录。数据根目录尊重已设置的 `OCTOP_HOME`；未设置时为 `~/.octop`。数据库、工作区和 `config.json` 都在这个根目录下。
 3. Desktop 每次随壳启动自己的 Python 进程，退出时只回收这次启动的进程树。
 4. 本次进程监听 `127.0.0.1` 和操作系统分配的随机端口；地址通过环境变量覆盖，不写回 `config.json`。

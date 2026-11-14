@@ -1,8 +1,8 @@
 #!/bin/bash
 #
-# Octop 本地版（原生 app）— 生命周期管理
+# MEA Cowork 本地版（原生 app）— 生命周期管理
 # 直接以进程方式运行在飞牛主机上（非 Docker），监听 0.0.0.0:8089。
-# start:  启动 Octop（setsid 后台，写 PID 文件）；端口未就绪则失败并写出原因
+# start:  启动 MEA Cowork（setsid 后台，写 PID 文件）；端口未就绪则失败并写出原因
 # stop:   杀进程树并释放 8089；超时 SIGKILL。启动被中途杀掉也会收尸。
 # status: PID 存活或 8089 仍在监听（防止外壳已死、Python 孤儿仍占端口时显示已停止）
 #
@@ -115,7 +115,7 @@ start_process() {
         fi
     fi
 
-    log_msg "Starting Octop (native) on port ${PORT} ..."
+    log_msg "Starting MEA Cowork (native) on port ${PORT} ..."
 
     if [ ! -f "${DATA_DIR}/.octop/octop.db" ] && [ ! -f "${DATA_DIR}/octop.db" ]; then
         log_msg "数据库尚未初始化，先执行 --prepare"
@@ -158,7 +158,7 @@ start_process() {
         if port_ready; then
             trap - INT TERM HUP
             rm -f "${DATA_DIR}/octop-start-error.txt" "${PKGVAR}/last-error.txt"
-            log_msg "Octop pid=$octop_pid 端口 ${PORT} 已就绪"
+            log_msg "MEA Cowork pid=$octop_pid 端口 ${PORT} 已就绪"
             return 0
         fi
         if ! kill -0 "$octop_pid" 2>/dev/null; then
@@ -176,7 +176,7 @@ start_process() {
 }
 
 stop_process() {
-    log_msg "Stopping Octop (native) ..."
+    log_msg "Stopping MEA Cowork (native) ..."
 
     if [ -r "${PID_FILE}" ]; then
         pid=$(head -n 1 "${PID_FILE}" | tr -d '[:space:]')
@@ -216,7 +216,7 @@ stop_process() {
     local i
     for i in $(seq 1 15); do
         if ! port_ready; then
-            log_msg "Octop (native) stopped, port ${PORT} released"
+            log_msg "MEA Cowork (native) stopped, port ${PORT} released"
             return 0
         fi
         sleep 0.2

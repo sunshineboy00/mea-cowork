@@ -1,4 +1,4 @@
-"""HTTP reads against the Octop portal and the remote market object origin."""
+"""HTTP reads against the MEA Cowork portal and the remote market object origin."""
 
 from __future__ import annotations
 
@@ -93,7 +93,7 @@ def fetch_json(url: str, *, limit: int) -> Any:
 def fetch_bytes(url: str, *, limit: int) -> bytes:
     request = Request(
         url,
-        headers={"Accept": "application/json", "User-Agent": "Octop"},
+        headers={"Accept": "application/json", "User-Agent": "MEA Cowork"},
     )
     try:
         with urlopen(request, timeout=FETCH_TIMEOUT_SECONDS) as response:  # noqa: S310

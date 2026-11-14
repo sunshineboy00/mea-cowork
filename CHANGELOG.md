@@ -105,7 +105,7 @@
 ## [1.0.2] - 2026-10-18
 
 ### 新增
-- 两台 Octop 可以连起来用：通过云端协同使用对方的专家，能聊天，也能改对方工作区里的文件
+- 两台 MEA Cowork 可以连起来用：通过云端协同使用对方的专家，能聊天，也能改对方工作区里的文件
 - 专家可以组队。主持人负责分派任务和收尾总结，成员的回复会回到聊天，也会同步到即时通讯
 - 新连接器：企查查、OpenAlex、语雀、Obsidian、Agent Mail，以及钉钉命令行（设备码登录后可查通讯录、日程和文档）
 - 可以用公司的 LDAP 账号登录。Telegram 机器人可以限定哪些用户能跟它说话
@@ -197,7 +197,7 @@
 
 ### 变更
 - 头像、技能卡片、个人设置抽屉与登录页外观
-- 升级 octop-harness 与 octop-memory；README 加入 Octop Pet
+- 升级 octop-harness 与 octop-memory；README 加入 MEA Cowork Pet
 
 ### 新增
 - 模型配置支持显式选择 OpenAI Chat Completions 或 Responses API，并可按模型启用受限的 Responses → Chat Completions 协议回退
@@ -229,7 +229,7 @@
 ## [1.0.2b5] - 2026-09-29
 
 ### 新增
-- Octop↔Octop 云端桥接，经隧道使用远程专家（聊天与工作区可写；工具/插件/渠道部分可写；技能包、全局 ACP、连接器、知识库仅本机）
+- MEA Cowork↔MEA Cowork 云端桥接，经隧道使用远程专家（聊天与工作区可写；工具/插件/渠道部分可写；技能包、全局 ACP、连接器、知识库仅本机）
 - 内置助手可回答产品与使用问题
 - 可配置 Ollama 本地模型下载目录
 - 账号可自定义侧边栏；角色改为存模板 id（账号侧栏与权限快照，不是运行时角色同步）
@@ -594,7 +594,7 @@
 - 专家支持上传自定义头像，写入工作区 `.octop/avatar.png`（或 jpg/webp/gif）并通过 `agents.icon_url` 展示；发布快照会带上头像，安装后自动绑定。未设置时仍用配色 + Lucide 图标
 - 实例化专家的欢迎语改为单一 `welcome_message` 字段（用户自填，不再分中英）；专家模板仍保留双语欢迎词
 - 智能体状态接口返回 `memory_maintenance`（queued / pruning / compacting）。聊天页显示阶段进度条，整理本库时暂停发送；专家卡片显示「整理记忆」标签。
-- 聊天页：文件工具卡片显示「编辑了 N 个文件」（不含截图）；文件面板标题改为「文件变更」。会话 `artifacts` 由 Octop 工具中间件在写文件 / 发文件 / 桌面截图成功后写入，切换会话后仍可在文件变更中查看。路径优先取工具 args，仅在 args 没有 path 时才扫结果文本。专家选择器「共享」标记与名称同一行。右侧增加工作区入口；工作区目录树支持将文件拖到其他文件夹。
+- 聊天页：文件工具卡片显示「编辑了 N 个文件」（不含截图）；文件面板标题改为「文件变更」。会话 `artifacts` 由 MEA Cowork 工具中间件在写文件 / 发文件 / 桌面截图成功后写入，切换会话后仍可在文件变更中查看。路径优先取工具 args，仅在 args 没有 path 时才扫结果文本。专家选择器「共享」标记与名称同一行。右侧增加工作区入口；工作区目录树支持将文件拖到其他文件夹。
 - 知识库、技能包、已发布专家改为整数自增 `id` + 对外字符串 ID（`knowledge_base_id` / `skill_package_id` / `published_expert_id`；文档用 `kb_id` 关联）。`agents` 仍用字符串引用技能包与已发布专家。知识库文档支持文件夹路径；分片大小等仍存实例 `settings`。删除未使用的 `knowledge_base_members`。上述库变更与专家资料列、会话 artifacts、实例欢迎语单字段一并作为 schema v7。
 - 对话检索结果附带知识库引用标记；聊天页在回答下方展示可点击的来源文档（跳转知识库页）
 
@@ -644,7 +644,7 @@
 
 ### 新增
 
-- Octop-owned built-in `skill-manager` for conversational Skill lifecycle
+-  built-in `skill-manager` for conversational Skill lifecycle
   management from uploaded files, archives, Git/GitHub or web URLs, and
   SkillHub. It is seeded into every agent instance without modifying
   harness-agent and installs user Skills only under that agent's `skills/`.
@@ -673,11 +673,11 @@
 - 新增每用户模型与推理（reasoning）偏好设置
 
 ### 变更
-- 依赖 `orcakit-harness-agent[all]>=0.9.20`；FilesystemGuard / ModelSettings 由 harness 自动挂载（Octop 仅保留 BinaryReadGuard 与 runtime_limits）
+- 依赖 `orcakit-harness-agent[all]>=0.9.20`；FilesystemGuard / ModelSettings 由 harness 自动挂载（MEA Cowork 仅保留 BinaryReadGuard 与 runtime_limits）
 - 专家 `workspace_dir`：创建时写入 `config_json.workspace_dir`（默认 `{OCTOP_HOME}/agents/<id>/`），所有 backend 共用；Docker 在容器内镜像同名路径为专家工作区，宿主同路径放 sessions/memory/checkpoints
 - Docker：`sandbox_scope`（agent/user/fixed）+ `sandbox_prefix`（默认 `octop_sandbox`）；删专家不删容器；专家工作区在 running 时可预览；Admin 存储 `previewable` 仅控制浏览（默认仅 fixed）；探测用 test 沙箱做真实读写
 - 删除被专家 `named` 引用的存储后端时返回 `STORAGE_BACKEND_REFERENCED` 并列出引用专家
-- 将 IM 频道定时任务从 ACE 迁移至 Octop cron
+- 将 IM 频道定时任务从 ACE 迁移至 MEA Cowork cron
 
 ### 修复
 - 超大图片不再降级为附件路径提示：超过视觉嵌入上限（2 MB）的图片由 Pillow 压缩缩放至最长边 1568px 后仍以内联图片嵌入请求（保留 EXIF 方向与透明通道，仅当压缩失败时才回退为路径提示），视觉模型自动升级随之生效 (#219)
@@ -878,7 +878,7 @@
 ## [0.9.8] - 2026-07-15
 
 ### 新增
-- 远程浏览器/远程桌面安装日志面板新增「复制日志」按钮，并在安装失败时提示可将日志交给 Octop 协助排查
+- 远程浏览器/远程桌面安装日志面板新增「复制日志」按钮，并在安装失败时提示可将日志交给 MEA Cowork 协助排查
 - 新增前端 `copyText` 工具，在非安全上下文（如 plain-http 管理页）下通过临时 textarea + execCommand 回退，保证剪贴板复制可用
 - 桌面安装脚本新增 `A-F4`（关闭窗口）与 `C-A-D`（显示桌面）openbox 快捷键，对应桌面快捷键
 
@@ -891,7 +891,7 @@
 - 新增 `docker-publish.yml` 工作流，构建并推送镜像到 Docker Hub
 - 移除 `release.yml` 中多余的 `id-token: write` 权限
 - 删除已与现行 Docker Hub 发版流程脱节的离线部署脚本 `docker_deploy.sh`，并清理 `docker/README.md`、`README_CN.md` 中的相关章节
-- 修正 `docker/README.md` 标题笔误（`ODocker` → `Octop`）
+- 修正 `docker/README.md` 标题笔误（`ODocker` → `MEA Cowork`）
 
 ## [0.9.7] - 2026-07-14
 
@@ -932,7 +932,7 @@
 - 修复 Windows 下 sqlite 路径测试、媒体路径与 POSIX 专属测试导致的 CI 失败
 - 修复 Windows 测试收集问题（惰性导入 pwd 模块）
 - 修复 harness-memory Bridge 导入路径
-- 修复 CI 流水线并让测试套件通过，项目重命名为 Octop
+- 修复 CI 流水线并让测试套件通过，项目重命名为 MEA Cowork
 
 ### 变更
 - Windows 兼容：默认 agent backend 限定到 workspace，并集中 POSIX 专属 stdlib 调用以适配 Windows mypy CI

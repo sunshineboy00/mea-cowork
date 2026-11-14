@@ -96,7 +96,7 @@ tccli monitor GetMonitorData \
 - **tencentcloud-infra**：执行 `tccli tat RunCommand`，将编码内容发送到远端 CVM
 - **远端 CVM**：TAT 自动解码并运行脚本，返回 KEY=VALUE 结果
 
-**Step A — 在 Octop 所在机器上编码，再经 tat-exec 下发：**
+**Step A — 在 MEA Cowork 所在机器上编码，再经 tat-exec 下发：**
 
 ```bash
 # Linux / macOS（-w 0 强制单行输出，无需 tr 管道）

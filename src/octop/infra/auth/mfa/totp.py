@@ -32,7 +32,7 @@ def open_secret(secret_repo: SecretRepo, blob: bytes) -> str:
         raise OctopError(ErrorCode.MFA_INVALID, "invalid MFA secret") from exc
 
 
-def otpauth_uri(*, secret: str, username: str, issuer: str = "Octop") -> str:
+def otpauth_uri(*, secret: str, username: str, issuer: str = "MEA Cowork") -> str:
     return pyotp.TOTP(secret).provisioning_uri(name=username, issuer_name=issuer)
 
 

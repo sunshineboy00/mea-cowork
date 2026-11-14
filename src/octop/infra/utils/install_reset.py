@@ -1,4 +1,4 @@
-"""Reset Octop application state without deleting the install runtime.
+"""Reset MEA Cowork application state without deleting the install runtime.
 
 ``scripts/install.sh`` puts the virtualenv at ``~/.octop/venv`` and the
 launcher at ``~/.octop/bin``. ``init --force`` and ``clean --all`` used to
@@ -81,7 +81,7 @@ def partition_install_root(root: Path) -> tuple[list[Path], list[Path]]:
     """Split *root* into ``(state, runtime)`` children. Missing root → empty."""
     if root_is_runtime(root):
         raise InstallResetError(
-            f"{root} is the Octop install runtime. Refusing to delete it. "
+            f"{root} is the MEA Cowork install runtime. Refusing to delete it. "
             "Repair the CLI with: bash install.sh"
         )
     if not root.is_dir():

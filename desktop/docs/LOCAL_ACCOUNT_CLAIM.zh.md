@@ -55,7 +55,7 @@ sidecar 在 `secrets.desktop_device` 不存在或已撤销时，向 `<OCTOP_HOME
 | POST | `/api/auth/device/claim` | 校验 nonce 与 `user_id`，写入 `desktop_device`，签发 JWT |
 | POST | `/api/auth/device/local-user` | 新建本地用户，绑定设备凭证，签发 JWT |
 
-nonce 放在请求头 `X-Octop-Claim-Nonce`，不放查询字符串。`claim` 与 `local-user` 的正文另含 `device_token`（以及新建时的用户字段）。`candidates` 只靠请求头。
+nonce 放在请求头 `X-`，不放查询字符串。`claim` 与 `local-user` 的正文另含 `device_token`（以及新建时的用户字段）。`candidates` 只靠请求头。
 
 `claim` 写入的 JSON 与现有 `register` 相同：`v`、`user_id`、`hash`、`label`、`created_at`，存在 `secrets` 表的一行 `desktop_device`。后一次认领覆盖前一次绑定。审计动作为 `auth.device_claimed`。
 

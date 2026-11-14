@@ -1,4 +1,4 @@
-"""Plugin records published on the Octop portal."""
+"""Plugin records published on the MEA Cowork portal."""
 
 from __future__ import annotations
 

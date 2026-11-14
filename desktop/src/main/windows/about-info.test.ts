@@ -10,10 +10,10 @@ import {
 } from "./about-info";
 
 test("per-user and per-machine installs are named, dev electron is not", () => {
-  assert.equal(windowsInstallScope("C:\\Users\\finn\\Octop\\Octop.exe"), "user");
-  assert.equal(windowsInstallScope("C:\\Program Files\\Octop\\Octop.exe"), "system");
+  assert.equal(windowsInstallScope("C:\\Users\\finn\\MEA Cowork\\MEA Cowork.exe"), "user");
+  assert.equal(windowsInstallScope("C:\\Program Files\\MEA Cowork\\MEA Cowork.exe"), "system");
   assert.equal(
-    windowsInstallScope("D:\\repo\\Octop\\desktop\\src\\node_modules\\electron\\dist\\electron.exe"),
+    windowsInstallScope("D:\\repo\\MEA Cowork\\desktop\\src\\node_modules\\electron\\dist\\electron.exe"),
     null,
   );
 });

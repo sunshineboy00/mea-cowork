@@ -58,7 +58,7 @@ def workspace_root_dir_of(raw: Any) -> str | None:
 
 
 def effective_workspace_root_dir(raw: Any) -> str | None:
-    """Stored workspace-root policy, ignored when Octop runs in a container."""
+    """Stored workspace-root policy, ignored when MEA Cowork runs in a container."""
     if running_in_container():
         return None
     return workspace_root_dir_of(raw)

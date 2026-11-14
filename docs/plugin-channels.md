@@ -2,7 +2,7 @@
 
 通道插件依赖配套的 harness `kind: channel` 与 gateway 动态注册接口。部署前应先安装包含这些能力的正式版本；本变更不预先填写尚未发布的版本号。
 
-插件通过 `ctx.channel(kind, ChannelClass, label=..., fields=...)` 注册，类必须继承 gateway BaseChannel，并遵循 gateway 的构造与 Config 约定。安装和启用后，Octop 在网关恢复数据库通道之前注册实现。没有表单 schema 时可使用 JSON 配置。
+插件通过 `ctx.channel(kind, ChannelClass, label=..., fields=...)` 注册，类必须继承 gateway BaseChannel，并遵循 gateway 的构造与 Config 约定。安装和启用后，MEA Cowork 在网关恢复数据库通道之前注册实现。没有表单 schema 时可使用 JSON 配置。
 
 插件 ID 拥有通道 kind；不同插件的冲突会报告错误，同一插件更新可以替换实现。后台插件安装、开关、卸载和重载先比较 kind、plugin_id 与实现类，仅停止并重建变化的通道类型；内容未变的通道插件复用原类，无关 tool 插件操作不会重启通道。该过程可能中断插件通道中的活动消息；内置通道不重启。数据库通道配置与历史不会删除；缺失插件的记录保留并显示运行失败。恢复插件后可重载或重启。
 
