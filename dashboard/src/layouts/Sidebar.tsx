@@ -199,8 +199,8 @@ function NavItemButton({
         style={{
           color: active
             ? "var(--fn-sidebar-item-active-text)"
-            : "var(--fn-text-secondary)",
-          fontSize: typeSize(14, isMobile),
+            : "var(--fn-text-primary)",
+          fontSize: typeSize(15, isMobile),
           fontWeight: 400,
           paddingRight: showToggle ? 4 : 12,
         }}
@@ -212,7 +212,7 @@ function NavItemButton({
             alignItems: "center",
             color: active
               ? "var(--fn-sidebar-item-active-text)"
-              : "var(--fn-text-tertiary)",
+              : "var(--fn-text-secondary)",
           }}
         >
           {item.icon}
