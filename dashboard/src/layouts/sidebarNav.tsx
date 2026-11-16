@@ -26,7 +26,7 @@ import { navAllowed, userCan } from "../utils/permissions";
 export const EXPANDED_WIDTH = 220;
 export const COLLAPSED_WIDTH = 56;
 
-const iconSize = 18;
+const iconSize = 17;
 const iconStroke = 1.8;
 
 const PERSONALIZATION_NAV_TABS = [
