@@ -1,4 +1,4 @@
-"""octop bridge — manage Octop-to-Octop peer connections."""
+"""octop bridge — manage MEA Cowork-to-MEA Cowork peer connections."""
 
 from __future__ import annotations
 

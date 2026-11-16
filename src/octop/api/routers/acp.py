@@ -187,7 +187,7 @@ async def probe_acp_runner(
     """Check that the runner command exists and answers ACP initialize.
 
     Does not install anything. ``install_script`` and ``agent_prompt`` match
-    the operating system of the machine running Octop.
+    the operating system of the machine running MEA Cowork.
     """
     return await acp_host_status(
         runner=body.runner,
@@ -226,7 +226,7 @@ async def install_acp_runner(
     """Install a built-in runner when this host can do it without a password.
 
     Never fails the HTTP call for a missing installer. The response uses the
-    same shape as the probe, including the manual script and Octop prompt.
+    same shape as the probe, including the manual script and MEA Cowork prompt.
     """
     return await acp_host_status(
         runner=body.runner,

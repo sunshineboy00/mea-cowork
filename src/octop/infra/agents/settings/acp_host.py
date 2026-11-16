@@ -1,4 +1,4 @@
-"""Detect and best-effort install ACP CLIs on the Octop host.
+"""Detect and best-effort install ACP CLIs on the MEA Cowork host.
 
 Mirrors :mod:`octop.infra.utils.docker_env`: never raise for a missing binary.
 Return a status payload the dashboard can show with an install script and an
@@ -543,21 +543,21 @@ def _agent_prompt(
     if not script:
         if en:
             return (
-                f"Install `{command or label}` on the machine that runs Octop ({host}, {plat_name}) "
+                f"Install `{command or label}` on the machine that runs MEA Cowork ({host}, {plat_name}) "
                 "and confirm `ACP initialize` succeeds over stdio."
             )
         return (
-            f"请在运行 Octop 的这台机器上安装 `{command or label}`（系统：{host}，{plat_name}），"
+            f"请在运行 MEA Cowork 的这台机器上安装 `{command or label}`（系统：{host}，{plat_name}），"
             "并确认它能通过 stdio 完成 ACP initialize。"
         )
     if en:
         return (
-            f"Install {label} on this Octop host ({host}, {plat_name}) with:\n{script}\n"
+            f"Install {label} on this MEA Cowork host ({host}, {plat_name}) with:\n{script}\n"
             "Then confirm the configured command answers ACP initialize. "
             "Do not write tokens into the command."
         )
     return (
-        f"请在运行 Octop 的这台机器上安装 {label}（系统：{host}，{plat_name}）。"
+        f"请在运行 MEA Cowork 的这台机器上安装 {label}（系统：{host}，{plat_name}）。"
         f"使用下面的命令：\n{script}\n"
         "装好后确认当前启动命令能通过 ACP initialize。不要把密钥写进命令。"
     )

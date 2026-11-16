@@ -52,12 +52,12 @@ def require_managed_fields(config: dict[str, Any]) -> None:
 
 
 def managed_default_workspace(agent_id: str) -> str:
-    """``{home}/{agent_id}`` on the machine that runs Octop."""
+    """``{home}/{agent_id}`` on the machine that runs MEA Cowork."""
     return str(Path.home() / agent_id.strip())
 
 
 # Project directory each ACP agent already uses. Skills are ``{root}/skills``,
-# subagents are ``{root}/agents`` — the same layout Octop uses under ``.octop``.
+# subagents are ``{root}/agents`` — the same layout MEA Cowork uses under ``.octop``.
 _RUNNER_PROJECT_ROOTS: dict[str, str] = {
     "codebuddy": ".codebuddy",
     "claude_code": ".claude",

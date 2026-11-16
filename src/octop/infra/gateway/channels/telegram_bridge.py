@@ -40,7 +40,7 @@ def validate_telegram_config(kind: str, config: dict[str, Any]) -> None:
     from octop_gateway.channels.telegram import TelegramConfig
 
     supported = {item.name for item in fields(TelegramConfig)}
-    # These options belong to Octop rather than TelegramConfig.
+    # These options belong to MEA Cowork rather than TelegramConfig.
     unsupported = set(config) - supported - {"response_mode", "enabled"}
     if unsupported:
         raise OctopError(

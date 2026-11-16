@@ -136,7 +136,7 @@ async def subscribe_with_member_catchup(
 
 
 class TeamManager:
-    """Octop-side team room. Harness still owns ``ask_agent`` / inbox."""
+    """MEA Cowork-side team room. Harness still owns ``ask_agent`` / inbox."""
 
     def __init__(
         self,

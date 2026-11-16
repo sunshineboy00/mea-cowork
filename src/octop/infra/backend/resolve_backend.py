@@ -1,4 +1,4 @@
-"""Resolve harness backend specs, including Octop-owned types.
+"""Resolve harness backend specs, including MEA Cowork-owned types.
 
 ``tos`` is not a harness builtin. It is replaced with a :class:`TOSBackend`
 instance before ``resolve_backend`` runs, including inside composite routes.

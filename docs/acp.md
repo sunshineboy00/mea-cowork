@@ -36,7 +36,7 @@ Legacy per-agent `config_json.acp.runners` is migrated to the user-global store 
 | `cursor_cli` | `agent` | `acp` |
 | `pi` | `npx` | `-y`, `pi-acp` |
 
-Install the CLI on the host where `octop run` executes, ensure it is on `PATH` (or set an absolute `command` in the runner drawer). Open a built-in runner to probe it: Octop checks the command, then starts it long enough to complete ACP `initialize` and closes the process. The same drawer offers three installs for the host operating system (Linux, macOS, or Windows): one-click when the official installer needs no password, a copyable manual command, and a prompt you can hand to an Octop agent.
+Install the CLI on the host where `octop run` executes, ensure it is on `PATH` (or set an absolute `command` in the runner drawer). Open a built-in runner to probe it: MEA Cowork checks the command, then starts it long enough to complete ACP `initialize` and closes the process. The same drawer offers three installs for the host operating system (Linux, macOS, or Windows): one-click when the official installer needs no password, a copyable manual command, and a prompt you can hand to an MEA Cowork agent.
 
 | ID | macOS / Linux | Windows |
 |----|---------------|---------|

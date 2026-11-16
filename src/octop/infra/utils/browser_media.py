@@ -84,7 +84,7 @@ def _maybe_migrate_legacy_profiles(dest: Path) -> None:
 def octop_browser_profiles_dir(paths: PathLayout | None = None) -> Path:
     """Shared Chrome profiles root: ``~/.octop/browser-profiles``.
 
-    Profiles live under one Octop-owned root and are named ``user-<id>``.
+    Profiles live under one MEA Cowork-owned root and are named ``user-<id>``.
     A pre-isolation ``default`` directory, if present, is left untouched.
     Prefer this directory over ``~/.harness-browser/profiles`` or system
     ``/tmp``.

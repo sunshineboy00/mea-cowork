@@ -1,7 +1,7 @@
 """Magpie local-gateway identity, discovery, and catalog mapping.
 
 Magpie is an OpenAI-compatible provider. Discovery is a read-only probe of the
-Octop host (not the dashboard browser). Session attribution uses
+MEA Cowork host (not the dashboard browser). Session attribution uses
 ``X-Magpie-Session`` at turn time; this module never persists a static session
 value into provider headers.
 """
@@ -77,14 +77,14 @@ class MagpieSyncPlan:
 
 
 def magpie_user_agent() -> str:
-    """``User-Agent`` Magpie uses to attribute traffic to this Octop install."""
+    """``User-Agent`` Magpie uses to attribute traffic to this MEA Cowork install."""
     from octop import __version__
 
     return f"Octop/{__version__}"
 
 
 def magpie_preset() -> dict[str, Any]:
-    """Octop-owned Magpie preset: empty catalog, local default URL, no models."""
+    """MEA Cowork-owned Magpie preset: empty catalog, local default URL, no models."""
     return {
         "id": MAGPIE_PRESET_ID,
         "name": MAGPIE_PRESET_NAME,
@@ -161,7 +161,7 @@ def ensure_magpie_headers(
 
 
 def magpie_catalog_model(item: dict[str, Any]) -> dict[str, Any] | None:
-    """Map one Magpie ``/v1/models`` item to an Octop model dict, or skip it.
+    """Map one Magpie ``/v1/models`` item to an MEA Cowork model dict, or skip it.
 
     IDs are kept verbatim (including nested ``/``). Embedding / image / video
     entries are not imported as chat candidates. Missing capability fields stay
@@ -329,7 +329,7 @@ def _apply_reasoning(model: dict[str, Any], item: dict[str, Any]) -> None:
 
 
 async def discover_local_magpie() -> MagpieDiscovery:
-    """Probe ``GET /api/hello`` on the Octop host. Failures are ``available=false``."""
+    """Probe ``GET /api/hello`` on the MEA Cowork host. Failures are ``available=false``."""
     import httpx
 
     unavailable = MagpieDiscovery(available=False)

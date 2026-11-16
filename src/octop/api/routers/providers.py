@@ -379,7 +379,7 @@ admin_router = APIRouter()
 
 class MagpieDiscoveryResponse(BaseModel):
     available: bool = Field(
-        description="True when this Octop server reached a local Magpie hello response."
+        description="True when this MEA Cowork server reached a local Magpie hello response."
     )
     base_url: str = Field(description="OpenAI-compatible base URL of the probed local Magpie.")
     version: str | None = Field(
@@ -402,7 +402,7 @@ def _extra_dict(raw: str | None) -> dict[str, Any]:
     "/magpie/discovery",
     summary="Discover local Magpie",
     description=(
-        "Read-only probe of Magpie on the Octop server host at the default "
+        "Read-only probe of Magpie on the MEA Cowork server host at the default "
         "loopback address. Failures return available=false and do not include "
         "the upstream body. This route has no URL parameter."
     ),

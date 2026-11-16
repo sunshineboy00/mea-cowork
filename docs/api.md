@@ -315,7 +315,7 @@ starts a new conversation on the channel and ignores the history pin.
 | `PATCH`  | `/providers/{id}` | owner | body subset → updated row |
 | `DELETE` | `/providers/{id}` | owner | `204` (refuses if any agent references it) |
 | `POST`   | `/providers/{id}/test` | user | `{ok, latency_ms?, error?}` (one-token ping with 10 s timeout) |
-| `GET`    | `/admin/providers/magpie/discovery` | providers | Local Magpie hello on the Octop host. `{available, base_url, version}`. Misses stay `available: false` and omit the upstream body. No URL parameter. |
+| `GET`    | `/admin/providers/magpie/discovery` | providers | Local Magpie hello on the MEA Cowork host. `{available, base_url, version}`. Misses stay `available: false` and omit the upstream body. No URL parameter. |
 | `POST`   | `/admin/providers/fetch-models` | providers | OpenAI-compatible `GET /models` for a draft. Magpie responses keep model ids and optional capability fields. |
 | `POST`   | `/admin/providers` | admin | same body as user POST; row has `user_id = NULL` |
 | `PATCH`  | `/admin/providers/{id}` | admin | as user PATCH but works on shared rows |
@@ -504,7 +504,7 @@ this gate at production: it creates test namespaces and a temporary failure trig
 |--------|------|------|-------|
 | `GET`    | `/acp` | user | current user's global runner list |
 | `PUT`    | `/acp` | user | replace global runners |
-| `POST`   | `/acp/probe` | admin | probe command + ACP initialize; returns host install script and Octop prompt |
+| `POST`   | `/acp/probe` | admin | probe command + ACP initialize; returns host install script and MEA Cowork prompt |
 | `POST`   | `/acp/ask` | admin | send `who are you?` over ACP and return the reply text |
 | `POST`   | `/acp/install` | admin | best-effort install of a built-in runner, then probe again |
 | `GET`    | `/acp/{runner_name}` | user | one runner |
