@@ -6,7 +6,7 @@ import {
   FileJson,
   KeyRound,
   Lock,
-  RefreshCw,
+  // RefreshCw, // 隐藏：应用更新标签页（注释掉 import 以通过 tsc）
   ShieldCheck,
   Variable,
 } from "lucide-react";
@@ -43,7 +43,8 @@ const TABS: TabBarItem<TabKey>[] = [
   { key: "captcha", labelKey: "nav.loginCaptcha", icon: ShieldCheck },
   { key: "webauthn", labelKey: "nav.passkeys", icon: KeyRound },
   { key: "config", labelKey: "adminAppConfig.title", icon: FileJson },
-  { key: "updates", labelKey: "nav.checkUpdates", icon: RefreshCw },
+  // 隐藏：应用更新标签页
+  // { key: "updates", labelKey: "nav.checkUpdates", icon: RefreshCw },
 ];
 
 function parseTab(raw: string | null): TabKey {

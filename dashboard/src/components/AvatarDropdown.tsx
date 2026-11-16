@@ -25,8 +25,8 @@ import {
   Settings,
   Palette,
   CircleHelp,
-  Github,
-  RefreshCw,
+  // Github, // 隐藏：项目地址菜单
+  // RefreshCw, // 隐藏：检查更新菜单
   KeyRound,
   ShieldCheck,
   SlidersHorizontal,
@@ -51,7 +51,7 @@ import PaletteSwitcher from "./PaletteSwitcher";
 import type { OctopUser } from "../api/modules/auth";
 import { useLayoutMode } from "../context/LayoutModeContext";
 import type { LayoutMode } from "../layouts/layoutModeStorage";
-import { userCan } from "../utils/permissions";
+// import { userCan } from "../utils/permissions"; // 隐藏：检查更新菜单
 import feishuIcon from "../assets/channels/feishu.svg";
 import dingtalkIcon from "../assets/channels/dingtalk.svg";
 import wecomIcon from "../assets/channels/wecom.svg";
@@ -62,8 +62,8 @@ import {
 import AccountSecurityDrawer from "./AccountSecurityDrawer";
 import styles from "./AvatarDropdown.module.less";
 
-const GITHUB_URL = "https://github.com/TencentCloud/MEA Cowork";
-const HELP_FEEDBACK_URL = "https://octop.cloud";
+// const GITHUB_URL = "https://github.com/TencentCloud/MEA Cowork"; // 隐藏：项目地址菜单
+const HELP_FEEDBACK_URL = "https://www.xuelangyun.com/";
 const APP_OAUTH_KINDS = new Set(["feishu", "dingtalk", "wecom"]);
 
 function oauthProviderIcon(kind: string): ReactNode {
@@ -362,6 +362,7 @@ export default function AvatarDropdown({
         </button>
       ) : null}
 
+      {/* 隐藏：项目地址菜单
       <a
         className={styles.menuItem}
         href={GITHUB_URL}
@@ -372,6 +373,7 @@ export default function AvatarDropdown({
         <Github size={16} strokeWidth={1.8} />
         <span>{t("account.projectUrl")}</span>
       </a>
+      */}
 
       {onCustomizeNav ? (
         <button
@@ -394,6 +396,7 @@ export default function AvatarDropdown({
         <span>{t("account.security")}</span>
       </button>
 
+      {/* 隐藏：检查更新菜单
       {userCan(user, "update") && (
         <button
           type="button"
@@ -407,6 +410,7 @@ export default function AvatarDropdown({
           <span>{t("account.checkUpdates")}</span>
         </button>
       )}
+      */}
 
       <Divider className={styles.menuDivider} />
 

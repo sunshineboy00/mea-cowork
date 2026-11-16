@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import type { TFunction } from "i18next";
 import AvatarDropdown from "../components/AvatarDropdown";
-import CurrentVersionBadge from "../components/CurrentVersionBadge";
+// import CurrentVersionBadge from "../components/CurrentVersionBadge"; // 隐藏：版本徽标
 import { ArrowLeftRight, ChevronDown, PanelLeftClose, X } from "lucide-react";
 import cx from "classnames";
 import { useTheme } from "../context/ThemeContext";
@@ -535,7 +535,7 @@ export default function Sidebar({
       {!isRailCollapsed && !isMobile && (
         /* Let the version badges shrink without squeezing the wordmark. */
         <div className={styles.brandMeta}>
-          <CurrentVersionBadge isMobile={isMobile} />
+          {/* <CurrentVersionBadge isMobile={isMobile} /> */}
         </div>
       )}
     </>
