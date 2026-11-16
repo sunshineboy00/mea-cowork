@@ -47,10 +47,10 @@ make build-frontend
 pip install -e .
 # with dev deps: make install  /  pip install -e ".[dev]"`,
   docker: `# Compose (from repo root; rebuild + recreate)
-docker compose -f docker/docker-compose.yml up -d --build
+docker compose -f deploy/docker/docker-compose.yml up -d --build
 
 # or rebuild the image then run with a persistent data volume
-bash docker/docker_build.sh
+bash deploy/docker/docker_build.sh
 docker run -d \\
   --name octop \\
   -p 8088:8088 \\
