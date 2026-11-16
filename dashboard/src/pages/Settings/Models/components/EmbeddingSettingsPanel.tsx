@@ -163,6 +163,7 @@ export function EmbeddingSettingsPanel({
                     <ProviderCard
                       key={provider.id}
                       provider={provider}
+                      presets={presets}
                       onSaved={handleSaved}
                       isHover={hoveredCard === `p-${provider.id}`}
                       onMouseEnter={() => setHoveredCard(`p-${provider.id}`)}

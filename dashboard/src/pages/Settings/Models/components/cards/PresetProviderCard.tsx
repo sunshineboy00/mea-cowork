@@ -66,6 +66,7 @@ export function PresetProviderCard({
     return (
       <ProviderCard
         provider={configured}
+        presets={[preset]}
         onSaved={onSaved}
         isHover={isHover}
         onMouseEnter={onMouseEnter}

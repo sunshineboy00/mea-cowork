@@ -34,6 +34,7 @@ import {
   isLocalPreset,
   isPresetProvider,
   partitionCloudPresets,
+  splitPinnedPresets,
 } from "./presetUtils";
 import type { PresetGroup } from "./presetUtils";
 import type { ProviderPreset } from "./useProviders";
@@ -176,8 +177,20 @@ export default function ModelsPage() {
   const renderPresetCards = (
     grouped: PresetGroup[],
     singles: ProviderPreset[],
+    pinned: ProviderPreset[] = [],
   ) => (
     <>
+      {pinned.map((preset) => (
+        <PresetProviderCard
+          key={preset.id}
+          preset={preset}
+          providers={providers}
+          onSaved={fetchAll}
+          isHover={hoveredCard === `preset-${preset.id}`}
+          onMouseEnter={() => setHoveredCard(`preset-${preset.id}`)}
+          onMouseLeave={() => setHoveredCard(null)}
+        />
+      ))}
       {grouped.map((group) => (
         <PresetGroupCard
           key={group.groupKey}
@@ -223,8 +236,16 @@ export default function ModelsPage() {
   };
 
   const renderCloudPresetGrid = () => {
+    const { pinned: featuredPinned } = splitPinnedPresets(
+      cloudFeatured.ungrouped,
+    );
+    const restUngrouped = cloudFeatured.ungrouped.filter(
+      (p) => !featuredPinned.includes(p),
+    );
     const hasFeatured =
-      cloudFeatured.grouped.length > 0 || cloudFeatured.ungrouped.length > 0;
+      featuredPinned.length > 0 ||
+      cloudFeatured.grouped.length > 0 ||
+      restUngrouped.length > 0;
     const hasMore = moreProvidersCount > 0;
     if (!hasFeatured && !hasMore) {
       return (
@@ -238,7 +259,11 @@ export default function ModelsPage() {
       <>
         {(hasFeatured || showMoreProviders) && (
           <div className={styles.providerCards}>
-            {renderPresetCards(cloudFeatured.grouped, cloudFeatured.ungrouped)}
+            {renderPresetCards(
+              cloudFeatured.grouped,
+              restUngrouped,
+              featuredPinned,
+            )}
             {showMoreProviders &&
               renderPresetCards(cloudMore.grouped, cloudMore.ungrouped)}
           </div>
@@ -481,6 +506,7 @@ export default function ModelsPage() {
                     <ProviderCard
                       key={p.id}
                       provider={p}
+                      presets={presets}
                       onSaved={fetchAll}
                       isHover={hoveredCard === String(p.id)}
                       onMouseEnter={() => setHoveredCard(String(p.id))}

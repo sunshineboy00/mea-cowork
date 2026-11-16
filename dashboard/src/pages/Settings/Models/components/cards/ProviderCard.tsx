@@ -12,8 +12,8 @@ import cx from "classnames";
 import { request } from "../../../../../api/request";
 import { ollamaModelApi } from "../../../../../api/modules/ollamaModel";
 import { onnxModelApi } from "../../../../../api/modules/onnxModel";
-import { isOllamaProviderRow, isOnnxProviderRow } from "../../presetUtils";
-import type { ProviderRow } from "../../useProviders";
+import { isOllamaProviderRow, isOnnxProviderRow, presetLogoId } from "../../presetUtils";
+import type { ProviderRow, ProviderPreset } from "../../useProviders";
 import { ProviderConfigModal } from "../modals/ProviderConfigModal";
 import {
   getProviderLogo,
@@ -23,6 +23,8 @@ import styles from "../../index.module.less";
 
 interface ProviderCardProps {
   provider: ProviderRow;
+  /** Preset catalog, used to resolve brand logos for preset-named provider rows. */
+  presets?: ProviderPreset[];
   onSaved: () => void | Promise<void>;
   isHover: boolean;
   onMouseEnter: () => void;
@@ -33,6 +35,7 @@ interface ProviderCardProps {
 
 export function ProviderCard({
   provider,
+  presets = [],
   onSaved,
   isHover,
   onMouseEnter,
@@ -157,11 +160,17 @@ export function ProviderCard({
 
   // Try lookup by name, lowercase name, then fall back to custom logo.
   // Provider names like "DeepSeek" → "deepseek", "Tencent Cloud Coding Plan" → try both.
+  // Chinese-named providers (雪浪工匠) miss the slug chain, so also resolve
+  // via the preset whose name/id matches this row — its logo_id carries the brand mark.
   const nameSlug = provider.name.toLowerCase().replace(/\s+/g, "-");
+  const presetLogo = presets.find(
+    (preset) => preset.name === provider.name || preset.id === provider.name,
+  );
   const logo =
     getProviderLogo(provider.name) ??
     getProviderLogo(provider.name.toLowerCase()) ??
     getProviderLogo(nameSlug) ??
+    (presetLogo ? getProviderLogo(presetLogoId(presetLogo)) : undefined) ??
     customProviderLogo;
   const models = provider.models ?? [];
 

@@ -288,6 +288,23 @@ def _embedding_cloud_presets() -> list[dict[str, Any]]:
     ]
 
 
+def _xuelang_gongjiang_preset() -> dict[str, Any]:
+    """Default-first single-site preset; models are fetched via GET /v1/models at setup.
+
+    Deliberately has no ``provider_group``: 雪浪工匠 is single-site and must
+    render as a plain preset card, not a multi-site brand group.
+    """
+    return {
+        "id": "xuelang-gongjiang",
+        "name": "雪浪工匠",
+        "base_url": "https://api.xuelanglm.com/v1",
+        "protocol": "openai",
+        "api_key_prefix": "",
+        "models": [],
+        "logo_id": "xuelang-gongjiang",
+    }
+
+
 def load_provider_presets() -> list[dict[str, Any]]:
     """Serialize octop-harness provider templates for API / CLI."""
     from importlib import resources
@@ -353,6 +370,9 @@ def load_provider_presets() -> list[dict[str, Any]]:
         out.insert(0, magpie_preset())
     if not any(p.get("purpose") == "embedding" and p.get("id") != "onnx" for p in out):
         out.extend(_embedding_cloud_presets())
+    # 雪浪工匠：默认提供商置顶（在所有其他注入之后 insert(0)，保证最终排第一）。
+    if not any(p.get("id") == "xuelang-gongjiang" for p in out):
+        out.insert(0, _xuelang_gongjiang_preset())
     for preset in out:
         provider_id = str(preset.get("id") or "")
         for model in preset.get("models") or []:

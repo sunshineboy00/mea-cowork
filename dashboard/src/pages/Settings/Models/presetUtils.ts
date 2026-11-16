@@ -19,6 +19,29 @@ const PRESET_GROUP_ORDER = [
   "iflytek",
 ] as const;
 
+/**
+ * Presets rendered as single cards pinned ahead of every brand group.
+ * 雪浪工匠 is single-site: no group / variant picker, click opens setup directly.
+ */
+export const PINNED_PRESET_IDS: readonly string[] = ["xuelang-gongjiang"];
+
+/** Split out pinned single-card presets, preserving input order within each bucket. */
+export function splitPinnedPresets(presets: ProviderPreset[]): {
+  pinned: ProviderPreset[];
+  rest: ProviderPreset[];
+} {
+  const pinned: ProviderPreset[] = [];
+  const rest: ProviderPreset[] = [];
+  for (const preset of presets) {
+    if (PINNED_PRESET_IDS.includes(preset.id)) {
+      pinned.push(preset);
+    } else {
+      rest.push(preset);
+    }
+  }
+  return { pinned, rest };
+}
+
 function comparePresetGroups(a: PresetGroup, b: PresetGroup): number {
   const ai = PRESET_GROUP_ORDER.indexOf(
     a.groupKey as (typeof PRESET_GROUP_ORDER)[number],

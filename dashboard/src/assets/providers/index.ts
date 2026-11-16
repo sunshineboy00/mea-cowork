@@ -18,6 +18,7 @@ import minimaxLogo from "./minimax.png";
 import volcesLogo from "./volces.svg";
 import customProviderLogo from "./custom-provider.svg";
 import opencodeLogo from "./opencode.svg";
+import xuelangGongjiangLogo from "./xuelang-gongjiang.svg";
 import browserLogo from "./browser.svg";
 import edgeLogo from "./edge.svg";
 import tavilyLogo from "./tavily.svg";
@@ -56,6 +57,8 @@ export const PROVIDER_LOGOS: Record<string, string> = {
   iflytek: iflytekLogo,
   "iflytek-astron": iflytekLogo,
   magpie: magpieLogo,
+  "xuelang-gongjiang": xuelangGongjiangLogo,
+  xuelang: xuelangGongjiangLogo,
   // Same mark as the Yuanbao channel: one product, search and IM.
   yuanbao: yuanbaoLogo,
 };

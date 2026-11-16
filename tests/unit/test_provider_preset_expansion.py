@@ -8,6 +8,8 @@ from octop.infra.agents.providers.presets import load_provider_presets
 def test_load_provider_presets_integration() -> None:
     presets = load_provider_presets()
     ids = {p["id"] for p in presets}
+    # 雪浪工匠 is the default-first preset: bundled + injected entries only.
+    assert presets[0]["id"] == "xuelang-gongjiang"
     assert "moonshot" not in ids
     assert "kimi-cn" in ids
     assert "minimax-intl" in ids
@@ -124,6 +126,20 @@ def test_load_provider_presets_integration() -> None:
 
     go_ant = next(p for p in presets if p["id"] == "opencode-go-anthropic")
     assert go_ant["base_url"] == "https://opencode.ai/zen/go"
+
+
+def test_xuelang_gongjiang_preset_first() -> None:
+    presets = load_provider_presets()
+    xuelang = presets[0]
+    assert xuelang["id"] == "xuelang-gongjiang"
+    assert xuelang["name"] == "雪浪工匠"
+    assert xuelang["base_url"] == "https://api.xuelanglm.com/v1"
+    assert xuelang["protocol"] == "openai"
+    assert xuelang["models"] == []
+    # Single-site: no brand group, must render as a plain preset card.
+    assert "provider_group" not in xuelang
+    # Exactly one entry — no duplicates from repeated injection guards.
+    assert sum(1 for p in presets if p["id"] == "xuelang-gongjiang") == 1
 
 
 def test_embedding_cloud_presets_present() -> None:

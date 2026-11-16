@@ -38,6 +38,7 @@ import {
   isOverseasPreset,
   presetLogoId,
   presetVariantLabel,
+  splitPinnedPresets,
   type PresetGroup,
 } from "../../Settings/Models/presetUtils";
 import type { ProviderPreset as AdminProviderPreset } from "../../Settings/Models/useProviders";
@@ -103,18 +104,17 @@ interface Props {
 
 type SetupMode = "preset" | "custom";
 
-/** Match admin/models: domestic cloud first; overseas + local behind "more". */
+/** Match admin/models: pinned single-site first; then domestic; overseas + local behind "more". */
 function buildWizardPresetDisplay(presets: ProviderPreset[]): {
   featured: PresetDisplayItem[];
   more: PresetDisplayItem[];
 } {
   const asAdmin = (p: ProviderPreset) => p as AdminProviderPreset;
-  const featuredCloud = presets.filter(
-    (p) => !isLocalPreset(asAdmin(p)) && !isOverseasPreset(asAdmin(p)),
+  const { pinned, rest: unpinned } = splitPinnedPresets(
+    presets.filter((p) => !isLocalPreset(asAdmin(p))),
   );
-  const overseasCloud = presets.filter(
-    (p) => !isLocalPreset(asAdmin(p)) && isOverseasPreset(asAdmin(p)),
-  );
+  const featuredCloud = unpinned.filter((p) => !isOverseasPreset(asAdmin(p)));
+  const overseasCloud = unpinned.filter((p) => isOverseasPreset(asAdmin(p)));
   const local = presets.filter((p) => isLocalPreset(asAdmin(p)));
 
   const toItems = (list: ProviderPreset[]): PresetDisplayItem[] => {
@@ -131,7 +131,15 @@ function buildWizardPresetDisplay(presets: ProviderPreset[]): {
   };
 
   return {
-    featured: toItems(featuredCloud),
+    featured: [
+      ...pinned.map(
+        (preset): PresetDisplayItem => ({
+          kind: "single",
+          preset: preset as ProviderPreset,
+        }),
+      ),
+      ...toItems(featuredCloud),
+    ],
     more: [
       ...toItems(overseasCloud),
       ...local.map((preset): PresetDisplayItem => ({ kind: "single", preset })),

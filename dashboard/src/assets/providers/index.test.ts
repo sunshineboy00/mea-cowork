@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import yuanbaoIcon from "../channels/yuanbao.svg";
 import iflytekIcon from "./iflytek.svg";
 import magpieIcon from "./magpie.svg";
+import xuelangGongjiangIcon from "./xuelang-gongjiang.svg";
 import { getProviderLogo } from "./index";
 
 describe("getProviderLogo", () => {
@@ -15,5 +16,10 @@ describe("getProviderLogo", () => {
     expect(getProviderLogo("iflytek-astron")).toBe(iflytekIcon);
     expect(getProviderLogo("iflytek-astron-token-plan")).toBe(iflytekIcon);
     expect(getProviderLogo("magpie")).toBe(magpieIcon);
+  });
+
+  it("resolves the 雪浪工匠 brand mark for the default-first preset", () => {
+    expect(getProviderLogo("xuelang-gongjiang")).toBe(xuelangGongjiangIcon);
+    expect(getProviderLogo("xuelang")).toBe(xuelangGongjiangIcon);
   });
 });

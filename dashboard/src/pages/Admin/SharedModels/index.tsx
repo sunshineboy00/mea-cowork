@@ -4,13 +4,17 @@ import { Plus, RefreshCw } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import PageShell from "../../../layouts/PageShell";
 import { request } from "../../../api/request";
-import type { ProviderRow } from "../../Settings/Models/useProviders";
+import type {
+  ProviderRow,
+  ProviderPreset,
+} from "../../Settings/Models/useProviders";
 import { ProviderCard } from "../../Settings/Models/components/cards/ProviderCard";
 import { CustomProviderModal } from "../../Settings/Models/components/modals/CustomProviderModal";
 
 export default function AdminSharedModelsPage() {
   const { t } = useTranslation();
   const [providers, setProviders] = useState<ProviderRow[]>([]);
+  const [presets, setPresets] = useState<ProviderPreset[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
@@ -25,6 +29,9 @@ export default function AdminSharedModelsPage() {
         throw new Error("Unexpected API response shape from /admin/providers");
       }
       setProviders(rows);
+      // Brand-logo resolution on cards needs the preset catalog (logo_id).
+      const presetRows = await request<ProviderPreset[]>("/providers/presets");
+      if (Array.isArray(presetRows)) setPresets(presetRows);
     } catch (err) {
       setError(err instanceof Error ? err.message : "加载共享供应商失败");
     } finally {
@@ -90,6 +97,7 @@ export default function AdminSharedModelsPage() {
             <ProviderCard
               key={p.id}
               provider={p}
+              presets={presets}
               onSaved={fetchAll}
               isHover={hoveredCard === p.id}
               onMouseEnter={() => setHoveredCard(p.id)}

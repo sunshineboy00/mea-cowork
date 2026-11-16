@@ -7,6 +7,7 @@ import {
   isOllamaRuntimeUrl,
   isOnnxProviderRow,
   looksLikeOllamaProvider,
+  splitPinnedPresets,
 } from "./presetUtils";
 
 describe("isOnnxProviderRow", () => {
@@ -134,5 +135,51 @@ describe("groupPresets", () => {
     expect(result.grouped[0].groupKey).toBe("iflytek");
     expect(result.grouped[0].groupName).toBe("iFlytek Astron");
     expect(result.ungrouped).toHaveLength(0);
+  });
+
+  it("pins 雪浪工匠 as a single-site card ahead of brand groups", () => {
+    const xuelang = {
+      id: "xuelang-gongjiang",
+      name: "雪浪工匠",
+      protocol: "openai",
+      base_url: "https://api.xuelanglm.com/v1",
+      models: [],
+    };
+    const tencentCoding = {
+      id: "tencent-coding-plan",
+      name: "Tencent Cloud Coding Plan",
+      provider_group: "tencent",
+      provider_group_name: "Tencent Cloud",
+      provider_variant: "coding_plan",
+      protocol: "openai",
+      base_url: "https://api.lkeap.cloud.tencent.com/coding/v3",
+      models: [],
+    };
+    const deepseek = {
+      id: "deepseek",
+      name: "DeepSeek",
+      protocol: "openai",
+      base_url: "https://api.deepseek.com/v1",
+      models: [],
+    };
+    // No provider_group on the preset itself — single site, no variant picker.
+    expect("provider_group" in xuelang && xuelang.provider_group).toBeFalsy();
+
+    const { pinned, rest } = splitPinnedPresets([
+      tencentCoding,
+      xuelang,
+      deepseek,
+    ]);
+    expect(pinned).toEqual([xuelang]);
+    expect(rest).toEqual([tencentCoding, deepseek]);
+
+    // Without pinning, groupPresets sorts ungrouped alphabetically —
+    // "DeepSeek" lands ahead of "雪浪工匠", hence the dedicated pin mechanism.
+    const { grouped, ungrouped } = groupPresets([xuelang, deepseek]);
+    expect(grouped).toHaveLength(0);
+    expect(ungrouped.map((p) => p.id)).toEqual([
+      "deepseek",
+      "xuelang-gongjiang",
+    ]);
   });
 });

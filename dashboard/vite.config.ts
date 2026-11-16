@@ -189,9 +189,10 @@ export default defineConfig(({ mode }) => {
             "assets/*.{css,woff2}",
           ],
           // vendor-antd (incl. the ColorPicker color engine) exceeds the
-          // 2 MiB workbox default; raise the precache limit so it stays
-          // offline-available instead of silently skipped.
-          maximumFileSizeToCacheInBytes: 3 * 1024 * 1024,
+          // 2 MiB workbox default; vendor-react later grew past 3 MiB and the
+          // exceeding-asset error aborted the whole build. 6 MiB keeps both
+          // precached offline instead of silently skipped / failing the build.
+          maximumFileSizeToCacheInBytes: 6 * 1024 * 1024,
           // FastAPI already serves the SPA fallback. A Workbox NavigationRoute
           // would Cache-First the old shell; use NetworkFirst below instead.
           navigateFallback: null,
