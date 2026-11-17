@@ -14,7 +14,7 @@ html[data-theme="light"] {
   --fn-bg-secondary: #f7f8fa;
   --fn-bg-tertiary: #f0f1f3;
   --fn-bg-elevated: #ffffff;
-  --fn-bg-layout: #f5f6f8;
+  --fn-bg-layout: #fafafa;
   --fn-bg-container: #ffffff;
   --fn-bg-hover: rgba(0, 185, 107, 0.04);
   --fn-bg-active: rgba(0, 185, 107, 0.08);
@@ -157,7 +157,7 @@ html[data-theme="light"] {
 
   /* ---- Sidebar ---- */
   --fn-sidebar-width: 240px;
-  --fn-sidebar-bg: #ffffff;
+  --fn-sidebar-bg: #f6f7f8;
   --fn-sidebar-border: #ebebeb;
   --fn-sidebar-item-hover: #f5f5f5;
   --fn-sidebar-item-active-bg: #e6fbf2;
