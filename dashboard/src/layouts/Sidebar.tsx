@@ -779,12 +779,13 @@ export default function Sidebar({
               border: "none",
               borderRadius: "var(--fn-radius-md)",
               background: "transparent",
-              color: "var(--fn-text-tertiary)",
+              /* Match nav menu icon color tier (secondary). */
+              color: "var(--fn-text-secondary)",
               cursor: "pointer",
               flexShrink: 0,
             }}
           >
-            <X size={16} strokeWidth={1.8} />
+            <X size={17} strokeWidth={1.8} />
           </button>
         </div>
 
@@ -832,7 +833,7 @@ export default function Sidebar({
       aria-keyshortcuts={railShortcutAria("toggle-nav")}
       title={navFoldHint}
     >
-      <PanelLeftClose size={16} strokeWidth={1.8} aria-hidden />
+      <PanelLeftClose size={17} strokeWidth={1.8} aria-hidden />
     </button>
   ) : null;
 

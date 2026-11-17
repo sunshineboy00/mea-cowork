@@ -179,15 +179,15 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  width: 24px;
+  // width: 24px;
   height: 24px;
-  margin-right: 2px;
-  padding: 0;
+  // margin-right: 2px;
+  padding: 4px 6px;
   border: none;
   border-radius: var(--fn-radius-md);
   background: transparent;
-  color: var(--fn-sidebar-group-text);
-  opacity: 0.45;
+  // color: var(--fn-sidebar-group-text);
+  // opacity: 0.45;
   cursor: pointer;
   transition:
     background var(--fn-transition-fast),
@@ -371,7 +371,7 @@
   gap: 6px;
   min-width: 0;
   flex-shrink: 0;
-  padding: 10px 4px 10px 14px;
+  padding: 10px 14px 10px 14px;
 }
 
 .brandRowCollapsed {
@@ -391,7 +391,8 @@
   border: none;
   border-radius: var(--fn-radius-md);
   background: transparent;
-  color: var(--fn-text-tertiary);
+  /* Match nav menu icons: same visual weight (17px) and color tier. */
+  color: var(--fn-text-secondary);
   cursor: pointer;
 
   &:hover {

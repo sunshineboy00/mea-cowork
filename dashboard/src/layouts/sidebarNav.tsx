@@ -23,7 +23,7 @@ import {
 import type { OctopUser } from "../api/modules/auth";
 import { navAllowed, userCan } from "../utils/permissions";
 
-export const EXPANDED_WIDTH = 220;
+export const EXPANDED_WIDTH = 240;
 export const COLLAPSED_WIDTH = 56;
 
 const iconSize = 17;
