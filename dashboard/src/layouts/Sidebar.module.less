@@ -180,24 +180,22 @@
   justify-content: center;
   gap: 4px;
   flex-shrink: 0;
-  // width: 24px;
   height: 24px;
-  // margin-right: 2px;
   padding: 4px 4px;
   border: none;
   border-radius: var(--fn-radius-md);
   background: transparent;
-  // color: var(--fn-sidebar-group-text);
-  // opacity: 0.45;
+  /* Sidebar color tier so the button tracks data-theme like the label. */
+  color: var(--fn-sidebar-group-text);
+  font-size: 12px;
   cursor: pointer;
   transition:
     background var(--fn-transition-fast),
-    color var(--fn-transition-fast),
-    opacity var(--fn-transition-fast);
+    color var(--fn-transition-fast);
 
   &:hover {
-    opacity: 0.85;
-    background: color-mix(in srgb, var(--fn-text-primary) 6%, transparent);
+    /* rgba(primary 10%) over the sidebar bg — visible on light and dark. */
+    background: color-mix(in srgb, var(--fn-text-primary) 10%, transparent);
     color: var(--fn-text-secondary);
   }
 }

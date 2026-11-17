@@ -3,7 +3,6 @@ import { Tooltip } from "antd";
 import { useTranslation } from "react-i18next";
 import type { MinimalNavPane } from "./layoutModeStorage";
 import styles from "./Sidebar.module.less";
-import { Button } from "antd/lib";
 
 export default function SidebarMinimalPaneToggle({
   settingsLabel,
@@ -47,15 +46,19 @@ export default function SidebarMinimalPaneToggle({
         {minimalPane === "records" ? t("nav.paneRecords") : settingsLabel}
       </span>
       <Tooltip title={nextLabel} placement="top">
-        <Button
-          type="text"
+        {/* Native button: antd's text Button injects its own hover colors
+            (global colorText/Fill) at runtime, overriding the sidebar theme
+            vars and breaking dark/light adaptation. The collapsed branch's
+            native button never had this problem. */}
+        <button
+          type="button"
           className={styles.minimalPaneSwitchBtn}
           onClick={() => onSelect(nextPane)}
           aria-label={nextLabel}
-          icon={<ArrowLeftRight size={15} strokeWidth={1.2} aria-hidden />}
         >
-          {nextLabel}
-        </Button>
+          <ArrowLeftRight size={15} strokeWidth={1.8} aria-hidden />
+          <span>{nextLabel}</span>
+        </button>
       </Tooltip>
     </div>
   );
