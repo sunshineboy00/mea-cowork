@@ -3,6 +3,7 @@ import { Tooltip } from "antd";
 import { useTranslation } from "react-i18next";
 import type { MinimalNavPane } from "./layoutModeStorage";
 import styles from "./Sidebar.module.less";
+import { Button } from "antd/lib";
 
 export default function SidebarMinimalPaneToggle({
   settingsLabel,
@@ -46,14 +47,15 @@ export default function SidebarMinimalPaneToggle({
         {minimalPane === "records" ? t("nav.paneRecords") : settingsLabel}
       </span>
       <Tooltip title={nextLabel} placement="top">
-        <button
-          type="button"
+        <Button
+          type="text"
           className={styles.minimalPaneSwitchBtn}
           onClick={() => onSelect(nextPane)}
           aria-label={nextLabel}
+          icon={<ArrowLeftRight size={15} strokeWidth={1.2} aria-hidden />}
         >
-          <ArrowLeftRight size={14} strokeWidth={1.8} aria-hidden />
-        </button>
+          {nextLabel}
+        </Button>
       </Tooltip>
     </div>
   );
