@@ -15,7 +15,8 @@ export function loadLayoutMode(): LayoutMode {
   } catch {
     /* ignore */
   }
-  return "classic";
+  // Default layout: minimal (nav + records merged into one rail).
+  return "minimal";
 }
 
 export function saveLayoutMode(mode: LayoutMode): void {
