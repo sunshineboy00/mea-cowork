@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import {
-  Send,
+  ArrowUp,
   Square,
   MessageSquarePlus,
   Paperclip,
@@ -1530,7 +1530,7 @@ export default function ChatInputActionsRow({
                 type="button"
                 aria-label={t("chat.queue.action")}
               >
-                <Send size={18} />
+                <ArrowUp size={18} strokeWidth={2} />
               </button>
             </Tooltip>
           ) : (
@@ -1571,7 +1571,7 @@ export default function ChatInputActionsRow({
             title={t("chat.send", "Send")}
             type="button"
           >
-            <Send size={18} />
+            <ArrowUp size={18} strokeWidth={2} />
           </button>
         )}
       </div>
