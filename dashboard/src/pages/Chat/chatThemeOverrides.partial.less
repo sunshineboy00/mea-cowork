@@ -902,8 +902,9 @@
 .newChatBtn {
   width: 36px;
   height: 36px;
-  border: 1px solid var(--fn-color-brand-glow);
-  background: var(--fn-bg-secondary);
+  /* Clean icon buttons: no border, transparent base (theme vars below). */
+  border: none;
+  background: transparent;
 }
 
 .secondaryBtn:hover,
@@ -915,7 +916,8 @@
   width: 38px;
   height: 38px;
   border-radius: 12px;
-  box-shadow: var(--fn-shadow-brand);
+  /* Flat brand fill: no drop shadow, hover brightens via core styles. */
+  box-shadow: none;
 }
 
 .shortcutPopover {

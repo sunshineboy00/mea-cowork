@@ -783,7 +783,7 @@ export default function ChatInputActionsRow({
           }}
         >
           <span className={styles.mobileOverflowItemMain}>
-            <ModeIcon size={16} />
+            <ModeIcon size={17} strokeWidth={1.8} />
             <span>{t("chat.conversationMode.picker")}</span>
           </span>
           <span className={styles.mobileOverflowItemMeta}>
@@ -808,7 +808,7 @@ export default function ChatInputActionsRow({
           }}
         >
           <span className={styles.mobileOverflowItemMain}>
-            <Cpu size={16} />
+            <Cpu size={17} strokeWidth={1.8} />
             <span>{t("chat.selectModel", "Model")}</span>
           </span>
           <span className={styles.mobileOverflowItemMeta}>
@@ -831,7 +831,7 @@ export default function ChatInputActionsRow({
           onClick={() => openCompactPicker("connector")}
         >
           <span className={styles.mobileOverflowItemMain}>
-            <Link2 size={16} />
+            <Link2 size={17} strokeWidth={1.8} />
             <span>{t("connectors.chatPicker")}</span>
             <PlusMenuCount count={selectedConnectors.length} />
           </span>
@@ -850,7 +850,7 @@ export default function ChatInputActionsRow({
           onClick={() => openCompactPicker("knowledge")}
         >
           <span className={styles.mobileOverflowItemMain}>
-            <BookOpen size={16} />
+            <BookOpen size={17} strokeWidth={1.8} />
             <span>{t("chat.knowledgePicker")}</span>
             <PlusMenuCount count={selectedKnowledgeBaseIds.length} />
           </span>
@@ -869,7 +869,7 @@ export default function ChatInputActionsRow({
           onClick={() => openCompactPicker("skill")}
         >
           <span className={styles.mobileOverflowItemMain}>
-            <Sparkles size={16} />
+            <Sparkles size={17} strokeWidth={1.8} />
             <span>{t("chat.skillPicker")}</span>
             <PlusMenuCount count={activeSkillSlugs.length} />
           </span>
@@ -888,7 +888,7 @@ export default function ChatInputActionsRow({
           onClick={() => openCompactPicker("expert")}
         >
           <span className={styles.mobileOverflowItemMain}>
-            <GraduationCap size={16} />
+            <GraduationCap size={17} strokeWidth={1.8} />
             <span>{t("chat.expertPicker")}</span>
             <PlusMenuCount
               count={mentionedExperts.length}
@@ -910,7 +910,7 @@ export default function ChatInputActionsRow({
           onClick={() => openCompactPicker("subagent")}
         >
           <span className={styles.mobileOverflowItemMain}>
-            <Bot size={16} />
+            <Bot size={17} strokeWidth={1.8} />
             <span>{t("chat.subagentPicker")}</span>
             <PlusMenuCount
               count={mentionedSubagents.length}
@@ -932,7 +932,7 @@ export default function ChatInputActionsRow({
           onClick={() => openCompactPicker("shortcut")}
         >
           <span className={styles.mobileOverflowItemMain}>
-            <Zap size={16} />
+            <Zap size={17} strokeWidth={1.8} />
             <span>{t("shortcut.title", "快捷指令")}</span>
           </span>
           <span className={styles.mobileOverflowItemMeta}>
@@ -950,7 +950,7 @@ export default function ChatInputActionsRow({
           onClick={() => openCompactPicker("upload")}
         >
           <span className={styles.mobileOverflowItemMain}>
-            <Paperclip size={16} />
+            <Paperclip size={17} strokeWidth={1.8} />
             <span>{t("upload.tooltip", "Upload")}</span>
           </span>
           <span className={styles.mobileOverflowItemMeta}>
@@ -970,7 +970,8 @@ export default function ChatInputActionsRow({
         >
           <span className={styles.mobileOverflowItemMain}>
             <Wand2
-              size={16}
+              size={17}
+              strokeWidth={1.8}
               className={polishing ? styles.spinIcon : undefined}
             />
             <span>{t("chat.polish.tooltip")}</span>
@@ -1050,7 +1051,7 @@ export default function ChatInputActionsRow({
         }}
       >
         <span className={styles.mobileOverflowItemMain}>
-          <FileUp size={16} />
+          <FileUp size={17} strokeWidth={1.8} />
           <span>{t("upload.files", "Files")}</span>
         </span>
       </button>
@@ -1064,7 +1065,7 @@ export default function ChatInputActionsRow({
         }}
       >
         <span className={styles.mobileOverflowItemMain}>
-          <FolderUp size={16} />
+          <FolderUp size={17} strokeWidth={1.8} />
           <span>{t("upload.folder", "Folder")}</span>
         </span>
       </button>
@@ -1160,7 +1161,7 @@ export default function ChatInputActionsRow({
         aria-label={t("chat.composerMore", "更多工具")}
         data-testid="composer-plus"
       >
-        <Plus size={16} />
+        <Plus size={17} strokeWidth={1.8} />
         {overflowBadgeCount > 0 && (
           <span className={styles.toolbarBadge}>{overflowBadgeCount}</span>
         )}
@@ -1170,23 +1171,23 @@ export default function ChatInputActionsRow({
     const overflowIcon = (key: CompactPickerKey) => {
       switch (key) {
         case "mode":
-          return <ModeIcon size={16} />;
+          return <ModeIcon size={17} strokeWidth={1.8} />;
         case "model":
-          return <Cpu size={16} />;
+          return <Cpu size={17} strokeWidth={1.8} />;
         case "connector":
-          return <Link2 size={16} />;
+          return <Link2 size={17} strokeWidth={1.8} />;
         case "knowledge":
-          return <BookOpen size={16} />;
+          return <BookOpen size={17} strokeWidth={1.8} />;
         case "skill":
-          return <Sparkles size={16} />;
+          return <Sparkles size={17} strokeWidth={1.8} />;
         case "expert":
-          return <GraduationCap size={16} />;
+          return <GraduationCap size={17} strokeWidth={1.8} />;
         case "subagent":
-          return <Bot size={16} />;
+          return <Bot size={17} strokeWidth={1.8} />;
         case "shortcut":
-          return <Zap size={16} />;
+          return <Zap size={17} strokeWidth={1.8} />;
         case "upload":
-          return <Paperclip size={16} />;
+          return <Paperclip size={17} strokeWidth={1.8} />;
       }
     };
 
@@ -1303,7 +1304,7 @@ export default function ChatInputActionsRow({
                 type="button"
                 aria-label={t("shortcut.title", "快捷指令")}
               >
-                <Zap size={16} />
+                <Zap size={17} strokeWidth={1.8} />
               </button>
             </Tooltip>
           </Popover>
@@ -1328,7 +1329,7 @@ export default function ChatInputActionsRow({
                 aria-label={t("upload.tooltip", "Upload")}
                 aria-haspopup="menu"
               >
-                <Paperclip size={16} />
+                <Paperclip size={17} strokeWidth={1.8} />
               </button>
             </Tooltip>
           </Popover>
@@ -1373,7 +1374,7 @@ export default function ChatInputActionsRow({
               onClick={onNewChat}
               type="button"
             >
-              <MessageSquarePlus size={16} strokeWidth={1.75} />
+              <MessageSquarePlus size={17} strokeWidth={1.8} />
             </button>
           </Tooltip>
         ) : (
@@ -1384,7 +1385,7 @@ export default function ChatInputActionsRow({
                 onClick={onNewChat}
                 type="button"
               >
-                <MessageSquarePlus size={16} strokeWidth={1.75} />
+                <MessageSquarePlus size={17} strokeWidth={1.8} />
               </button>
             </Tooltip>
             <Tooltip title={t("chat.polish.tooltip")} mouseEnterDelay={0.4}>
@@ -1395,7 +1396,8 @@ export default function ChatInputActionsRow({
                 disabled={polishDisabled}
               >
                 <Wand2
-                  size={16}
+                  size={17}
+                  strokeWidth={1.8}
                   className={polishing ? styles.spinIcon : undefined}
                 />
               </button>
@@ -1448,7 +1450,7 @@ export default function ChatInputActionsRow({
                 : undefined
             }
           >
-            <Mic size={16} />
+            <Mic size={17} strokeWidth={1.8} />
           </button>
         </Tooltip>
         {(onStartBrowserRecording || onStopBrowserRecording) &&
