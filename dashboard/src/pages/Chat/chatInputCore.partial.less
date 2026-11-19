@@ -314,6 +314,47 @@
   }
 }
 
+/* Model trigger: labeled pill button at the composer's bottom-right. */
+.modelTriggerBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 10px;
+  border: none;
+  border-radius: var(--fn-radius-full);
+  background: transparent;
+  color: var(--fn-text-secondary);
+  font-size: 12px;
+  line-height: 1;
+  max-width: 220px;
+  cursor: pointer;
+  transition:
+    color var(--fn-transition-fast),
+    background var(--fn-transition-fast);
+
+  &:hover {
+    color: var(--fn-text-brand);
+    background: var(--fn-color-brand-bg);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--fn-color-brand);
+    outline-offset: 2px;
+  }
+}
+
+.modelTriggerBtnOpen {
+  color: var(--fn-color-brand);
+  background: var(--fn-color-brand-bg);
+}
+
+.modelTriggerLabel {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .toolbarBadge {
   position: absolute;
   top: -3px;

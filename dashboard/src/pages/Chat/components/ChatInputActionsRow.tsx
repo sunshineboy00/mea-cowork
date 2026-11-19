@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import {
   ArrowUp,
+  ChevronDown,
   Square,
   MessageSquarePlus,
   Paperclip,
@@ -794,6 +795,8 @@ export default function ChatInputActionsRow({
           </span>
         </button>
       )}
+      {/* Model entry moved to the composer's bottom-right trigger button
+          (modelTriggerBtn); kept here commented for reference.
       {showModelPicker && (
         <button
           type="button"
@@ -821,6 +824,7 @@ export default function ChatInputActionsRow({
           </span>
         </button>
       )}
+      */}
       {showConnectorPicker && (
         <button
           type="button"
@@ -1519,6 +1523,43 @@ export default function ChatInputActionsRow({
               </button>
             </Tooltip>
           )}
+        {showModelPicker && !useCompactControls && (
+          <Popover
+            trigger="click"
+            placement="topRight"
+            arrow={false}
+            open={inlinePicker === "model"}
+            onOpenChange={(open) => {
+              setInlinePicker(open ? "model" : null);
+              if (!open) setModelQuery("");
+            }}
+            overlayClassName={styles.skillPickerPopover}
+            content={modelMenu}
+          >
+            <Tooltip
+              title={t("chat.selectModel", "Model")}
+              mouseEnterDelay={0.4}
+            >
+              <button
+                className={cx(
+                  styles.modelTriggerBtn,
+                  inlinePicker === "model" && styles.modelTriggerBtnOpen,
+                )}
+                type="button"
+                aria-label={t("chat.selectModel", "Model")}
+                aria-haspopup="menu"
+                aria-expanded={inlinePicker === "model"}
+                data-testid="composer-model-trigger"
+              >
+                <Cpu size={17} strokeWidth={1.8} />
+                <span className={styles.modelTriggerLabel}>
+                  {selectedModelTriggerLabel}
+                </span>
+                <ChevronDown size={14} strokeWidth={2} />
+              </button>
+            </Tooltip>
+          </Popover>
+        )}
         {isStreaming ? (
           canSend ? (
             // Queue into the chip bar; ↵ Steer lives on the chip row.
