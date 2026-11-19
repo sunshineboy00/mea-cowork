@@ -485,6 +485,21 @@ export default function ChatInputActionsRow({
       )
     : t("chat.modelAuto", "Auto");
 
+  // Provider logo of the currently selected model (falls back to the
+  // generic mark when auto / unresolved).
+  const selectedModelTriggerLogo = selectedModel
+    ? resolveModelLogo({
+        provider_name:
+          availableModels?.find((m) => modelOptionValue(m) === selectedModel)
+            ?.provider_name ??
+          selectedModel.split("/")[0] ??
+          "",
+        provider_kind:
+          availableModels?.find((m) => modelOptionValue(m) === selectedModel)
+            ?.provider_kind ?? "",
+      })
+    : undefined;
+
   const modelQueryNormalized = modelQuery.trim().toLowerCase();
   const filteredModels = (availableModels ?? []).filter((model) => {
     if (!modelQueryNormalized) return true;
@@ -1523,7 +1538,7 @@ export default function ChatInputActionsRow({
               </button>
             </Tooltip>
           )}
-        {showModelPicker && !useCompactControls && (
+        {showModelPicker && (
           <Popover
             trigger="click"
             placement="topRight"
@@ -1543,6 +1558,7 @@ export default function ChatInputActionsRow({
               <button
                 className={cx(
                   styles.modelTriggerBtn,
+                  useCompactControls && styles.modelTriggerBtnCompact,
                   inlinePicker === "model" && styles.modelTriggerBtnOpen,
                 )}
                 type="button"
@@ -1551,11 +1567,19 @@ export default function ChatInputActionsRow({
                 aria-expanded={inlinePicker === "model"}
                 data-testid="composer-model-trigger"
               >
-                <Cpu size={17} strokeWidth={1.8} />
+                {selectedModelTriggerLogo ? (
+                  <img
+                    src={selectedModelTriggerLogo}
+                    alt=""
+                    className={styles.modelTriggerLogo}
+                  />
+                ) : (
+                  <Cpu size={15} strokeWidth={1.8} />
+                )}
                 <span className={styles.modelTriggerLabel}>
                   {selectedModelTriggerLabel}
                 </span>
-                <ChevronDown size={14} strokeWidth={2} />
+                <ChevronDown size={12} strokeWidth={2} />
               </button>
             </Tooltip>
           </Popover>

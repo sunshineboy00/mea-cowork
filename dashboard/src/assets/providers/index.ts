@@ -81,8 +81,11 @@ export function getProviderLogo(providerId: string): string | undefined {
     opencode: opencodeLogo,
     iflytek: iflytekLogo,
     magpie: magpieLogo,
+    // Chinese display names resolve before the protocol-kind fallback,
+    // so OpenAI-compatible providers keep their own brand mark.
+    "雪浪工匠": xuelangGongjiangLogo,
   };
-  return groupLogo[base];
+  return groupLogo[providerId] ?? groupLogo[base];
 }
 
 /**

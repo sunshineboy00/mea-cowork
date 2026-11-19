@@ -349,10 +349,31 @@
   background: var(--fn-color-brand-bg);
 }
 
+/* Compact (mobile/narrow) variant: small pill that still shows the
+   current model name — icon-only circles hide essential context. */
+.modelTriggerBtnCompact {
+  height: 28px;
+  padding: 0 8px;
+  gap: 4px;
+  font-size: 11px;
+
+  .modelTriggerLabel {
+    max-width: 110px;
+  }
+}
+
 .modelTriggerLabel {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.modelTriggerLogo {
+  flex-shrink: 0;
+  width: 15px;
+  height: 15px;
+  object-fit: contain;
+  border-radius: 3px;
 }
 
 .toolbarBadge {

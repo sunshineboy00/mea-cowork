@@ -23,3 +23,9 @@ describe("getProviderLogo", () => {
     expect(getProviderLogo("xuelang")).toBe(xuelangGongjiangIcon);
   });
 });
+
+describe("getProviderLogo chinese aliases", () => {
+  it("maps 雪浪工匠 to the xuelang mark", () => {
+    expect(getProviderLogo("雪浪工匠")).toMatch(/xuelang-gongjiang/);
+  });
+});
