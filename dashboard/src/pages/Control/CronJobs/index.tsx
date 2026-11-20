@@ -9,7 +9,13 @@ import {
   Tooltip,
   Alert,
 } from "antd";
-import { LayoutGrid, List, RefreshCw } from "lucide-react";
+import {
+  LayoutGrid,
+  List,
+  RefreshCw,
+  ArrowUpRight,
+  CalendarClock,
+} from "lucide-react";
 import type { CronJobSpecOutput } from "../../../api/types";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -26,11 +32,9 @@ import {
 import type { CronJobFormValues } from "./useCronJobs";
 import { useCardTableView } from "../../../hooks/useCardTableView";
 import { showConfirmModal } from "../../../utils/confirmModal";
-import { OctopEmptyMascot } from "../../../components/EmptyState";
 import { ResizableTable } from "../../../components/ResizableTable";
 import PageShell from "../../../layouts/PageShell";
 import { useAgent } from "../../../context/AgentContext";
-import { taskExampleColumns } from "./taskExamples";
 import { useTaskExamples } from "./useTaskExamples";
 import styles from "./index.module.less";
 
@@ -50,42 +54,49 @@ function CronJobsEmptyState({
   const { t } = useTranslation();
 
   return (
-    <div className={styles.emptyState}>
-      <div className={styles.emptyStateIcon}>
-        <OctopEmptyMascot />
-      </div>
-      <h2 className={styles.emptyStateTitle}>{t("cronJobs.noJobs")}</h2>
-      <p className={styles.emptyStateDesc}>{t("cronJobs.noJobsDesc")}</p>
-      {suggestions.length > 0 ? (
-        <div
-          className={cx(
-            styles.emptyStateSuggestions,
-            taskExampleColumns(suggestions.length) === 2 &&
-              styles.emptyStateSuggestionsCols2,
-          )}
+    <Card className={styles.emptyCard} variant="borderless">
+      <div className={styles.emptyCardHeader}>
+        <div className={styles.emptyCardHeaderText}>
+          <span className={styles.emptyCardHeaderIcon}>
+            <CalendarClock size={22} strokeWidth={2} aria-hidden />
+          </span>
+          <div>
+            <h2 className={styles.emptyCardTitle}>{t("cronJobs.noJobs")}</h2>
+            <p className={styles.emptyCardSubtitle}>
+              {t("cronJobs.noJobsDesc")}
+            </p>
+          </div>
+        </div>
+        <Button
+          type="primary"
+          className={styles.emptyCardCreateBtn}
+          onClick={onCreate}
         >
+          + {t("cronJobs.createJob")}
+        </Button>
+      </div>
+      {suggestions.length > 0 ? (
+        <div className={styles.emptyCardList}>
           {suggestions.map((text, i) => (
             <button
               key={i}
               type="button"
-              className={styles.emptyStateSuggestionItem}
+              className={styles.emptyCardItem}
               title={text}
               onClick={() => onSuggestionClick(text)}
             >
-              <span className={styles.emptyStateSuggestionText}>{text}</span>
-              <span className={styles.emptyStateSuggestionArrow}>→</span>
+              <span className={styles.emptyCardItemText}>{text}</span>
+              <ArrowUpRight
+                size={16}
+                strokeWidth={1.8}
+                className={styles.emptyCardItemArrow}
+                aria-hidden
+              />
             </button>
           ))}
         </div>
       ) : null}
-      <Button
-        type="primary"
-        onClick={onCreate}
-        className={styles.emptyStateCreateBtn}
-      >
-        + {t("cronJobs.createJob")}
-      </Button>
-    </div>
+    </Card>
   );
 }
 
