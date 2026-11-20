@@ -80,7 +80,10 @@ type CompactPickerKey =
   | "shortcut"
   | "upload";
 
-type ToolbarPickerKey = Exclude<CompactPickerKey, "shortcut" | "upload">;
+type ToolbarPickerKey = Exclude<
+  CompactPickerKey,
+  "shortcut" | "upload" | "model"
+>;
 
 function resolveModelLogo(model: {
   provider_name: string;
@@ -403,7 +406,9 @@ export default function ChatInputActionsRow({
   const overflowKeys = (
     [
       showModePicker ? "mode" : null,
-      showModelPicker ? "model" : null,
+      // "model" lives exclusively on the bottom-right trigger button
+      // (modelTriggerBtn); flattening it here duplicated that entry in
+      // Plan/Ask modes where the write-tool pickers are hidden.
       showConnectorPicker ? "connector" : null,
       showKnowledgePicker ? "knowledge" : null,
       showSkillPicker ? "skill" : null,
@@ -1423,6 +1428,52 @@ export default function ChatInputActionsRow({
             </Tooltip>
           </>
         )}
+        {showModelPicker && (
+          <Popover
+            trigger="click"
+            placement="topRight"
+            arrow={false}
+            open={inlinePicker === "model"}
+            onOpenChange={(open) => {
+              setInlinePicker(open ? "model" : null);
+              if (!open) setModelQuery("");
+            }}
+            overlayClassName={styles.skillPickerPopover}
+            content={modelMenu}
+          >
+            <Tooltip
+              title={t("chat.selectModel", "Model")}
+              mouseEnterDelay={0.4}
+            >
+              <button
+                className={cx(
+                  styles.modelTriggerBtn,
+                  useCompactControls && styles.modelTriggerBtnCompact,
+                  inlinePicker === "model" && styles.modelTriggerBtnOpen,
+                )}
+                type="button"
+                aria-label={t("chat.selectModel", "Model")}
+                aria-haspopup="menu"
+                aria-expanded={inlinePicker === "model"}
+                data-testid="composer-model-trigger"
+              >
+                {selectedModelTriggerLogo ? (
+                  <img
+                    src={selectedModelTriggerLogo}
+                    alt=""
+                    className={styles.modelTriggerLogo}
+                  />
+                ) : (
+                  <Cpu size={15} strokeWidth={1.8} />
+                )}
+                <span className={styles.modelTriggerLabel}>
+                  {selectedModelTriggerLabel}
+                </span>
+                <ChevronDown size={12} strokeWidth={2} />
+              </button>
+            </Tooltip>
+          </Popover>
+        )}
         <Tooltip
           title={
             !_sttAvailable
@@ -1538,52 +1589,6 @@ export default function ChatInputActionsRow({
               </button>
             </Tooltip>
           )}
-        {showModelPicker && (
-          <Popover
-            trigger="click"
-            placement="topRight"
-            arrow={false}
-            open={inlinePicker === "model"}
-            onOpenChange={(open) => {
-              setInlinePicker(open ? "model" : null);
-              if (!open) setModelQuery("");
-            }}
-            overlayClassName={styles.skillPickerPopover}
-            content={modelMenu}
-          >
-            <Tooltip
-              title={t("chat.selectModel", "Model")}
-              mouseEnterDelay={0.4}
-            >
-              <button
-                className={cx(
-                  styles.modelTriggerBtn,
-                  useCompactControls && styles.modelTriggerBtnCompact,
-                  inlinePicker === "model" && styles.modelTriggerBtnOpen,
-                )}
-                type="button"
-                aria-label={t("chat.selectModel", "Model")}
-                aria-haspopup="menu"
-                aria-expanded={inlinePicker === "model"}
-                data-testid="composer-model-trigger"
-              >
-                {selectedModelTriggerLogo ? (
-                  <img
-                    src={selectedModelTriggerLogo}
-                    alt=""
-                    className={styles.modelTriggerLogo}
-                  />
-                ) : (
-                  <Cpu size={15} strokeWidth={1.8} />
-                )}
-                <span className={styles.modelTriggerLabel}>
-                  {selectedModelTriggerLabel}
-                </span>
-                <ChevronDown size={12} strokeWidth={2} />
-              </button>
-            </Tooltip>
-          </Popover>
-        )}
         {isStreaming ? (
           canSend ? (
             // Queue into the chip bar; ↵ Steer lives on the chip row.
