@@ -317,7 +317,7 @@
     "user": "用户设置",
     "advancedSettings": "高级设置",
     "embedding": "Embedding",
-    "tokenUsage": "Token 统计",
+    "tokenUsage": "用量统计",
     "checkUpdates": "应用更新",
     "newVersionBadge": "有新版本",
     "newVersionBadgeShort": "新",
@@ -572,7 +572,7 @@
     "editDocumentSuccess": "已保存，正在重建索引",
     "editDocumentFailed": "保存文档失败",
     "filenameRequired": "请输入文件名",
-    "filenamePlaceholder": "例如 notes",
+    "filenamePlaceholder": "文件名",
     "fileFormat": "格式",
     "fileContent": "内容",
     "fileContentPlaceholder": "在此编写文档内容…",
@@ -593,7 +593,6 @@
     "moveSuccess": "已移动",
     "moveSuccessTo": "已移动到「{{name}}」",
     "moveFailed": "移动失败",
-    "filenamePlaceholder": "文件名",
     "pathBreadcrumb": "路径导航",
     "deleteFolderConfirm": "删除此文件夹及其内部文档？",
     "uploaded": "文档已上传",
@@ -3007,7 +3006,7 @@
     "telegramAllowedUsersHelp": "仅这些数字用户 ID 可以与机器人对话（私聊和群聊均生效）。留空则任何找到该机器人的人都能使用。"
   },
   "tokenUsage": {
-    "title": "Token 消耗统计",
+    "title": "用量统计",
     "description": "分析各渠道和会话的 Token 消耗趋势",
     "today": "今天",
     "yesterday": "昨天",
@@ -3020,7 +3019,7 @@
     "rangeEnd": "结束日期",
     "exportExcel": "导出 Excel",
     "exportFailed": "导出失败",
-    "exportFilenamePrefix": "Token用量",
+    "exportFilenamePrefix": "Token用量统计",
     "summary": "汇总",
     "byDay": "按天",
     "byExpert": "按专家",
@@ -7581,7 +7580,7 @@
       "subtitle": "启用或关闭当前专家的内置工具与插件工具，控制可用能力"
     },
     "tokenUsage": {
-      "title": "Token 统计",
+      "title": "用量统计",
       "subtitle": "查看账户 Token 消耗总览，并按渠道与会话做多维分析"
     },
     "channels": {
