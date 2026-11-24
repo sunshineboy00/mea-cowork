@@ -39,6 +39,7 @@ The suite is skipped unless `OCTOP_E2E_BROWSER=1`, and every test carries the
 - **static quiet** — no repaint, no frames (the bandwidth argument)
 - **input→echo latency** — measured on a hover-only repaint page so every frame after a mouse move is *caused* by it; median must stay far below poll-mode latency
 - **cursor echo** — screencast frames carry no cursor, so `{"type":"cursor"}` must report the CSS value
+- **viewport coordinates** — `focus.html` only has a text field in the *centre* of the viewport, so a client that maps clicks through the (shrunken) decoded frame misses it; the echoed cursor proves which element the server actually hit
 - **wire contract** — bad version / truncated headers raise instead of rendering garbage
 
 `test_dashboard_ui_e2e.py`
@@ -59,3 +60,9 @@ The suite is skipped unless `OCTOP_E2E_BROWSER=1`, and every test carries the
   `data:text/html,…` becomes `https://data:…` and navigation fails.
 - **`/remote-browser` redirects to `/workbench/browser`** and does not auto-start
   the session — the test clicks *启动浏览器* like a user does.
+- **Frontend mapping is covered by unit tests, not E2E**: the pointer mapping
+  (`getBoundingClientRect` → remote viewport, including the `object-fit: contain`
+  letterbox offset) lives purely in the dashboard, so
+  `dashboard/src/utils/__tests__/canvasCoords.test.ts` pins it against
+  degraded frames, letterbox bars and clamping. The E2E above pins the server
+  side of the same contract.

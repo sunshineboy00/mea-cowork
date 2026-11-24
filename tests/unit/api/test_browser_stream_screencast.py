@@ -288,16 +288,63 @@ async def test_screencast_params_include_viewport_and_page_enable(
 
 
 @pytest.mark.asyncio
-async def test_quality_steps_down_on_superseded_frames(
+async def test_send_overrunning_frame_budget_counts_as_backpressure() -> None:
+    """A client whose WS send overruns the frame budget must step the profile
+    down. Sending is the only place real client slowness shows up; counting
+    superseded frames instead conflated it with the fps cap."""
+    sent = 0
+
+    async def slow_send(b64: str, meta: dict) -> None:
+        nonlocal sent
+        sent += 1
+        await asyncio.sleep(0.05)  # > 1/30 s budget of the default entry
+
+    relay = stream._ScreencastRelay(FakeCDPClient(), slow_send, vw=800, vh=600)
+    assert relay.profile["quality"] == 70
+
+    for _ in range(stream._SCREENCAST_DROPS_FOR_STEPDOWN):
+        await relay._push("aGVsbG8=", {})
+
+    assert sent == stream._SCREENCAST_DROPS_FOR_STEPDOWN
+    assert relay.should_adjust() == -1
+    assert relay.profile["quality"] == 55
+
+
+@pytest.mark.asyncio
+async def test_fast_send_never_counts_backpressure() -> None:
+    """A send well inside the frame budget must never trigger degradation."""
+
+    async def fast_send(b64: str, meta: dict) -> None:
+        pass
+
+    relay = stream._ScreencastRelay(FakeCDPClient(), fast_send, vw=800, vh=600)
+    for _ in range(50):
+        await relay._push("aGVsbG8=", {})
+
+    assert relay._backpressure == 0
+    assert relay.should_adjust() == 0
+    assert relay.profile["quality"] == 70
+
+
+@pytest.mark.asyncio
+async def test_fps_cap_coalescing_does_not_degrade_profile(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """A burst of superseded (dropped) frames must trigger a re-arm of
-    startScreencast at a lower JPEG quality (adaptive degradation)."""
+    """Frames coalesced away by the FPS cap are the cap doing its job.
+
+    A page repainting faster than the cap must NOT be read as a slow client —
+    that conflation used to walk any animating page straight down to
+    15fps/q40/x0.5 within seconds (and, before the coordinate-space fix, into
+    scaled-down frames that misaligned every click).
+    """
     sess = FakeSession()
     monkeypatch.setattr(stream, "resolve_harness_session", AsyncMock(return_value=sess))
     monkeypatch.setattr(stream, "_send_session_snapshot", AsyncMock())
 
     send_json, _sent = make_send_json()
+
+    async def fast_send_bytes(blob: bytes) -> None:
+        pass
 
     async def stop_soon() -> str:
         await asyncio.sleep(0.45)
@@ -310,14 +357,13 @@ async def test_quality_steps_down_on_superseded_frames(
             receive_text=stop_soon,
             user_id=1,
             start_msg={"type": "start", "mode": "screencast", "width": 800, "height": 600},
+            send_bytes=fast_send_bytes,
         )
     )
     await asyncio.sleep(0.02)
 
     client = sess._internal.client
-    # Rapid burst: each frame within the 33ms rate-limit window supersedes
-    # the previous pending one, driving the drop counter past the threshold.
-    for _ in range(15):
+    for _ in range(20):
         await client.emit(
             "Page.screencastFrame",
             {"data": "aGVsbG8=", "metadata": {"deviceWidth": 800, "deviceHeight": 600}},
@@ -326,9 +372,8 @@ async def test_quality_steps_down_on_superseded_frames(
     await task
 
     arms = [p for m, p in client.commands if m == "Page.startScreencast"]
-    qualities = [p.get("quality") for p in arms]
-    assert 70 in qualities
-    assert 55 in qualities, f"expected quality step-down, saw {qualities}"
+    assert len(arms) == 1, f"profile should not degrade, saw {[p.get('quality') for p in arms]}"
+    assert arms[0].get("quality") == 70
 
 
 @pytest.mark.asyncio
@@ -375,6 +420,35 @@ async def test_mousemove_pushes_remote_cursor_style(
     assert values == list(dict.fromkeys(values))
 
 
+@pytest.mark.asyncio
+async def test_scroll_refreshes_remote_cursor_style() -> None:
+    """Scrolling swaps the element under the pointer without a moving mouse,
+    so the echoed cursor style must be refreshed — otherwise a link's pointer
+    handedness would persist long after the link scrolled away."""
+    sess = FakeSession()
+
+    async def fake_send(method: str, params: dict | None = None) -> dict:
+        if method == "Runtime.evaluate":
+            return {"result": {"type": "string", "value": "pointer"}}
+        return {}
+
+    sess._internal.client.send = fake_send  # type: ignore[method-assign]
+
+    send_json, sent = make_send_json()
+    state: dict = {"last": 0.0, "value": "auto"}
+
+    await stream._handle_client_event(
+        sess,
+        {"type": "scroll", "x": 10, "y": 5, "deltaX": 0, "deltaY": 120},
+        send_json=send_json,
+        cursor_state=state,
+    )
+
+    cursors = [m for m in sent if m.get("type") == "cursor"]
+    assert cursors, "scroll must refresh the echoed cursor style"
+    assert cursors[-1]["cursor"] == "pointer"
+
+
 def test_profile_steps_up_after_stable_window(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -397,21 +471,21 @@ def test_profile_steps_up_after_stable_window(
     assert relay.profile["quality"] == 70
 
 
-def test_profile_scale_degrades_on_sustained_drops() -> None:
+def test_profile_scale_degrades_on_sustained_backpressure() -> None:
     """Three step-downs walk the ladder into the resolution-scaled entry."""
     client = FakeCDPClient()
     relay = stream._ScreencastRelay(client, AsyncMock(), vw=800, vh=600)
 
     downs = 0
     for _ in range(2):
-        relay._superseded = stream._SCREENCAST_DROPS_FOR_STEPDOWN
+        relay._backpressure = stream._SCREENCAST_DROPS_FOR_STEPDOWN
         downs += int(relay.should_adjust() == -1)
     assert downs == 2
     assert relay.profile["scale"] == 0.75  # idx3: 30fps/q40/x0.75
     assert relay.profile["quality"] == 40
 
     for _ in range(3):
-        relay._superseded = stream._SCREENCAST_DROPS_FOR_STEPDOWN
+        relay._backpressure = stream._SCREENCAST_DROPS_FOR_STEPDOWN
         downs += int(relay.should_adjust() == -1)
     assert downs == 4  # ladder bottom: idx5
     assert relay.profile["scale"] == 0.5

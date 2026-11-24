@@ -234,7 +234,10 @@ class _ScreencastRelay:
     sending. The relay rate-limits to the active profile's FPS cap and drops
     older queued frames so a slow client never accumulates lag; the profile
     (fps / JPEG quality / resolution scale) self-tunes via
-    :meth:`should_adjust` driven by the drop rate.
+    :meth:`should_adjust` driven by *backpressure*, never by that deliberate
+    fps-cap coalescing — coalescing is the cap doing its job, not the client
+    falling behind. Conflating the two made any animating page degrade to the
+    bottom of the ladder within seconds.
     """
 
     def __init__(
@@ -253,7 +256,10 @@ class _ScreencastRelay:
         self._vh = vh
         self._seq = 0
         self._last_push = 0.0
-        self._superseded = 0
+        # Frames coalesced away by the fps cap (observability only — must not
+        # drive degradation) vs. frames whose WS send overran the frame budget.
+        self._coalesced = 0
+        self._backpressure = 0
         self._stable_s = 0.0
         self._last_check = 0.0
         self._pending: asyncio.Task[None] | None = None
@@ -290,20 +296,20 @@ class _ScreencastRelay:
         """Adaptive profile decision, called once per recheck tick.
 
         Returns +1 (step up after sustained clean window), -1 (step down on
-        frame drops), or 0. The caller re-arms startScreencast on ±1 so the
-        new fps cap / quality / scale takes effect.
+        send backpressure), or 0. The caller re-arms startScreencast on ±1 so
+        the new fps cap / quality / scale takes effect.
         """
         now = time.monotonic()
         dt = now - self._last_check if self._last_check else 0.0
         self._last_check = now
         self._stats["window_s"] += dt
-        if self._superseded >= _SCREENCAST_DROPS_FOR_STEPDOWN:
-            self._superseded = 0
+        if self._backpressure >= _SCREENCAST_DROPS_FOR_STEPDOWN:
+            self._backpressure = 0
             self._stable_s = 0.0
             if self._profile_idx + 1 < len(_SCREENCAST_PROFILE_STEPS):
                 self._profile_idx += 1
                 return -1
-        elif self._superseded == 0:
+        elif self._backpressure == 0:
             self._stable_s += dt
             if (
                 self._stable_s >= _SCREENCAST_STABLE_S_FOR_STEPUP
@@ -321,10 +327,13 @@ class _ScreencastRelay:
         out = {
             "pushed": self._stats["pushed"],
             "dropped": self._stats["dropped"],
+            "coalesced": self._coalesced,
+            "backpressure": self._backpressure,
             "bytes": self._stats["bytes"],
             "window_s": round(self._stats["window_s"], 1),
             "profile": f"{self.profile['fps']}fps/q{self.profile['quality']}/x{self.profile['scale']}",
         }
+        self._coalesced = 0
         self._stats = {"pushed": 0, "dropped": 0, "bytes": 0, "window_s": 0.0}
         return out
 
@@ -350,7 +359,7 @@ class _ScreencastRelay:
         # wait, superseding any still-queued frame (only the latest matters).
         if self._pending is not None:
             self._pending.cancel()
-            self._superseded += 1
+            self._coalesced += 1
             self._stats["dropped"] += 1
         delay = min_interval - elapsed
         self._pending = asyncio.create_task(self._push_later(data, params.get("metadata") or {}, delay))
@@ -372,7 +381,13 @@ class _ScreencastRelay:
             "w": int(metadata.get("deviceWidth") or 0),
             "h": int(metadata.get("deviceHeight") or 0),
         }
+        started = time.monotonic()
         await self._send_frame(b64_jpeg, meta)
+        # A send that overruns the current frame budget means the client (or the
+        # network) cannot absorb the profile's throughput — that, and only that,
+        # is the signal that warrants degrading.
+        if time.monotonic() - started > 1.0 / max(1, int(self.profile["fps"])):
+            self._backpressure += 1
 
     async def _ack(self, session_id: Any) -> None:
         params: dict[str, Any] = {}
@@ -461,10 +476,12 @@ async def _screencast_loop(
                 if stats["pushed"] or stats["dropped"]:
                     logger.info(
                         "screencast stats profile=%s pushed=%d dropped=%d "
-                        "bytes=%d window=%ss",
+                        "coalesced=%d backpressure=%d bytes=%d window=%ss",
                         stats["profile"],
                         stats["pushed"],
                         stats["dropped"],
+                        stats["coalesced"],
+                        stats["backpressure"],
                         stats["bytes"],
                         stats["window_s"],
                     )
@@ -731,6 +748,13 @@ async def _handle_client_event(
             direction = "down" if delta_y > 0 else "up"
             amount = max(int(abs(delta_y)), 50)
             await sess.scroll(direction=direction, amount=amount)
+        # Scrolling changes the element under the pointer without a moving
+        # mouse, so the echoed cursor style would stay stale (a link's pointer
+        # handedness persisting over plain text). Refresh it here; the sampling
+        # throttle in ``_maybe_push_cursor_style`` bounds the cost.
+        if send_json is not None and cursor_state is not None:
+            with contextlib.suppress(Exception):
+                await _maybe_push_cursor_style(sess, x, y, send_json, cursor_state)
     elif t == "type":
         text = str(msg.get("text") or "")
         if text:
