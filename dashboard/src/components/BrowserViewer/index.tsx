@@ -25,7 +25,11 @@ import type {
 } from "../../hooks/useBrowserStream";
 import { useBrowserCanvasInteraction } from "../../hooks/useBrowserCanvasInteraction";
 import { useBrowserKeyboard } from "../../hooks/useBrowserKeyboard";
-import { paintBase64JpegToCanvas, createScreencastPainter } from "../../utils/browserCanvas";
+import {
+  paintBase64JpegToCanvas,
+  createScreencastPainter,
+  type ViewportSize,
+} from "../../utils/browserCanvas";
 import { normalizeUrl } from "../../utils/normalizeUrl";
 import { ChromeTabBar } from "../ChromeTabBar";
 import StreamConnectingIndicator from "../StreamConnectingIndicator";
@@ -62,6 +66,16 @@ interface BrowserViewerProps {
    * hover feedback is local — screencast frames carry no cursor.
    */
   remoteCursor?: string;
+
+  /**
+   * Remote page viewport in CSS pixels (the size requested when connecting).
+   *
+   * Frames may be smaller than this — the adaptive profile trades resolution
+   * for bandwidth — so pointer coordinates must be derived from the viewport,
+   * never from the decoded frame size. Without it, clicks and hover land at a
+   * scaled position and inputs never take focus.
+   */
+  remoteViewport?: ViewportSize | null;
 
   /** Bookmark toggle for the current URL (address-bar star button). */
   bookmarked?: boolean;
@@ -112,6 +126,7 @@ export const BrowserViewer = forwardRef<
     onNavigate,
     interactive,
     remoteCursor = "default",
+    remoteViewport = null,
     bookmarked = false,
     onToggleBookmark,
     addressBarExtra,
@@ -130,8 +145,49 @@ export const BrowserViewer = forwardRef<
     sendEvent,
   );
 
+  // Read through a ref so the stable paint callbacks always see the current
+  // viewport without being re-created (which would drop queued frames).
+  const viewportRef = useRef<ViewportSize | null>(remoteViewport);
+  viewportRef.current = remoteViewport;
+
+  // Fit the canvas element box to the viewport aspect ratio.
+  //
+  // `object-fit: contain` *does* letterbox a canvas, and `getCanvasCoords`
+  // assumes the bitmap fills the element — so any aspect mismatch would offset
+  // every pointer event by the bar size. Sizing the element to the exact
+  // aspect-fit box makes the fit an identity transform.
+  const viewportContainerRef = useRef<HTMLDivElement | null>(null);
+  const [displaySize, setDisplaySize] = useState<{ w: number; h: number } | null>(
+    null,
+  );
+  const viewportW = remoteViewport?.width ?? 0;
+  const viewportH = remoteViewport?.height ?? 0;
+  useEffect(() => {
+    const box = viewportContainerRef.current;
+    if (!box || viewportW <= 0 || viewportH <= 0) {
+      setDisplaySize(null);
+      return undefined;
+    }
+    const measure = () => {
+      const bw = box.clientWidth;
+      const bh = box.clientHeight;
+      if (bw <= 0 || bh <= 0) return;
+      const scale = Math.min(bw / viewportW, bh / viewportH);
+      const w = Math.max(1, Math.floor(viewportW * scale));
+      const h = Math.max(1, Math.floor(viewportH * scale));
+      // Keep the previous object when nothing changed: resizing emits many
+      // observations and each new object would re-render the whole viewer.
+      setDisplaySize((prev) => (prev && prev.w === w && prev.h === h ? prev : { w, h }));
+    };
+    measure();
+    if (typeof ResizeObserver !== "function") return undefined;
+    const observer = new ResizeObserver(measure);
+    observer.observe(box);
+    return () => observer.disconnect();
+  }, [viewportW, viewportH]);
+
   const paintFrame = useCallback((base64Data: string) => {
-    paintBase64JpegToCanvas(canvasRef.current, base64Data);
+    paintBase64JpegToCanvas(canvasRef.current, base64Data, viewportRef.current);
     setFrameReady(true);
   }, []);
 
@@ -158,10 +214,13 @@ export const BrowserViewer = forwardRef<
     if (!painterRef.current || painterRef.current.canvas !== canvas) {
       painterRef.current?.painter.dispose();
       painterRef.current = {
-        painter: createScreencastPainter(canvas),
+        painter: createScreencastPainter(canvas, viewportRef.current),
         canvas,
       };
     }
+    // The profile can change the frame size mid-session; the coordinate space
+    // (and therefore the backing store) must not follow it.
+    painterRef.current.painter.setViewport(viewportRef.current);
     painterRef.current.painter.paint(blob);
     setFrameReady(true);
   }, []);
@@ -204,6 +263,7 @@ export const BrowserViewer = forwardRef<
     enabled: interactive,
     canvasRef,
     onEvent: forwardCanvasEvent,
+    viewport: remoteViewport,
   });
 
   const isStreaming = status === "streaming" || status === "browser_started";
@@ -331,6 +391,7 @@ export const BrowserViewer = forwardRef<
 
       {/* Viewport (canvas screencast) */}
       <div
+        ref={viewportContainerRef}
         className={cx(
           styles.viewportContainer,
           interactive && styles.viewportInteractive,
@@ -376,6 +437,17 @@ export const BrowserViewer = forwardRef<
                 ? "grabbing"
                 : remoteCursor || "default",
               ...pointerStyle,
+              ...(displaySize
+                ? {
+                    width: displaySize.w,
+                    height: displaySize.h,
+                    // The box is already the exact aspect-fit size — never let
+                    // flexbox shrink it (a shrunken box would reintroduce the
+                    // letterbox the coordinate mapping has to undo).
+                    flex: "0 0 auto",
+                    margin: "auto",
+                  }
+                : {}),
             }}
             onPointerDown={handlePanPointerDown}
             onPointerMove={handlePointerMove}

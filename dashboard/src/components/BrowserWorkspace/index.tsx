@@ -113,7 +113,7 @@ const BrowserWorkspace: React.FC<BrowserWorkspaceProps> = ({
   // Shared stream controller: measure container, resolve viewport, open the
   // WebSocket, and paint frames onto the BrowserViewer canvas. The chat panel
   // defaults to a fixed 1440×900 canvas (the pane is too small for ``auto``).
-  const { startStream } = useBrowserViewController({
+  const { startStream, viewport: remoteViewport } = useBrowserViewController({
     containerRef: canvasContainerRef,
     viewerRef,
     connect,
@@ -365,6 +365,7 @@ const BrowserWorkspace: React.FC<BrowserWorkspaceProps> = ({
           onNavigate={handleNavigate}
           interactive={isStreaming && isInteractive}
           remoteCursor={remoteCursor}
+          remoteViewport={remoteViewport}
           onReconnect={handleRetry}
           bookmarked={bookmarked}
           onToggleBookmark={onToggleBookmark}

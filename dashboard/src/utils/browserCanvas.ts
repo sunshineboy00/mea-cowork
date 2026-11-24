@@ -3,14 +3,67 @@ export interface CanvasPoint {
   y: number;
 }
 
-/** Map a screen pointer position to canvas pixel coordinates. */
+/**
+ * The remote page viewport in CSS pixels — the coordinate space pointer events
+ * must be expressed in. It is *not* the size of a decoded frame: screencast
+ * frames can be scaled down by the adaptive profile, while `canvas.width` only
+ * ever holds the viewport.
+ */
+export interface ViewportSize {
+  width: number;
+  height: number;
+}
+
+function clampCoord(value: number, max: number): number {
+  if (!Number.isFinite(value)) return 0;
+  if (value < 0) return 0;
+  if (value > max) return max;
+  return value;
+}
+
+/**
+ * Map a screen pointer position to remote viewport coordinates — the space
+ * `Input.dispatchMouseEvent` expects.
+ *
+ * `getBoundingClientRect` is the *element* box, and the canvas is laid out with
+ * `object-fit: contain`, so the remote viewport is letterboxed inside it.
+ * Passing `viewport` undoes that fit (scale + centring offset) and yields true
+ * page coordinates regardless of how small the decoded frame is — the adaptive
+ * profile can shrink frames to 50% without moving a single click.
+ *
+ * Without `viewport` (unknown session) we fall back to the legacy assumption
+ * that the backing store already is the coordinate space.
+ */
 export function getCanvasCoords(
   canvas: HTMLCanvasElement | null,
   e: { clientX: number; clientY: number },
+  viewport: ViewportSize | null = null,
 ): CanvasPoint {
   if (!canvas) return { x: 0, y: 0 };
   const rect = canvas.getBoundingClientRect();
   if (rect.width === 0 || rect.height === 0) return { x: 0, y: 0 };
+
+  if (viewport && viewport.width > 0 && viewport.height > 0) {
+    const scale = Math.min(
+      rect.width / viewport.width,
+      rect.height / viewport.height,
+    );
+    if (scale > 0) {
+      const offsetX = (rect.width - viewport.width * scale) / 2;
+      const offsetY = (rect.height - viewport.height * scale) / 2;
+      return {
+        x: clampCoord(
+          Math.round((e.clientX - rect.left - offsetX) / scale),
+          viewport.width,
+        ),
+        y: clampCoord(
+          Math.round((e.clientY - rect.top - offsetY) / scale),
+          viewport.height,
+        ),
+      };
+    }
+  }
+
   const scaleX = canvas.width / rect.width;
   const scaleY = canvas.height / rect.height;
   return {
@@ -19,25 +72,46 @@ export function getCanvasCoords(
   };
 }
 
-/** Paint a JPEG base64 frame onto a canvas (WebSocket stream). */
+/**
+ * Size the backing store for one decoded frame.
+ *
+ * With a known viewport the canvas stays at the viewport size and the frame is
+ * scaled to fill it, so `getCanvasCoords` keeps returning true remote
+ * coordinates no matter what the adaptive profile did to the frame. Without
+ * one (unknown session) we fall back to the frame's own size.
+ */
+function sizeBackingStore(
+  canvas: HTMLCanvasElement,
+  frameWidth: number,
+  frameHeight: number,
+  viewport: ViewportSize | null,
+): { width: number; height: number } {
+  const width = viewport?.width || frameWidth;
+  const height = viewport?.height || frameHeight;
+  if (canvas.width !== width || canvas.height !== height) {
+    canvas.width = width;
+    canvas.height = height;
+  }
+  return { width, height };
+}
+
+/** Paint a JPEG base64 frame onto a canvas (poll mode / bridge relay). */
 export function paintBase64JpegToCanvas(
   canvas: HTMLCanvasElement | null,
   base64Data: string,
+  viewport: ViewportSize | null = null,
 ): void {
   if (!canvas) return;
   const img = new Image();
   img.onload = () => {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
-    if (canvas.width !== img.width || canvas.height !== img.height) {
-      canvas.width = img.width;
-      canvas.height = img.height;
-    }
+    const target = sizeBackingStore(canvas, img.width, img.height, viewport);
     ctx.imageSmoothingEnabled = true;
     if ("imageSmoothingQuality" in ctx) {
       ctx.imageSmoothingQuality = "high";
     }
-    ctx.drawImage(img, 0, 0);
+    ctx.drawImage(img, 0, 0, target.width, target.height);
   };
   img.src = `data:image/jpeg;base64,${base64Data}`;
 }
@@ -90,11 +164,21 @@ function createDecodeWorker(): { worker: Worker; url: string } | null {
  */
 export function createScreencastPainter(
   canvas: HTMLCanvasElement | null,
-): { paint: (blob: Blob) => void; dispose: () => void } {
+  initialViewport: ViewportSize | null = null,
+): {
+  paint: (blob: Blob) => void;
+  setViewport: (viewport: ViewportSize | null) => void;
+  dispose: () => void;
+} {
   let latest: Blob | null = null;
   let decoding = false;
   let disposed = false;
   let lastDrawnSeq = 0;
+  let viewport = initialViewport;
+
+  const setViewport = (next: ViewportSize | null) => {
+    viewport = next;
+  };
 
   const workerHandle = createDecodeWorker();
 
@@ -108,15 +192,12 @@ export function createScreencastPainter(
       bitmap.close();
       return;
     }
-    if (canvas.width !== bitmap.width || canvas.height !== bitmap.height) {
-      canvas.width = bitmap.width;
-      canvas.height = bitmap.height;
-    }
+    const target = sizeBackingStore(canvas, bitmap.width, bitmap.height, viewport);
     ctx.imageSmoothingEnabled = true;
     if ("imageSmoothingQuality" in ctx) {
       ctx.imageSmoothingQuality = "high";
     }
-    ctx.drawImage(bitmap, 0, 0);
+    ctx.drawImage(bitmap, 0, 0, target.width, target.height);
     bitmap.close();
   };
 
@@ -204,6 +285,7 @@ export function createScreencastPainter(
           paintOnMainThread(blob);
         }
       },
+      setViewport,
       dispose() {
         disposed = true;
         pending = null;
@@ -223,6 +305,7 @@ export function createScreencastPainter(
       }
       void draw(blob);
     },
+    setViewport,
     dispose() {
       disposed = true;
       latest = null;

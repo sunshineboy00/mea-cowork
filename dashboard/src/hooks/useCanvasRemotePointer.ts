@@ -7,7 +7,7 @@ import {
   type RefObject,
   type WheelEvent as ReactWheelEvent,
 } from "react";
-import { getCanvasCoords } from "../utils/browserCanvas";
+import { getCanvasCoords, type ViewportSize } from "../utils/browserCanvas";
 
 const DRAG_THRESHOLD = 4;
 const MOVE_INTERVAL_MS = 33;
@@ -29,6 +29,12 @@ export interface CanvasRemotePointerOptions {
   enrichPayload?: (coords: { x: number; y: number }) => Record<string, unknown>;
   /** Emit hover mousemove (default true). Mobile streams should disable this. */
   sendHoverMoves?: boolean;
+  /**
+   * Remote viewport in CSS pixels. Screencast frames may be smaller than the
+   * viewport (adaptive profile), so coordinates must be derived from this
+   * instead of the canvas backing store. Omit for fixed-size streams.
+   */
+  viewport?: ViewportSize | null;
 }
 
 function buttonName(button: number): "left" | "middle" | "right" {
@@ -53,7 +59,14 @@ export function useCanvasRemotePointer({
   onEvent,
   enrichPayload,
   sendHoverMoves = true,
+  viewport = null,
 }: CanvasRemotePointerOptions) {
+  // Read the viewport through a ref so every handler stays referentially stable
+  // (re-creating them mid-gesture would drop pointer capture) while still
+  // mapping against the latest viewport.
+  const viewportRef = useRef<ViewportSize | null>(viewport);
+  viewportRef.current = viewport ?? null;
+
   const pressingRef = useRef(false);
   const movedRef = useRef(false);
   const anchorRef = useRef({ x: 0, y: 0 });
@@ -71,7 +84,7 @@ export function useCanvasRemotePointer({
 
   const getCoords = useCallback(
     (e: { clientX: number; clientY: number }) =>
-      getCanvasCoords(canvasRef.current, e),
+      getCanvasCoords(canvasRef.current, e, viewportRef.current),
     [canvasRef],
   );
 

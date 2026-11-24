@@ -162,6 +162,47 @@ async def test_cursor_style_is_echoed(backend, pages_url) -> None:
         assert "pointer" in seen, f"cursor echo never reported 'pointer' (saw {seen})"
 
 
+async def test_viewport_coordinates_reach_the_right_element(backend, pages_url) -> None:
+    """Pointer coordinates are remote *viewport* CSS pixels, not frame pixels.
+
+    Screencast frames shrink with the adaptive profile, so a client that maps
+    clicks through the decoded bitmap lands somewhere else entirely — the
+    regression that made inputs unclickable. Here the hovered element is only
+    in the centre of the viewport, and the cursor echo reports which element
+    the server actually hit.
+    """
+    async with open_stream(backend, url=_page(pages_url, "focus.html"),
+                           width=VIEW_W, height=VIEW_H) as client:
+        await _first_frame(client)
+        await client.pump(0.5)
+        await client.drain(0.4)
+
+        # Centre of the viewport → the text field.
+        client.cursor = None
+        for _ in range(8):
+            await client.move(VIEW_W // 2, VIEW_H // 2)
+            await asyncio.sleep(0.2)
+            await client.drain(0.05)
+            if client.cursor == "text":
+                break
+        assert client.cursor == "text", (
+            f"centre of the viewport is not the text field (cursor={client.cursor!r}); "
+            f"frame metadata: {[(f.width, f.height) for f in client.frames[-3:]]}"
+        )
+
+        # Bottom-right corner → plain page background.
+        client.cursor = None
+        for _ in range(8):
+            await client.move(VIEW_W - 32, VIEW_H - 32)
+            await asyncio.sleep(0.2)
+            await client.drain(0.05)
+            if client.cursor not in (None, "text"):
+                break
+        assert client.cursor in ("auto", "default"), (
+            f"corner should not be the text field (cursor={client.cursor!r})"
+        )
+
+
 def test_wire_contract_rejects_malformed_frames() -> None:
     """Bad version / truncated headers must fail loudly, not render garbage."""
     with pytest.raises(WireFormatError):

@@ -1,4 +1,4 @@
-import { useCallback, useRef } from "react";
+import { useCallback, useRef, useState } from "react";
 import type { RefObject } from "react";
 import type { BrowserViewerHandle } from "../components/BrowserViewer";
 
@@ -82,6 +82,14 @@ export function useBrowserViewController({
   onAfterConnect,
   bridgeConnectionId = null,
 }: UseBrowserViewControllerOptions) {
+  /**
+   * The remote page viewport the stream was started with — the coordinate
+   * space every pointer event must be expressed in. It is deliberately kept
+   * here (not derived from the decoded frame) because screencast frames shrink
+   * as the adaptive profile degrades; the viewport does not.
+   */
+  const [viewport, setViewport] = useState<ViewportSize | null>(null);
+
   // Hold the caller-provided callbacks/flags in a ref so ``startStream`` keeps
   // a stable identity even when those inline functions are recreated each
   // render. Only ``resolveViewport`` (which changes with the viewport mode)
@@ -128,13 +136,30 @@ export function useBrowserViewController({
       }
 
       before?.(sessionId);
+      setViewport(size);
       connect(
         targetUrl,
         size.width,
         size.height,
         {
           onFrame: (base64Data) => viewerRef.current?.paintFrame(base64Data),
-          onBinaryFrame: (blob) => viewerRef.current?.paintBlobFrame?.(blob),
+          onBinaryFrame: (blob, meta) => {
+            // The backend reports the real ``deviceWidth/deviceHeight`` in each
+            // frame; adopt it if it disagrees with what we asked for (DPR,
+            // server-side clamping) so the coordinate space never drifts from
+            // the page. A small tolerance avoids re-sizing the backing store —
+            // and therefore clearing the canvas — on floating-point noise.
+            if (meta && meta.w > 0 && meta.h > 0) {
+              setViewport((prev) =>
+                prev &&
+                Math.abs(prev.width - meta.w) <= 2 &&
+                Math.abs(prev.height - meta.h) <= 2
+                  ? prev
+                  : { width: meta.w, height: meta.h },
+              );
+            }
+            viewerRef.current?.paintBlobFrame?.(blob);
+          },
           onError: err,
         },
         {
@@ -147,5 +172,5 @@ export function useBrowserViewController({
     [containerRef, viewerRef, connect, resolveViewport],
   );
 
-  return { startStream };
+  return { startStream, viewport };
 }

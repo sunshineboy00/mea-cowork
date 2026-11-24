@@ -438,7 +438,7 @@ export default function RemoteBrowserPage({
   // (mobile-aware), opens the WebSocket, and paints frames onto the canvas.
   // The standalone page toggles frame-ready / stream-active flags and attaches
   // the profile around the connect call.
-  const { startStream } = useBrowserViewController({
+  const { startStream, viewport: remoteViewport } = useBrowserViewController({
     containerRef,
     viewerRef,
     connect,
@@ -1274,6 +1274,7 @@ export default function RemoteBrowserPage({
                   onNavigate={(url) => streamNavigate(url)}
                   interactive={Boolean(session)}
                   remoteCursor={remoteCursor}
+                  remoteViewport={remoteViewport}
                   bookmarked={currentBookmarked}
                   onToggleBookmark={toggle}
                   addressBarExtra={

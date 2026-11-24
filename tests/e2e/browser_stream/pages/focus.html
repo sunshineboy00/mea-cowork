@@ -1,0 +1,13 @@
+<!doctype html><meta charset="utf-8"><style>
+/* A click target that only exists in the *centre* of the viewport, so a
+   coordinate space anchored to the decoded frame (which screencast frames
+   shrink) misses it: pointer input must be expressed in viewport CSS px. */
+*{margin:0}
+body{height:100vh;background:#fff;font:16px sans-serif;position:relative}
+#target{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:400px;height:200px;border:4px solid #08f;background:#eef6ff;
+  cursor:text;font-size:18px;padding:8px;box-sizing:border-box}
+#hint{position:absolute;left:8px;top:8px;color:#555;cursor:default}
+</style>
+<div id="hint">corners are default-cursor; only the centre box is a text field</div>
+<input id="target" placeholder="click me">
