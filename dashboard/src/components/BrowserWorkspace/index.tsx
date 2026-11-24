@@ -80,6 +80,7 @@ const BrowserWorkspace: React.FC<BrowserWorkspaceProps> = ({
     status,
     tabs,
     sessionInfo,
+    remoteCursor,
     connect,
     sendEvent,
     navigate: streamNavigate,
@@ -363,6 +364,7 @@ const BrowserWorkspace: React.FC<BrowserWorkspaceProps> = ({
           onNavUrlChange={setUrl}
           onNavigate={handleNavigate}
           interactive={isStreaming && isInteractive}
+          remoteCursor={remoteCursor}
           onReconnect={handleRetry}
           bookmarked={bookmarked}
           onToggleBookmark={onToggleBookmark}

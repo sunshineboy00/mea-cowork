@@ -25,8 +25,48 @@ export interface BrowserTab {
 
 interface BrowserStreamCallbacks {
   onFrame: (base64Data: string) => void;
+  onBinaryFrame?: (jpegBlob: Blob, meta: { w: number; h: number; seq: number }) => void;
   onStatusChange?: (status: BrowserStreamState) => void;
   onError?: (message: string) => void;
+}
+
+/** Wire format for screencast binary frames: 1B version + 4B big-endian meta
+ *  length + meta JSON + raw JPEG. Must match the backend
+ *  ``encode_screencast_frame`` in ``api/routers/browser/stream.py``. */
+const WS_FRAME_VERSION = 1;
+
+/** localStorage override for the frame channel: "poll" forces the legacy
+ *  base64 text frames. Default (and any other value) is "screencast". */
+const STREAM_MODE_KEY = "octop:browserStreamMode";
+
+function resolveStreamMode(): "screencast" | "poll" {
+  try {
+    return localStorage.getItem(STREAM_MODE_KEY) === "poll"
+      ? "poll"
+      : "screencast";
+  } catch {
+    return "screencast";
+  }
+}
+
+export function parseWsBinaryFrame(
+  data: ArrayBuffer,
+): { jpeg: Uint8Array; meta: { w: number; h: number; seq: number } } {
+  const view = new DataView(data);
+  if (data.byteLength < 5) throw new Error("truncated binary frame header");
+  const version = view.getUint8(0);
+  if (version !== WS_FRAME_VERSION) {
+    throw new Error(`unsupported binary frame version ${version}`);
+  }
+  const metaLen = view.getUint32(1, false);
+  if (data.byteLength < 5 + metaLen) {
+    throw new Error("truncated binary frame metadata length");
+  }
+  const meta = JSON.parse(
+    new TextDecoder().decode(new Uint8Array(data, 5, metaLen)),
+  ) as { w: number; h: number; seq: number };
+  const jpeg = new Uint8Array(data, 5 + metaLen);
+  return { jpeg, meta };
 }
 
 interface ConnectOptions {
@@ -79,6 +119,7 @@ export function useBrowserStream() {
   const [status, setStatus] = useState<BrowserStreamState>("idle");
   const [currentUrl, setCurrentUrl] = useState("");
   const [tabs, setTabs] = useState<BrowserTab[]>([]);
+  const [remoteCursor, setRemoteCursor] = useState("default");
   const [sessionInfo, setSessionInfo] = useState<StreamSessionInfo | null>(
     null,
   );
@@ -110,6 +151,7 @@ export function useBrowserStream() {
       let ws: WebSocket;
       try {
         ws = new WebSocket(wsUrl);
+        ws.binaryType = "arraybuffer";
       } catch (err) {
         console.error("[BrowserStream] Failed to create WebSocket:", err);
         updateStatus("error");
@@ -123,6 +165,7 @@ export function useBrowserStream() {
           width,
           height,
           reuse_session: true,
+          mode: resolveStreamMode(),
         };
         if (options.sessionId) {
           startMsg.session_id = options.sessionId;
@@ -132,6 +175,19 @@ export function useBrowserStream() {
       };
 
       ws.onmessage = (ev) => {
+        // Screencast binary frames bypass JSON entirely.
+        if (ev.data instanceof ArrayBuffer) {
+          try {
+            const { jpeg, meta } = parseWsBinaryFrame(ev.data);
+            callbacksRef.current?.onBinaryFrame?.(
+              new Blob([jpeg], { type: "image/jpeg" }),
+              meta,
+            );
+          } catch (err) {
+            console.warn("[BrowserStream] bad binary frame:", err);
+          }
+          return;
+        }
         try {
           const msg = JSON.parse(ev.data as string) as {
             type: string;
@@ -139,6 +195,8 @@ export function useBrowserStream() {
             status?: string;
             message?: string;
             tabs?: BrowserTab[];
+            mode?: string;
+            cursor?: string;
           };
 
           if (msg.type === "frame" && msg.data) {
@@ -175,6 +233,12 @@ export function useBrowserStream() {
                 "dashboard",
             };
             setSessionInfo(info);
+          } else if (msg.type === "stream_mode") {
+            // Server confirms the active frame channel; informational.
+            console.debug("[BrowserStream] stream_mode:", msg.mode);
+          } else if (msg.type === "cursor") {
+            // Remote cursor style echo (screencast frames carry no cursor).
+            setRemoteCursor(String(msg.cursor ?? "default"));
           }
         } catch {
           // Non-JSON frames — ignore
@@ -283,6 +347,7 @@ export function useBrowserStream() {
     currentUrl,
     tabs,
     sessionInfo,
+    remoteCursor,
     connect,
     sendEvent,
     navigate,

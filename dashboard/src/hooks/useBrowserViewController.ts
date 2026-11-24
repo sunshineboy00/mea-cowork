@@ -30,6 +30,7 @@ type ConnectStreamFn = (
   height: number,
   callbacks: {
     onFrame: (base64Data: string) => void;
+    onBinaryFrame?: (blob: Blob, meta: { w: number; h: number; seq: number }) => void;
     onStatusChange?: (status: string) => void;
     onError?: (message: string) => void;
   },
@@ -133,6 +134,7 @@ export function useBrowserViewController({
         size.height,
         {
           onFrame: (base64Data) => viewerRef.current?.paintFrame(base64Data),
+          onBinaryFrame: (blob) => viewerRef.current?.paintBlobFrame?.(blob),
           onError: err,
         },
         {

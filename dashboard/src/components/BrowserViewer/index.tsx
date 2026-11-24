@@ -25,7 +25,7 @@ import type {
 } from "../../hooks/useBrowserStream";
 import { useBrowserCanvasInteraction } from "../../hooks/useBrowserCanvasInteraction";
 import { useBrowserKeyboard } from "../../hooks/useBrowserKeyboard";
-import { paintBase64JpegToCanvas } from "../../utils/browserCanvas";
+import { paintBase64JpegToCanvas, createScreencastPainter } from "../../utils/browserCanvas";
 import { normalizeUrl } from "../../utils/normalizeUrl";
 import { ChromeTabBar } from "../ChromeTabBar";
 import StreamConnectingIndicator from "../StreamConnectingIndicator";
@@ -33,7 +33,10 @@ import styles from "./index.module.less";
 
 /** Imperative handle so the parent can paint incoming frames onto the canvas. */
 export interface BrowserViewerHandle {
+  /** Legacy base64 JPEG frame (poll mode). */
   paintFrame: (base64Data: string) => void;
+  /** Screencast binary frame (Blob). Uses the latest-frame-wins painter. */
+  paintBlobFrame?: (blob: Blob) => void;
 }
 
 interface BrowserViewerProps {
@@ -52,6 +55,13 @@ interface BrowserViewerProps {
 
   /** Whether the canvas forwards pointer and keyboard input. */
   interactive: boolean;
+
+  /**
+   * Remote cursor style pushed by the backend (``{"type":"cursor"}``):
+   * "pointer" over links, "text" over inputs, … Applied to the canvas so
+   * hover feedback is local — screencast frames carry no cursor.
+   */
+  remoteCursor?: string;
 
   /** Bookmark toggle for the current URL (address-bar star button). */
   bookmarked?: boolean;
@@ -101,6 +111,7 @@ export const BrowserViewer = forwardRef<
     onNavUrlChange,
     onNavigate,
     interactive,
+    remoteCursor = "default",
     bookmarked = false,
     onToggleBookmark,
     addressBarExtra,
@@ -124,7 +135,42 @@ export const BrowserViewer = forwardRef<
     setFrameReady(true);
   }, []);
 
-  useImperativeHandle(ref, () => ({ paintFrame }), [paintFrame]);
+  // Latest-frame-wins painter for binary screencast frames. The canvas is
+  // conditionally rendered (placeholder while connecting / on error), so it is
+  // created lazily on the first frame rather than in a mount-only effect —
+  // a mount-only effect would run while canvasRef is still null and leave the
+  // painter permanently missing, silently dropping every binary frame.
+  const painterRef = useRef<{
+    painter: ReturnType<typeof createScreencastPainter>;
+    canvas: HTMLCanvasElement;
+  } | null>(null);
+  useEffect(
+    () => () => {
+      painterRef.current?.painter.dispose();
+      painterRef.current = null;
+    },
+    [],
+  );
+
+  const paintBlobFrame = useCallback((blob: Blob) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    if (!painterRef.current || painterRef.current.canvas !== canvas) {
+      painterRef.current?.painter.dispose();
+      painterRef.current = {
+        painter: createScreencastPainter(canvas),
+        canvas,
+      };
+    }
+    painterRef.current.painter.paint(blob);
+    setFrameReady(true);
+  }, []);
+
+  useImperativeHandle(
+    ref,
+    () => ({ paintFrame, paintBlobFrame }),
+    [paintFrame, paintBlobFrame],
+  );
 
   // Notify the parent whenever a frame is painted (parent tracks readiness).
   useEffect(() => {
@@ -326,7 +372,9 @@ export const BrowserViewer = forwardRef<
               !frameReady && styles.canvasHidden,
             )}
             style={{
-              cursor: isDragging ? "grabbing" : "default",
+              cursor: isDragging
+                ? "grabbing"
+                : remoteCursor || "default",
               ...pointerStyle,
             }}
             onPointerDown={handlePanPointerDown}

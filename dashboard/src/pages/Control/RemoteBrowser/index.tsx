@@ -388,6 +388,7 @@ export default function RemoteBrowserPage({
   const {
     status,
     tabs: streamTabs,
+    remoteCursor,
     connect,
     disconnect,
     sendEvent,
@@ -1272,6 +1273,7 @@ export default function RemoteBrowserPage({
                   onNavUrlChange={setNavUrl}
                   onNavigate={(url) => streamNavigate(url)}
                   interactive={Boolean(session)}
+                  remoteCursor={remoteCursor}
                   bookmarked={currentBookmarked}
                   onToggleBookmark={toggle}
                   addressBarExtra={
