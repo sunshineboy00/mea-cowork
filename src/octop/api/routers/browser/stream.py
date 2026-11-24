@@ -6,7 +6,7 @@ and ``useBrowserSessionState`` (listen-only status):
 Client → Server::
 
   {"type": "start", "url": "", "width": 1280, "height": 800,
-   "reuse_session": true, "session_id": "<profile>"}
+   "reuse_session": true, "session_id": "<profile>", "mode": "screencast"}
   {"type": "navigate", "url": "https://..."}
   {"type": "click", "x": 100, "y": 200}
   {"type": "mousedown", "x": 100, "y": 200, "button": "left", "buttons": 1}
@@ -15,13 +15,27 @@ Client → Server::
   {"type": "mouseup", "x": 150, "y": 250, "button": "left", "buttons": 0}
   {"type": "stop"}
 
-Server → Client::
+Server → Client (control messages, JSON text)::
 
   {"type": "status", "status": "streaming"}
-  {"type": "frame", "data": "<base64 jpeg>"}
   {"type": "tabs", "tabs": [{id, url, title, active}]}
   {"type": "session_update", "session_id": "...", "current_url": "...", ...}
   {"type": "error", "message": "..."}
+
+Server → Client (image frames):
+
+* legacy ``poll`` mode — ``{"type": "frame", "data": "<base64 jpeg>"}`` text
+  frames at a fixed interval (unchanged behaviour).
+* ``screencast`` mode — CDP ``Page.startScreencast`` event-driven push, one
+  WebSocket **binary** frame per image::
+
+      1 byte   version (0x01)
+      4 bytes  metadata JSON length, big-endian
+      N bytes  metadata JSON ({"w", "h", "seq"})
+      rest     raw JPEG payload
+
+  Fallback to base64 ``frame`` text frames when the transport has no binary
+  send hook (Bridge peer relay).
 
 Auth: ``?token=<JWT>`` query param (browsers cannot set Authorization on WS).
 Listen-only (``?listen_only=1``): still requires ``start``, but never launches
@@ -34,6 +48,7 @@ import asyncio
 import contextlib
 import json
 import logging
+import struct
 import time
 from typing import Any
 
@@ -55,6 +70,54 @@ router = APIRouter()
 
 _FRAME_INTERVAL_S = 1 / 12
 _SESSION_INTERVAL_S = 1.0
+# Screencast: the CDP client is re-checked every 250 ms (tab switches rebuild
+# the CDPClient, so listeners must re-arm on the fresh instance).
+_SCREENCAST_SNAPSHOT_INTERVAL_S = 1.0
+_SCREENCAST_RECHECK_INTERVAL_S = 0.25
+# Adaptive transmission profile: an ordered ladder from best to worst.
+# Chrome pushes ~60 FPS on animated pages (measured); the default entry caps
+# at 30 FPS. On sustained frame drops (slow client) we degrade one entry per
+# window; after a sustained clean window we step back up (asymmetric
+# hysteresis: drops trigger instantly, recovery needs stability).
+_SCREENCAST_PROFILE_STEPS = (
+    {"fps": 60, "quality": 70, "scale": 1.0},
+    {"fps": 30, "quality": 70, "scale": 1.0},
+    {"fps": 30, "quality": 55, "scale": 1.0},
+    {"fps": 30, "quality": 40, "scale": 0.75},
+    {"fps": 30, "quality": 40, "scale": 0.5},
+    {"fps": 15, "quality": 40, "scale": 0.5},
+)
+_SCREENCAST_DEFAULT_PROFILE = 1
+_SCREENCAST_DROPS_FOR_STEPDOWN = 10
+_SCREENCAST_STABLE_S_FOR_STEPUP = 8.0
+# Re-arm failures tolerated mid-session (client swaps) before poll fallback.
+_SCREENCAST_REARM_FAILURES = 4
+# Remote cursor echo: min interval between getComputedStyle probes.
+_CURSOR_QUERY_INTERVAL_S = 0.12
+# Stream observability: windowed counters logged at INFO each period.
+_SCREENCAST_STATS_INTERVAL_S = 10.0
+_WS_FRAME_VERSION = 1
+
+
+def encode_screencast_frame(jpeg: bytes, metadata: dict[str, Any]) -> bytes:
+    """Pack one screencast frame into the WS binary wire format."""
+    meta = json.dumps(metadata, separators=(",", ":")).encode()
+    return (
+        struct.pack(">BI", _WS_FRAME_VERSION, len(meta)) + meta + jpeg
+    )
+
+
+def parse_ws_binary_frame(blob: bytes) -> tuple[int, dict[str, Any], bytes]:
+    """Parse one WS binary frame; raises ValueError on malformed input."""
+    if len(blob) < 5:
+        raise ValueError("truncated binary frame header")
+    version, meta_len = struct.unpack(">BI", blob[:5])
+    if version != _WS_FRAME_VERSION:
+        raise ValueError(f"unsupported binary frame version {version}")
+    if len(blob) < 5 + meta_len:
+        raise ValueError("truncated binary frame metadata length")
+    meta = json.loads(blob[5 : 5 + meta_len])
+    return version, meta, blob[5 + meta_len :]
 
 
 def _normalize_nav_url(raw: str) -> str:
@@ -160,6 +223,259 @@ async def _stream_loop(
                 await send_json({"type": "frame", "data": frame})
 
         await asyncio.sleep(max(0, _FRAME_INTERVAL_S - (time.monotonic() - started)))
+
+
+class _ScreencastRelay:
+    """Bridge CDP ``Page.screencastFrame`` events to one stream client.
+
+    Chrome pushes a frame whenever the page compositor produces a new one
+    (measured ~60 FPS on animated pages, nothing on static ones). Each frame
+    must be acknowledged via ``Page.screencastFrameAck`` or Chrome stops
+    sending. The relay rate-limits to the active profile's FPS cap and drops
+    older queued frames so a slow client never accumulates lag; the profile
+    (fps / JPEG quality / resolution scale) self-tunes via
+    :meth:`should_adjust` driven by the drop rate.
+    """
+
+    def __init__(
+        self,
+        client: Any,
+        send_frame: Any,
+        *,
+        profile_idx: int = _SCREENCAST_DEFAULT_PROFILE,
+        vw: int = 0,
+        vh: int = 0,
+    ) -> None:
+        self._client = client
+        self._send_frame = send_frame
+        self._profile_idx = profile_idx
+        self._vw = vw
+        self._vh = vh
+        self._seq = 0
+        self._last_push = 0.0
+        self._superseded = 0
+        self._stable_s = 0.0
+        self._last_check = 0.0
+        self._pending: asyncio.Task[None] | None = None
+        self._stats = {"pushed": 0, "dropped": 0, "bytes": 0, "window_s": 0.0}
+        client.on("Page.screencastFrame", self._on_frame)
+
+    @property
+    def client(self) -> Any:
+        return self._client
+
+    @property
+    def profile(self) -> dict[str, Any]:
+        return _SCREENCAST_PROFILE_STEPS[self._profile_idx]
+
+    async def arm(self) -> None:
+        """Enable the Page domain and (re)start the screencast at the current
+        profile (fps cap / JPEG quality / resolution scale). Raises when
+        Chrome rejects the command — the caller decides between retry and
+        poll fallback."""
+        with contextlib.suppress(Exception):
+            await self._client.send("Page.enable")
+        p = self.profile
+        params: dict[str, Any] = {
+            "format": "jpeg",
+            "quality": p["quality"],
+            "everyNthFrame": 1,
+        }
+        if self._vw > 0 and self._vh > 0:
+            params["maxWidth"] = max(1, int(self._vw * p["scale"]))
+            params["maxHeight"] = max(1, int(self._vh * p["scale"]))
+        await self._client.send("Page.startScreencast", params)
+
+    def should_adjust(self) -> int:
+        """Adaptive profile decision, called once per recheck tick.
+
+        Returns +1 (step up after sustained clean window), -1 (step down on
+        frame drops), or 0. The caller re-arms startScreencast on ±1 so the
+        new fps cap / quality / scale takes effect.
+        """
+        now = time.monotonic()
+        dt = now - self._last_check if self._last_check else 0.0
+        self._last_check = now
+        self._stats["window_s"] += dt
+        if self._superseded >= _SCREENCAST_DROPS_FOR_STEPDOWN:
+            self._superseded = 0
+            self._stable_s = 0.0
+            if self._profile_idx + 1 < len(_SCREENCAST_PROFILE_STEPS):
+                self._profile_idx += 1
+                return -1
+        elif self._superseded == 0:
+            self._stable_s += dt
+            if (
+                self._stable_s >= _SCREENCAST_STABLE_S_FOR_STEPUP
+                and self._profile_idx > 0
+            ):
+                self._profile_idx -= 1
+                self._stable_s = 0.0
+                return 1
+        else:
+            self._stable_s = 0.0
+        return 0
+
+    def take_stats(self) -> dict[str, Any]:
+        """Windowed counters for observability; resets the window."""
+        out = {
+            "pushed": self._stats["pushed"],
+            "dropped": self._stats["dropped"],
+            "bytes": self._stats["bytes"],
+            "window_s": round(self._stats["window_s"], 1),
+            "profile": f"{self.profile['fps']}fps/q{self.profile['quality']}/x{self.profile['scale']}",
+        }
+        self._stats = {"pushed": 0, "dropped": 0, "bytes": 0, "window_s": 0.0}
+        return out
+
+    def detach(self) -> None:
+        self._client.off("Page.screencastFrame", self._on_frame)
+        if self._pending is not None:
+            self._pending.cancel()
+            self._pending = None
+
+    async def _on_frame(self, params: dict[str, Any]) -> None:
+        data = params.get("data")
+        if not data:
+            return
+        await self._ack(params.get("sessionId"))
+        now = time.monotonic()
+        min_interval = 1.0 / self.profile["fps"]
+        elapsed = now - self._last_push
+        if elapsed >= min_interval:
+            self._last_push = now
+            await self._push(data, params.get("metadata") or {})
+            return
+        # Rate-limited: remember this frame and push it after the remaining
+        # wait, superseding any still-queued frame (only the latest matters).
+        if self._pending is not None:
+            self._pending.cancel()
+            self._superseded += 1
+            self._stats["dropped"] += 1
+        delay = min_interval - elapsed
+        self._pending = asyncio.create_task(self._push_later(data, params.get("metadata") or {}, delay))
+
+    async def _push_later(self, data: str, metadata: dict[str, Any], delay: float) -> None:
+        try:
+            await asyncio.sleep(delay)
+            self._last_push = time.monotonic()
+            await self._push(data, metadata)
+        except asyncio.CancelledError:
+            pass
+
+    async def _push(self, b64_jpeg: str, metadata: dict[str, Any]) -> None:
+        self._seq += 1
+        self._stats["pushed"] += 1
+        self._stats["bytes"] += len(b64_jpeg) * 3 // 4
+        meta = {
+            "seq": self._seq,
+            "w": int(metadata.get("deviceWidth") or 0),
+            "h": int(metadata.get("deviceHeight") or 0),
+        }
+        await self._send_frame(b64_jpeg, meta)
+
+    async def _ack(self, session_id: Any) -> None:
+        params: dict[str, Any] = {}
+        if session_id is not None:
+            params["sessionId"] = session_id
+        try:
+            await self._client.send("Page.screencastFrameAck", params)
+        except Exception as exc:  # noqa: BLE001
+            logger.debug("screencast ack failed: %s", exc)
+
+
+async def _screencast_loop(
+    send_json: Any,
+    send_frame: Any,
+    is_connected: Any,
+    sess: Any,
+    profile: str,
+    *,
+    vw: int = 0,
+    vh: int = 0,
+) -> None:
+    """Event-driven screencast: Chrome pushes, we relay.
+
+    * Initial arm failure degrades to the poll loop (never a black screen).
+    * The CDP client is re-checked every 250 ms; tab switches rebuild it and a
+      swapped client stops pushing frames until re-armed. A few consecutive
+      re-arm failures also degrade to poll.
+    * Sustained frame drops (slow client) step the JPEG quality down.
+    * Status/tabs snapshots keep the 1 s cadence.
+    """
+    await send_json({"type": "status", "status": "browser_started"})
+    await send_json({"type": "status", "status": "streaming"})
+    await send_json({"type": "stream_mode", "mode": "screencast"})
+
+    async def fall_back_to_poll(reason: str) -> None:
+        logger.warning("screencast unusable (%s); degrading to poll mode", reason)
+        await send_json({"type": "stream_mode", "mode": "poll"})
+        await _stream_loop(send_json, is_connected, sess, profile, listen_only=False)
+
+    client = sess._internal.client  # noqa: SLF001
+    relay = _ScreencastRelay(client, send_frame, vw=vw, vh=vh)
+    try:
+        await relay.arm()
+    except Exception as exc:  # noqa: BLE001
+        relay.detach()
+        await fall_back_to_poll(f"initial startScreencast failed: {exc}")
+        return
+
+    rearm_failures = 0
+    next_snapshot = 0.0
+    next_stats = 0.0
+    try:
+        while is_connected():
+            started = time.monotonic()
+            current = sess._internal.client  # noqa: SLF001
+            if current is not relay.client:
+                profile_idx = relay._profile_idx  # noqa: SLF001
+                relay.detach()
+                relay = _ScreencastRelay(current, send_frame, profile_idx=profile_idx, vw=vw, vh=vh)
+                try:
+                    await relay.arm()
+                    rearm_failures = 0
+                except Exception as exc:  # noqa: BLE001
+                    rearm_failures += 1
+                    if rearm_failures >= _SCREENCAST_REARM_FAILURES:
+                        relay.detach()
+                        await fall_back_to_poll(
+                            f"re-arm failed {rearm_failures}x: {exc}"
+                        )
+                        return
+                    logger.debug("re-arm attempt %d failed: %s", rearm_failures, exc)
+            elif (adjust := relay.should_adjust()) != 0:
+                with contextlib.suppress(Exception):
+                    await relay.arm()
+                logger.info(
+                    "screencast profile %s for %s",
+                    relay.profile,
+                    profile,
+                )
+                _ = adjust
+            if started >= next_snapshot:
+                await _send_session_snapshot(send_json, profile, sess=sess)
+                next_snapshot = started + _SCREENCAST_SNAPSHOT_INTERVAL_S
+            if started >= next_stats:
+                stats = relay.take_stats()
+                if stats["pushed"] or stats["dropped"]:
+                    logger.info(
+                        "screencast stats profile=%s pushed=%d dropped=%d "
+                        "bytes=%d window=%ss",
+                        stats["profile"],
+                        stats["pushed"],
+                        stats["dropped"],
+                        stats["bytes"],
+                        stats["window_s"],
+                    )
+                next_stats = started + _SCREENCAST_STATS_INTERVAL_S
+            await asyncio.sleep(
+                max(0, _SCREENCAST_RECHECK_INTERVAL_S - (time.monotonic() - started))
+            )
+    finally:
+        relay.detach()
+        with contextlib.suppress(Exception):
+            await sess._internal.client.send("Page.stopScreencast")  # noqa: SLF001
 
 
 async def _listen_state_loop(
@@ -276,7 +592,69 @@ async def _dispatch_key(sess: Any, msg: dict[str, Any]) -> None:
     )
 
 
-async def _handle_client_event(sess: Any, msg: dict[str, Any]) -> None:
+def _make_frame_sender(send_bytes: Any | None, send_json: Any) -> Any:
+    """Return ``send(b64_jpeg, meta)`` for the screencast relay.
+
+    With a binary transport, decodes and packs into the WS binary format.
+    Without one (Bridge peer relay), degrades to the legacy base64 text frame.
+    """
+    import base64
+
+    if send_bytes is None:
+
+        async def send_text_frame(b64_jpeg: str, meta: dict[str, Any]) -> None:
+            await send_json({"type": "frame", "data": b64_jpeg})
+
+        return send_text_frame
+
+    async def send_binary_frame(b64_jpeg: str, meta: dict[str, Any]) -> None:
+        blob = encode_screencast_frame(base64.b64decode(b64_jpeg), meta)
+        await send_bytes(blob)
+
+    return send_binary_frame
+
+
+async def _maybe_push_cursor_style(
+    sess: Any,
+    x: int,
+    y: int,
+    send_json: Any,
+    cursor_state: dict[str, Any],
+) -> None:
+    """Query the remote element's CSS cursor (throttled + deduplicated) and
+    push ``{"type": "cursor"}`` so the dashboard canvas can echo it locally —
+    screencast frames do not contain the remote cursor."""
+    now = time.monotonic()
+    if now - float(cursor_state.get("last", 0.0)) < _CURSOR_QUERY_INTERVAL_S:
+        return
+    cursor_state["last"] = now
+    expression = (
+        "(function(){var e=document.elementFromPoint("
+        f"{int(x)},{int(y)}"
+        ");return e?getComputedStyle(e).cursor:'default';})()"
+    )
+    try:
+        result = await asyncio.wait_for(
+            sess._internal.client.send(  # noqa: SLF001
+                "Runtime.evaluate",
+                {"expression": expression, "returnByValue": True},
+            ),
+            timeout=0.5,
+        )
+        value = str(result.get("result", {}).get("value") or "default")
+    except Exception:  # noqa: BLE001
+        return
+    if value and value != cursor_state.get("value"):
+        cursor_state["value"] = value
+        await send_json({"type": "cursor", "cursor": value})
+
+
+async def _handle_client_event(
+    sess: Any,
+    msg: dict[str, Any],
+    send_json: Any | None = None,
+    cursor_state: dict[str, Any] | None = None,
+) -> None:
     t = msg.get("type")
     if t == "navigate":
         url = _normalize_nav_url(str(msg.get("url") or ""))
@@ -299,6 +677,9 @@ async def _handle_client_event(sess: Any, msg: dict[str, Any]) -> None:
         button = _cdp_button(msg.get("button"))
         buttons = _cdp_buttons(msg, button=button, event=str(t))
         click_count = _cdp_click_count(msg)
+        if send_json is not None and cursor_state is not None:
+            with contextlib.suppress(Exception):
+                await _maybe_push_cursor_style(sess, x, y, send_json, cursor_state)
         if t == "mousedown":
             await _dispatch_mouse(
                 sess,
@@ -413,6 +794,10 @@ async def browser_stream_ws(
     async def receive_text() -> str:
         return await websocket.receive_text()
 
+    async def send_bytes(blob: bytes) -> None:
+        if websocket.application_state == WebSocketState.CONNECTED:
+            await websocket.send_bytes(blob)
+
     try:
         await run_browser_stream_session(
             send_json=send_json,
@@ -422,6 +807,7 @@ async def browser_stream_ws(
             listen_only=bool(listen_only),
             default_width=width,
             default_height=height,
+            send_bytes=send_bytes,
         )
     except WebSocketDisconnect:
         pass
@@ -441,11 +827,16 @@ async def run_browser_stream_session(
     default_width: int = 1280,
     default_height: int = 800,
     start_msg: dict[str, Any] | None = None,
+    send_bytes: Any | None = None,
 ) -> None:
     """Run one screencast / listen-only session over arbitrary send/receive hooks.
 
     Used by the local dashboard WebSocket and by Bridge peer relay so both share
     the same Chrome / harness lifecycle.
+
+    ``send_bytes(blob)`` is the WebSocket binary send hook; when absent
+    (Bridge peer relay) screencast frames degrade to base64 ``frame`` text
+    messages so the JSON-envelope relay keeps working.
     """
     sess: Any | None = None
     profile = user_browser_profile(user_id)
@@ -492,16 +883,30 @@ async def run_browser_stream_session(
                         },
                     )
 
-            stream_task = asyncio.create_task(
-                _stream_loop(
-                    send_json,
-                    is_connected,
-                    sess,
-                    profile,
-                    listen_only=False,
+            if str(start_msg.get("mode") or "") == "screencast":
+                stream_task = asyncio.create_task(
+                    _screencast_loop(
+                        send_json,
+                        _make_frame_sender(send_bytes, send_json),
+                        is_connected,
+                        sess,
+                        profile,
+                        vw=vw,
+                        vh=vh,
+                    )
                 )
-            )
+            else:
+                stream_task = asyncio.create_task(
+                    _stream_loop(
+                        send_json,
+                        is_connected,
+                        sess,
+                        profile,
+                        listen_only=False,
+                    )
+                )
 
+        cursor_state: dict[str, Any] = {"last": 0.0, "value": "default"}
         while is_connected():
             try:
                 raw = await receive_text()
@@ -517,7 +922,9 @@ async def run_browser_stream_session(
                 break
             if sess is not None:
                 with contextlib.suppress(Exception):
-                    await _handle_client_event(sess, msg)
+                    await _handle_client_event(
+                        sess, msg, send_json=send_json, cursor_state=cursor_state
+                    )
     except TimeoutError:
         await send_json({"type": "error", "message": "timed out waiting for start"})
     except WebSocketDisconnect:
